@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
@@ -12,9 +11,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   void pressed() {
     print("pressed");
+  }
+  Widget is_server_live() {
+    return new Text('live');
   }
 
   @override
@@ -24,27 +25,48 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: title,
       home: Scaffold(
-        backgroundColor: Colors.white,
-        body: GridView.count(
-          crossAxisCount: 2,
-          children: List.generate(4, (index) {
-            return Container(
-              margin: const EdgeInsets.all(5.0),
-              child: RaisedButton(
-              onPressed: pressed,
-              color: Colors.green,
-              child: Center(
-                child: Text(
-                headings[index] ,
-                textAlign: TextAlign.center,
-                style:TextStyle(color: Colors.white, fontSize: 30)
-                )
+          backgroundColor: Colors.white,
+          body: new Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              new Flexible(
+                  child: GridView.count(
+                crossAxisCount: 2,
+                children: List.generate(4, (index) {
+                  return Container(
+                    margin: const EdgeInsets.all(5.0),
+                    child: RaisedButton(
+                        onPressed: pressed,
+                        color: Colors.green,
+                        child: Center(
+                            child: Text(headings[index],
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 30)))),
+                  );
+                }),
+              )),
+              new Row(
+                children: <Widget>[
+                  new Flexible(
+                    child: const ListTile(
+                      leading: Icon(Icons.computer, size: 50),
+                      title: Text('Druv 1.0'),
+                      subtitle: Text('live', style: TextStyle(color: Colors.green),),
+                      // subtitle: is_server_live(),
+                    ),
+                  ),
+                  new Flexible(
+                    child: const ListTile(
+                      leading: Icon(Icons.folder, size: 50),
+                      title: Text('344'),
+                      subtitle: Text('out of 500 GB'),
+                    ),
+                  )
+                ],
               )
-              ),
-            );
-          }),
-        ),
-      ),
+            ],
+          )),
     );
   }
 }
