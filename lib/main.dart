@@ -14,8 +14,12 @@ class _MyAppState extends State<MyApp> {
   void pressed() {
     print("pressed");
   }
-  Widget is_server_live() {
-    return new Text('live');
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
   }
 
   @override
@@ -50,9 +54,8 @@ class _MyAppState extends State<MyApp> {
                 children: <Widget>[
                   new Flexible(
                     child: const ListTile(
-                      leading: Icon(Icons.computer, size: 50),
-                      title: Text('Druv 1.0'),
-                      subtitle: Text('live', style: TextStyle(color: Colors.green),),
+                      leading: Icon(Icons.computer, size: 50, color:Colors.green),
+                      title: Text('Druv 1.0')                      
                       // subtitle: is_server_live(),
                     ),
                   ),
