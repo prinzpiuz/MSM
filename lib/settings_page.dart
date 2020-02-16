@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -6,6 +7,19 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  final usernameController = TextEditingController();
+  final ipController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    usernameController.dispose();
+    ipController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,18 +40,19 @@ class _SettingsPageState extends State<SettingsPage> {
             children: <Widget>[
               SizedBox(height: 10),
               TextFormField(
+                controller: usernameController,
                 decoration: new InputDecoration(
-                  labelText: "Enter Email",
+                  labelText: "Enter Username",
                   fillColor: Colors.green,
                   border: new OutlineInputBorder(
-                    borderRadius: new BorderRadius.circular(25.0),
+                    borderRadius: new BorderRadius.circular(50.0),
                     borderSide: new BorderSide(),
                   ),
                   //fillColor: Colors.green
                 ),
                 validator: (val) {
                   if (val.length == 0) {
-                    return "Email cannot be empty";
+                    return "Username cannot be empty";
                   } else {
                     return null;
                   }
@@ -49,18 +64,43 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               SizedBox(height: 10),
               TextFormField(
+                controller: ipController,
                 decoration: new InputDecoration(
-                  labelText: "Enter Email",
+                  labelText: "Enter IP Adress",
                   fillColor: Colors.green,
                   border: new OutlineInputBorder(
-                    borderRadius: new BorderRadius.circular(25.0),
+                    borderRadius: new BorderRadius.circular(50.0),
                     borderSide: new BorderSide(),
                   ),
                   //fillColor: Colors.green
                 ),
                 validator: (val) {
                   if (val.length == 0) {
-                    return "Email cannot be empty";
+                    return "IP cannot be empty";
+                  } else {
+                    return null;
+                  }
+                },
+                keyboardType: TextInputType.numberWithOptions(),
+                style: new TextStyle(
+                  fontFamily: "Poppins",
+                ),
+              ),
+              SizedBox(height: 10),
+              TextFormField(
+                controller: passwordController,
+                decoration: new InputDecoration(
+                  labelText: "Enter Password",
+                  fillColor: Colors.green,
+                  border: new OutlineInputBorder(
+                    borderRadius: new BorderRadius.circular(50.0),
+                    borderSide: new BorderSide(),
+                  ),
+                  //fillColor: Colors.green
+                ),
+                validator: (val) {
+                  if (val.length == 0) {
+                    return "Password cannot be empty";
                   } else {
                     return null;
                   }
@@ -71,28 +111,33 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               SizedBox(height: 10),
-              TextFormField(
-                decoration: new InputDecoration(
-                  labelText: "Enter Email",
-                  fillColor: Colors.green,
-                  border: new OutlineInputBorder(
-                    borderRadius: new BorderRadius.circular(25.0),
-                    borderSide: new BorderSide(),
-                  ),
-                  //fillColor: Colors.green
-                ),
-                validator: (val) {
-                  if (val.length == 0) {
-                    return "Email cannot be empty";
-                  } else {
-                    return null;
-                  }
+              FlatButton(
+                onPressed: () async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  prefs.remove('username');
+                  prefs.remove('ip');
+                  prefs.remove('password');
+                  prefs.setString('username', usernameController.text);
+                  prefs.setString('ip', ipController.text);
+                  prefs.setString('password', passwordController.text);
+                  return showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        // Retrieve the text the that user has entered by using the
+                        // TextEditingController.
+                        content: Text("settings saved succesfully"),
+                      );
+                    },
+                  );
                 },
-                keyboardType: TextInputType.emailAddress,
-                style: new TextStyle(
-                  fontFamily: "Poppins",
+                child: Icon(
+                  Icons.save,
+                  color: Colors.green,
+                  size: 70,
                 ),
-              ),
+              )
             ],
           ),
         ),
