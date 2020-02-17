@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:msm/settings_page.dart';
+import 'package:msm/upload_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -35,6 +36,12 @@ class MyHome extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => SettingsPage()),
+      );
+    }
+    if (index == 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => UploadPage()),
       );
     }
   }
