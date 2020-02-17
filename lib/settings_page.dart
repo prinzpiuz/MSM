@@ -10,6 +10,7 @@ class _SettingsPageState extends State<SettingsPage> {
   final usernameController = TextEditingController();
   final ipController = TextEditingController();
   final passwordController = TextEditingController();
+  final portController = TextEditingController();
 
   @override
   void dispose() {
@@ -17,6 +18,7 @@ class _SettingsPageState extends State<SettingsPage> {
     usernameController.dispose();
     ipController.dispose();
     passwordController.dispose();
+    portController.dispose();
     super.dispose();
   }
 
@@ -24,6 +26,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        resizeToAvoidBottomPadding: false,
         appBar: AppBar(
           backgroundColor: Colors.green,
           title: Text(
@@ -45,7 +48,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   labelText: "Enter Username",
                   fillColor: Colors.green,
                   border: new OutlineInputBorder(
-                    borderRadius: new BorderRadius.circular(50.0),
+                    borderRadius: new BorderRadius.circular(60.0),
                     borderSide: new BorderSide(),
                   ),
                   //fillColor: Colors.green
@@ -66,10 +69,10 @@ class _SettingsPageState extends State<SettingsPage> {
               TextFormField(
                 controller: ipController,
                 decoration: new InputDecoration(
-                  labelText: "Enter IP Adress",
+                  labelText: "Enter IP Address",
                   fillColor: Colors.green,
                   border: new OutlineInputBorder(
-                    borderRadius: new BorderRadius.circular(50.0),
+                    borderRadius: new BorderRadius.circular(60.0),
                     borderSide: new BorderSide(),
                   ),
                   //fillColor: Colors.green
@@ -88,12 +91,36 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               SizedBox(height: 10),
               TextFormField(
+                controller: portController,
+                decoration: new InputDecoration(
+                  labelText: "Enter Port Number",
+                  fillColor: Colors.green,
+                  border: new OutlineInputBorder(
+                    borderRadius: new BorderRadius.circular(60.0),
+                    borderSide: new BorderSide(),
+                  ),
+                  //fillColor: Colors.green
+                ),
+                validator: (val) {
+                  if (val.length == 0) {
+                    return "port cannot be empty";
+                  } else {
+                    return null;
+                  }
+                },
+                keyboardType: TextInputType.number,
+                style: new TextStyle(
+                  fontFamily: "Poppins",
+                ),
+              ),
+              SizedBox(height: 10),
+              TextFormField(
                 controller: passwordController,
                 decoration: new InputDecoration(
                   labelText: "Enter Password",
                   fillColor: Colors.green,
                   border: new OutlineInputBorder(
-                    borderRadius: new BorderRadius.circular(50.0),
+                    borderRadius: new BorderRadius.circular(60.0),
                     borderSide: new BorderSide(),
                   ),
                   //fillColor: Colors.green
@@ -118,9 +145,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   prefs.remove('username');
                   prefs.remove('ip');
                   prefs.remove('password');
+                  prefs.remove('port');
                   prefs.setString('username', usernameController.text);
                   prefs.setString('ip', ipController.text);
                   prefs.setString('password', passwordController.text);
+                  prefs.setString('port', portController.text);
                   return showDialog(
                     context: context,
                     builder: (context) {
