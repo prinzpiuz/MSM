@@ -16,7 +16,7 @@ class _UploadPageState extends State<UploadPage> {
   bool _loadingPath = false;
   bool _multiPick = false;
   bool _hasValidMime = false;
-  FileType _pickingType;
+  String _pickingType;
   TextEditingController _controller = new TextEditingController();
 
   @override
@@ -55,9 +55,6 @@ class _UploadPageState extends State<UploadPage> {
   Widget build(BuildContext context) {
     return new MaterialApp(
       home: new Scaffold(
-        appBar: new AppBar(
-          title: const Text('File Picker example app'),
-        ),
         body: new Center(
             child: new Padding(
           padding: const EdgeInsets.only(left: 10.0, right: 10.0),
@@ -72,42 +69,30 @@ class _UploadPageState extends State<UploadPage> {
                       value: _pickingType,
                       items: <DropdownMenuItem>[
                         new DropdownMenuItem(
-                          child: new Text('FROM AUDIO'),
-                          value: FileType.AUDIO,
+                          child: new Text('Movies'),
+                          value: "1",
                         ),
                         new DropdownMenuItem(
-                          child: new Text('FROM IMAGE'),
-                          value: FileType.IMAGE,
-                        ),
-                        new DropdownMenuItem(
-                          child: new Text('FROM VIDEO'),
-                          value: FileType.VIDEO,
-                        ),
-                        new DropdownMenuItem(
-                          child: new Text('FROM ANY'),
-                          value: FileType.ANY,
-                        ),
-                        new DropdownMenuItem(
-                          child: new Text('CUSTOM FORMAT'),
-                          value: FileType.CUSTOM,
+                          child: new Text('Tv Series'),
+                          value: "2",
                         ),
                       ],
                       onChanged: (value) => setState(() {
                             _pickingType = value;
-                            if (_pickingType != FileType.CUSTOM) {
+                            if (_pickingType != "2") {
                               _controller.text = _extension = '';
                             }
                           })),
                 ),
                 new ConstrainedBox(
                   constraints: BoxConstraints.tightFor(width: 100.0),
-                  child: _pickingType == FileType.CUSTOM
+                  child: _pickingType == "2"
                       ? new TextFormField(
                           maxLength: 15,
                           autovalidate: true,
                           controller: _controller,
                           decoration:
-                              InputDecoration(labelText: 'File extension'),
+                              InputDecoration(labelText: 'Folder Name'),
                           keyboardType: TextInputType.text,
                           textCapitalization: TextCapitalization.none,
                           validator: (value) {
@@ -135,6 +120,7 @@ class _UploadPageState extends State<UploadPage> {
                 new Padding(
                   padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
                   child: new RaisedButton(
+                    color: Colors.green,
                     onPressed: () => _openFileExplorer(),
                     child: new Text("Open file picker"),
                   ),
