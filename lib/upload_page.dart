@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
@@ -26,6 +25,8 @@ class _UploadPageState extends State<UploadPage> {
   TextEditingController _controller = new TextEditingController();
   Future<TvFolders> folder;
   Widget val;
+  List<String> selectedFiles = [];
+  List<int> select = [];
 
   @override
   void initState() {
@@ -51,32 +52,32 @@ class _UploadPageState extends State<UploadPage> {
   }
 
   void _openFileExplorer() async {
-    if (_pickingType != "2" || _hasValidMime) {
-      setState(() => _loadingPath = true);
-      try {
-        if (_multiPick) {
-          _path = null;
-          _paths = await FilePicker.getMultiFilePath(
-              type: FileType.ANY,
-              fileExtension:
-                  _extension); //need to write a function here to validate file type
-        } else {
-          _paths = null;
-          _path = await FilePicker.getFilePath(
-              type: FileType.ANY, fileExtension: _extension);
-        }
-        print(_path);
-      } on PlatformException catch (e) {
-        print("Unsupported operation" + e.toString());
-      }
-      if (!mounted) return;
-      setState(() {
-        _loadingPath = false;
-        _fileName = _path != null
-            ? _path.split('/').last
-            : _paths != null ? _paths.keys.toString() : '...';
-      });
-    }
+    // if (_pickingType != "2" || _hasValidMime) {
+    //   setState(() => _loadingPath = true);
+    //   try {
+    //     if (_multiPick) {
+    //       _path = null;
+    //       _paths = await FilePicker.getMultiFilePath(
+    //           type: FileType.ANY,
+    //           fileExtension:
+    //               _extension); //need to write a function here to validate file type
+    //     } else {
+    //       _paths = null;
+    //       _path = await FilePicker.getFilePath(
+    //           type: FileType.ANY, fileExtension: _extension);
+    //     }
+    //     print(_path);
+    //   } on PlatformException catch (e) {
+    //     print("Unsupported operation" + e.toString());
+    //   }
+    //   if (!mounted) return;
+    //   setState(() {
+    //     _loadingPath = false;
+    //     _fileName = _path != null
+    //         ? _path.split('/').last
+    //         : _paths != null ? _paths.keys.toString() : '...';
+    //   });
+    // }
     setState(() {
       getFileNames();
     });
@@ -91,7 +92,13 @@ class _UploadPageState extends State<UploadPage> {
       ));
       for (var i = 0; i < data.length; i++) {
         dropDownItems.add(DropdownMenuItem(
-            child: new Text(data[i].toString()), value: i + 1));
+            child: data[i].toString().length > 20
+                ? new Text(data[i].toString().replaceRange(
+                    data[i].toString().length - 10,
+                    data[i].toString().length,
+                    ''))
+                : Text(data[i].toString()),
+            value: i + 1));
       }
       return dropDownItems.toList();
     }
@@ -105,6 +112,7 @@ class _UploadPageState extends State<UploadPage> {
               child: new DropdownButton(
                   hint: Text('Select TV Folder'),
                   items: dropDown(snapshot.data.folders),
+                  value: _folderValues,
                   onChanged: (value) => setState(() {
                         _folderValues = value;
                       })),
@@ -123,101 +131,101 @@ class _UploadPageState extends State<UploadPage> {
     return new MaterialApp(
       home: new Scaffold(
         body: new Center(
-            child: new Padding(
-          padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-          child: new SingleChildScrollView(
-            child: new Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: new DropdownButton(
-                      hint: new Text('Movie/TV'),
-                      value: _pickingType,
-                      items: <DropdownMenuItem>[
-                        new DropdownMenuItem(
-                          child: new Text('Movies'),
-                          value: "1",
-                        ),
-                        new DropdownMenuItem(
-                          child: new Text('Tv Series'),
-                          value: "2",
-                        ),
-                      ],
-                      onChanged: (value) => setState(() {
-                            _pickingType = value;
-                          })),
+            child: new SingleChildScrollView(
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: new DropdownButton(
+                    hint: new Text('Movie/TV'),
+                    value: _pickingType,
+                    items: <DropdownMenuItem>[
+                      new DropdownMenuItem(
+                        child: new Text('Movies'),
+                        value: "1",
+                      ),
+                      new DropdownMenuItem(
+                        child: new Text('Tv Series'),
+                        value: "2",
+                      ),
+                    ],
+                    onChanged: (value) => setState(() {
+                          _pickingType = value;
+                        })),
+              ),
+              _pickingType == "2"
+                  ? buidDropDown()
+                  :
+                  // Text("dsnflds"):
+                  Container(),
+              new ConstrainedBox(
+                constraints: BoxConstraints.tightFor(width: 100.0),
+                child: _folderValues == 0
+                    ? new TextFormField(
+                        maxLength: 15,
+                        autovalidate: true,
+                        controller: _controller,
+                        decoration:
+                            InputDecoration(labelText: 'New Folder Name'),
+                        keyboardType: TextInputType.text,
+                        textCapitalization: TextCapitalization.none,
+                        // validator: (value) {
+                        //   RegExp reg = new RegExp(r'[^a-zA-Z0-9]');
+                        //   if (reg.hasMatch(value)) {
+                        //     _hasValidMime = false;
+                        //     return 'Invalid format';
+                        //   }
+                        //   _hasValidMime = true;
+                        //   return null;
+                        // },
+                      )
+                    : new Container(),
+              ),
+              new ConstrainedBox(
+                constraints: BoxConstraints.tightFor(width: 200.0),
+                child: new SwitchListTile.adaptive(
+                  title: new Text('Pick multiple files',
+                      textAlign: TextAlign.right),
+                  onChanged: (bool value) => setState(() => _multiPick = value),
+                  value: _multiPick,
                 ),
-                _pickingType == "2"
-                    ? buidDropDown()
-                    :
-                    // Text("dsnflds"):
-                    Container(),
-                new ConstrainedBox(
-                  constraints: BoxConstraints.tightFor(width: 100.0),
-                  child: _folderValues == 0
-                      ? new TextFormField(
-                          maxLength: 15,
-                          autovalidate: true,
-                          controller: _controller,
-                          decoration: InputDecoration(labelText: 'Folder Name'),
-                          keyboardType: TextInputType.text,
-                          textCapitalization: TextCapitalization.none,
-                          validator: (value) {
-                            RegExp reg = new RegExp(r'[^a-zA-Z0-9]');
-                            if (reg.hasMatch(value)) {
-                              _hasValidMime = false;
-                              return 'Invalid format';
-                            }
-                            _hasValidMime = true;
-                            return null;
-                          },
-                        )
-                      : new Container(),
+              ),
+              new Padding(
+                padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                child: RaisedButton(
+                  color: Colors.green,
+                  onPressed: () => _openFileExplorer(),
+                  child: new Text("List Available Files"),
                 ),
-                new ConstrainedBox(
-                  constraints: BoxConstraints.tightFor(width: 200.0),
-                  child: new SwitchListTile.adaptive(
-                    title: new Text('Pick multiple files',
-                        textAlign: TextAlign.right),
-                    onChanged: (bool value) =>
-                        setState(() => _multiPick = value),
-                    value: _multiPick,
-                  ),
-                ),
-                new Padding(
-                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
-                  child: new RaisedButton(
-                    color: Colors.green,
-                    onPressed: () => _openFileExplorer(),
-                    child: new Text("List Available Files"),
-                  ),
-                ),
-                new Builder(
-                  builder: (BuildContext context) => _loadingPath
-                      ? Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: const CircularProgressIndicator())
-                      : fileNames != null || fileNames != null
-                          ? new Container(
-                              padding: const EdgeInsets.only(bottom: 30.0),
-                              height: MediaQuery.of(context).size.height * 0.50,
-                              child: new Scrollbar(
-                                  child: new ListView.separated(
+              ),
+              new Builder(
+                builder: (BuildContext context) => _loadingPath
+                    ? Padding(
+                        padding: const EdgeInsets.only(bottom: 10.0),
+                        child: const CircularProgressIndicator())
+                    : fileNames != null || fileNames != null
+                        ? new Container(
+                            padding: const EdgeInsets.only(bottom: 30.0),
+                            height: MediaQuery.of(context).size.height * 0.50,
+                            child: new Scrollbar(
+                              child: new ListView.separated(
                                 itemCount:
                                     fileNames != null && fileNames.isNotEmpty
                                         ? fileNames.length
                                         : 1,
                                 itemBuilder: (BuildContext context, int index) {
+                                  int itemNumber = index + 1;
                                   final bool isMultiPath =
                                       fileNames != null && fileNames.isNotEmpty;
-                                  final String name = 'File $index: ' +
-                                      (isMultiPath
-                                          ? fileNames[index]
-                                          : _fileName ?? '...');
+                                  final String name = fileNames.isNotEmpty
+                                      ? itemNumber.toString() +
+                                          ' ' +
+                                          fileNames[index]
+                                      : '';
                                   final path = isMultiPath
                                       ? fileNames[index].toString()
-                                      : files;
+                                      : "";
 
                                   return new ListTile(
                                     title: name != null
@@ -225,18 +233,43 @@ class _UploadPageState extends State<UploadPage> {
                                             name,
                                           )
                                         : Text(" "),
-                                    // subtitle: new Text(path),
+                                    subtitle: path != null
+                                        ? new Text(path)
+                                        : Text(" "),
+                                    selected:
+                                        select.contains(index) ? true : false,
+                                    trailing: select.contains(index)
+                                        ? Icon(Icons.radio_button_checked)
+                                        : Icon(Icons.radio_button_unchecked),
+                                    onLongPress: () {
+                                      setState(() {
+                                        select.remove(index);
+                                      });
+                                    },
+                                    onTap: () {
+                                      selectedFiles.add(name);
+
+                                      setState(() {
+                                        select.add(index);
+                                      });
+                                    },
                                   );
                                 },
                                 separatorBuilder:
                                     (BuildContext context, int index) =>
                                         new Divider(),
-                              )),
-                            )
-                          : new Container(),
-                ),
-              ],
-            ),
+                              ),
+                            ),
+                          )
+                        : new Container(),
+              ),
+              RaisedButton(
+                  color: Colors.green,
+                  onPressed: () {
+                    print(selectedFiles);
+                  },
+                  child: Text("Upload")),
+            ],
           ),
         )),
       ),
