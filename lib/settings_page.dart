@@ -7,14 +7,25 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  final usernameController = TextEditingController();
+  String username = "sdkjf";
+
+  void _intial() async {
+    final prefs = await SharedPreferences.getInstance();
+    username = prefs.getString('username') ?? 0;
+    final ip = prefs.getString('ip') ?? 0;
+    final password = prefs.getString('password') ?? 0;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _intial();
+  }
+
+  final usernameController = TextEditingController(text: "username");
   final ipController = TextEditingController();
   final passwordController = TextEditingController();
   final portController = TextEditingController();
-
-  get username => null;
-  get ip => null;
-  get password => null;
 
   @override
   void dispose() {
@@ -26,16 +37,8 @@ class _SettingsPageState extends State<SettingsPage> {
     super.dispose();
   }
 
-  void _intial() async {
-    final prefs = await SharedPreferences.getInstance();
-    final username = prefs.getString('username') ?? 0;
-    final ip = prefs.getString('ip') ?? 0;
-    final password = prefs.getString('password') ?? 0;
-  }
-
   @override
   Widget build(BuildContext context) {
-    _intial();
     return MaterialApp(
       home: Scaffold(
         resizeToAvoidBottomPadding: false,
@@ -55,7 +58,6 @@ class _SettingsPageState extends State<SettingsPage> {
             children: <Widget>[
               SizedBox(height: 10),
               TextFormField(
-                initialValue: username,
                 controller: usernameController,
                 decoration: new InputDecoration(
                   labelText: "Enter Username",

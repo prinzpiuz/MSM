@@ -13,13 +13,7 @@ class UploadPage extends StatefulWidget {
 }
 
 class _UploadPageState extends State<UploadPage> {
-  String _fileName;
-  String _path;
-  Map<String, String> _paths;
-  String _extension;
-  bool _loadingPath = false;
-  bool _multiPick = false;
-  bool _hasValidMime = false;
+ 
   String _pickingType;
   int _folderValues;
   TextEditingController _controller = new TextEditingController();
@@ -27,13 +21,13 @@ class _UploadPageState extends State<UploadPage> {
   Widget val;
   List<String> selectedFiles = [];
   List<int> select = [];
+  bool upload = false;
 
   @override
   void initState() {
     super.initState();
     buildImages();
     folder = fetchTvFolders();
-    _controller.addListener(() => _extension = _controller.text);
   }
 
   List<File> files;
@@ -79,6 +73,7 @@ class _UploadPageState extends State<UploadPage> {
     //   });
     // }
     setState(() {
+      upload = true;
       getFileNames();
     });
   }
@@ -182,15 +177,15 @@ class _UploadPageState extends State<UploadPage> {
                       )
                     : new Container(),
               ),
-              new ConstrainedBox(
-                constraints: BoxConstraints.tightFor(width: 200.0),
-                child: new SwitchListTile.adaptive(
-                  title: new Text('Pick multiple files',
-                      textAlign: TextAlign.right),
-                  onChanged: (bool value) => setState(() => _multiPick = value),
-                  value: _multiPick,
-                ),
-              ),
+              // new ConstrainedBox(
+              //   constraints: BoxConstraints.tightFor(width: 200.0),
+              //   child: new SwitchListTile.adaptive(
+              //     title: new Text('Pick multiple files',
+              //         textAlign: TextAlign.right),
+              //     onChanged: (bool value) => setState(() => _multiPick = value),
+              //     value: _multiPick,
+              //   ),
+              // ),
               new Padding(
                 padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
                 child: RaisedButton(
@@ -200,75 +195,71 @@ class _UploadPageState extends State<UploadPage> {
                 ),
               ),
               new Builder(
-                builder: (BuildContext context) => _loadingPath
-                    ? Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
-                        child: const CircularProgressIndicator())
-                    : fileNames != null || fileNames != null
-                        ? new Container(
-                            padding: const EdgeInsets.only(bottom: 30.0),
-                            height: MediaQuery.of(context).size.height * 0.50,
-                            child: new Scrollbar(
-                              child: new ListView.separated(
-                                itemCount:
-                                    fileNames != null && fileNames.isNotEmpty
-                                        ? fileNames.length
-                                        : 1,
-                                itemBuilder: (BuildContext context, int index) {
-                                  int itemNumber = index + 1;
-                                  final bool isMultiPath =
-                                      fileNames != null && fileNames.isNotEmpty;
-                                  final String name = fileNames.isNotEmpty
-                                      ? itemNumber.toString() +
-                                          ' ' +
-                                          fileNames[index]
-                                      : '';
-                                  final path = isMultiPath
-                                      ? fileNames[index].toString()
-                                      : "";
+                  builder: (BuildContext context) => Container(
+                        padding: const EdgeInsets.only(bottom: 30.0),
+                        height: MediaQuery.of(context).size.height * 0.50,
+                        child: new Scrollbar(
+                          child: new ListView.separated(
+                            itemCount: fileNames != null && fileNames.isNotEmpty
+                                ? fileNames.length
+                                : 1,
+                            itemBuilder: (BuildContext context, int index) {
+                              int itemNumber = index + 1;
+                              final bool isMultiPath =
+                                  fileNames != null && fileNames.isNotEmpty;
+                              final String name = fileNames.isNotEmpty
+                                  ? itemNumber.toString() +
+                                      ' ' +
+                                      fileNames[index]
+                                  : '';
+                              final path = isMultiPath
+                                  ? fileNames[index].toString()
+                                  : "";
 
-                                  return new ListTile(
-                                    title: name != null
-                                        ? new Text(
-                                            name,
-                                          )
-                                        : Text(" "),
-                                    subtitle: path != null
-                                        ? new Text(path)
-                                        : Text(" "),
-                                    selected:
-                                        select.contains(index) ? true : false,
-                                    trailing: select.contains(index)
-                                        ? Icon(Icons.radio_button_checked)
-                                        : Icon(Icons.radio_button_unchecked),
-                                    onLongPress: () {
-                                      setState(() {
-                                        select.remove(index);
-                                      });
-                                    },
-                                    onTap: () {
-                                      selectedFiles.add(name);
+                              return name != ''
+                                  ? ListTile(
+                                      title: name != null
+                                          ? new Text(
+                                              name,
+                                            )
+                                          : Text(" "),
+                                      subtitle: path != null
+                                          ? new Text(path)
+                                          : Text(" "),
+                                      selected:
+                                          select.contains(index) ? true : false,
+                                      trailing: select.contains(index)
+                                          ? Icon(Icons.radio_button_checked)
+                                          : Icon(Icons.radio_button_unchecked),
+                                      onLongPress: () {
+                                        setState(() {
+                                          select.remove(index);
+                                        });
+                                      },
+                                      onTap: () {
+                                        selectedFiles.add(name);
 
-                                      setState(() {
-                                        select.add(index);
-                                      });
-                                    },
-                                  );
-                                },
-                                separatorBuilder:
-                                    (BuildContext context, int index) =>
-                                        new Divider(),
-                              ),
-                            ),
-                          )
-                        : new Container(),
-              ),
-              RaisedButton(
-                  color: Colors.green,
-                  onPressed: () {
-                    print(selectedFiles);
-                  },
-                  child: Text("Upload")),
+                                        setState(() {
+                                          select.add(index);
+                                        });
+                                      },
+                                    )
+                                  : Container();
+                            },
+                            separatorBuilder:
+                                (BuildContext context, int index) =>
+                                    new Divider(),
+                          ),
+                        ),
+                      )),
+              upload
+                  ? RaisedButton(
+                      color: Colors.green,
+                      onPressed: () {
+                        print(selectedFiles);
+                      },
+                      child: Text("Upload"))
+                  : Container(),
             ],
           ),
         )),
