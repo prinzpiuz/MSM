@@ -6,14 +6,13 @@ import 'dart:io';
 import 'package:msm/file_utils.dart';
 import 'package:msm/services.dart';
 import 'package:msm/models.dart';
-
+import 'package:msm/ssh_utils.dart';
 class UploadPage extends StatefulWidget {
   @override
   _UploadPageState createState() => new _UploadPageState();
 }
 
 class _UploadPageState extends State<UploadPage> {
- 
   String _pickingType;
   int _folderValues;
   TextEditingController _controller = new TextEditingController();
@@ -46,32 +45,6 @@ class _UploadPageState extends State<UploadPage> {
   }
 
   void _openFileExplorer() async {
-    // if (_pickingType != "2" || _hasValidMime) {
-    //   setState(() => _loadingPath = true);
-    //   try {
-    //     if (_multiPick) {
-    //       _path = null;
-    //       _paths = await FilePicker.getMultiFilePath(
-    //           type: FileType.ANY,
-    //           fileExtension:
-    //               _extension); //need to write a function here to validate file type
-    //     } else {
-    //       _paths = null;
-    //       _path = await FilePicker.getFilePath(
-    //           type: FileType.ANY, fileExtension: _extension);
-    //     }
-    //     print(_path);
-    //   } on PlatformException catch (e) {
-    //     print("Unsupported operation" + e.toString());
-    //   }
-    //   if (!mounted) return;
-    //   setState(() {
-    //     _loadingPath = false;
-    //     _fileName = _path != null
-    //         ? _path.split('/').last
-    //         : _paths != null ? _paths.keys.toString() : '...';
-    //   });
-    // }
     setState(() {
       upload = true;
       getFileNames();
@@ -154,38 +127,17 @@ class _UploadPageState extends State<UploadPage> {
                   :
                   // Text("dsnflds"):
                   Container(),
-              new ConstrainedBox(
-                constraints: BoxConstraints.tightFor(width: 100.0),
-                child: _folderValues == 0
-                    ? new TextFormField(
-                        maxLength: 15,
-                        autovalidate: true,
-                        controller: _controller,
-                        decoration:
-                            InputDecoration(labelText: 'New Folder Name'),
-                        keyboardType: TextInputType.text,
-                        textCapitalization: TextCapitalization.none,
-                        // validator: (value) {
-                        //   RegExp reg = new RegExp(r'[^a-zA-Z0-9]');
-                        //   if (reg.hasMatch(value)) {
-                        //     _hasValidMime = false;
-                        //     return 'Invalid format';
-                        //   }
-                        //   _hasValidMime = true;
-                        //   return null;
-                        // },
-                      )
-                    : new Container(),
-              ),
-              // new ConstrainedBox(
-              //   constraints: BoxConstraints.tightFor(width: 200.0),
-              //   child: new SwitchListTile.adaptive(
-              //     title: new Text('Pick multiple files',
-              //         textAlign: TextAlign.right),
-              //     onChanged: (bool value) => setState(() => _multiPick = value),
-              //     value: _multiPick,
-              //   ),
-              // ),
+              _folderValues == 0
+                  ? new TextFormField(
+                      maxLength: 15,
+                      autovalidate: true,
+                      controller: _controller,
+                      decoration:
+                          InputDecoration(labelText: 'Enter New Folder Name'),
+                      keyboardType: TextInputType.text,
+                      textCapitalization: TextCapitalization.none,
+                    )
+                  : new Container(),
               new Padding(
                 padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
                 child: RaisedButton(
@@ -256,7 +208,9 @@ class _UploadPageState extends State<UploadPage> {
                   ? RaisedButton(
                       color: Colors.green,
                       onPressed: () {
+                        // upload(selectedFiles);
                         print(selectedFiles);
+                        print(_controller.text);
                       },
                       child: Text("Upload"))
                   : Container(),
