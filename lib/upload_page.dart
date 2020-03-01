@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:msm/file_utils.dart';
 import 'package:msm/services.dart';
 import 'package:msm/models.dart';
-import 'package:msm/ssh_utils.dart';
+import 'package:ssh/ssh.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 class UploadPage extends StatefulWidget {
+  final basicDeatials;
+  UploadPage(this.basicDeatials);
   @override
   _UploadPageState createState() => new _UploadPageState();
 }
@@ -40,7 +45,7 @@ class _UploadPageState extends State<UploadPage> {
 
   void getFileNames() {
     for (var i = 0; i < files.length; i++) {
-      fileNames.add(files[i].toString());
+      fileNames.add(files[i].path.toString());
     }
   }
 
@@ -207,9 +212,11 @@ class _UploadPageState extends State<UploadPage> {
               upload
                   ? RaisedButton(
                       color: Colors.green,
-                      onPressed: () {
-                        // upload(selectedFiles);
+                      onPressed: () async {
+                        print("pressed");
                         print(selectedFiles);
+                        var connect = await widget.basicDeatials["client"].connect();
+                        print("connect $connect");
                         print(_controller.text);
                       },
                       child: Text("Upload"))

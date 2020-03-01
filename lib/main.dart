@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:msm/settings_page.dart';
 import 'package:msm/upload_page.dart';
+import 'package:msm/models.dart';
 
 void main() => runApp(MyApp());
 
@@ -31,7 +33,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 class MyHome extends StatelessWidget {
-  void pressed(index, context) {
+  void pressed(index, context, basicDeatials) {
     if (index == 3) {
       Navigator.push(
         context,
@@ -41,13 +43,18 @@ class MyHome extends StatelessWidget {
     if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => UploadPage()),
+        MaterialPageRoute(builder: (context) => UploadPage(basicDeatials)),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final text = BasicServerDetails().basicDetails();
+    var basicDeatials;
+    text.then((val) {
+      basicDeatials = val;
+    }).catchError((error) => print(error));
     var headings = ['Upload', 'Server', 'Files', 'Settings'];
     return Scaffold(
         backgroundColor: Colors.white,
@@ -61,7 +68,7 @@ class MyHome extends StatelessWidget {
                 return Container(
                   margin: const EdgeInsets.all(5.0),
                   child: RaisedButton(
-                      onPressed: () => pressed(index, context),
+                      onPressed: () => pressed(index, context, basicDeatials),
                       color: Colors.green,
                       child: Center(
                           child: Text(headings[index],
@@ -77,7 +84,7 @@ class MyHome extends StatelessWidget {
                   child: const ListTile(
                       leading:
                           Icon(Icons.computer, size: 50, color: Colors.green),
-                      title: Text('Druv 1.0')
+                      title: Text("d")
                       // subtitle: is_server_live(),
                       ),
                 ),
