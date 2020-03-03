@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:msm/file_utils.dart';
 import 'package:msm/services.dart';
 import 'package:msm/models.dart';
 import 'package:ssh/ssh.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workmanager/workmanager.dart';
+
+void callbackDispatcher() {
+  Workmanager.executeTask((task, inputData) {
+    print(task);
+    print("Native called background task: " +
+        inputData["selectedFiles"]); //simpleTask will be emitted here.
+    return Future.value(true);
+  });
+}
 
 class UploadPage extends StatefulWidget {
   final basicDeatials;
@@ -215,9 +223,18 @@ class _UploadPageState extends State<UploadPage> {
                       onPressed: () async {
                         print("pressed");
                         print(selectedFiles);
-                        var connect = await widget.basicDeatials["client"].connect();
+                        var connect =
+                            await widget.basicDeatials["client"].connect();
                         print("connect $connect");
                         print(_controller.text);
+                        Workmanager.initialize(
+                            callbackDispatcher, // The top level function, aka callbackDispatcher
+                            isInDebugMode:
+                                true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+                            );
+                        Workmanager.registerOneOffTask("1", "uploadFile",
+                            tag: "tag",
+                            inputData: {"selectedFiles": selectedFiles[0]});
                       },
                       child: Text("Upload"))
                   : Container(),

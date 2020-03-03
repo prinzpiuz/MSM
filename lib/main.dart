@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:msm/settings_page.dart';
 import 'package:msm/upload_page.dart';
 import 'package:msm/models.dart';
 
 void main() => runApp(MyApp());
+var basicDeatials;
 
 class MyApp extends StatefulWidget {
   @override
@@ -32,7 +32,12 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class MyHome extends StatelessWidget {
+class MyHome extends StatefulWidget {
+  @override
+  _MyHomeState createState() => _MyHomeState();
+}
+
+class _MyHomeState extends State<MyHome> {
   void pressed(index, context, basicDeatials) {
     if (index == 3) {
       Navigator.push(
@@ -50,9 +55,8 @@ class MyHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = BasicServerDetails().basicDetails();
-    var basicDeatials;
-    text.then((val) {
+    final data = BasicServerDetails().basicDetails();
+    data.then((val) {
       basicDeatials = val;
     }).catchError((error) => print(error));
     var headings = ['Upload', 'Server', 'Files', 'Settings'];
@@ -81,19 +85,38 @@ class MyHome extends StatelessWidget {
             new Row(
               children: <Widget>[
                 new Flexible(
-                  child: const ListTile(
-                      leading:
-                          Icon(Icons.computer, size: 50, color: Colors.green),
-                      title: Text("d")
-                      // subtitle: is_server_live(),
-                      ),
+                  child: ListTile(
+                    leading: IconButton(
+                        icon: Icon(Icons.computer,
+                            size: 50,
+                            color: basicDeatials != null
+                                ? Colors.green
+                                : Colors.black),
+                        onPressed: () {
+                          setState(() {
+                            final data = BasicServerDetails().basicDetails();
+                            data.then((val) {
+                              basicDeatials = val;
+                            }).catchError((error) => print(error));
+                          });
+                        }),
+                    // Icon(Icons.computer, size: 50, color: Colors.green),
+                    title: basicDeatials != null
+                        ? Text(basicDeatials["hostname"])
+                        : Text("Check Connection"),
+                    subtitle:
+                        basicDeatials == null ? Text("press") : Text("live"),
+                  ),
                 ),
                 new Flexible(
-                  child: const ListTile(
-                    leading: Icon(Icons.folder, size: 50),
-                    title: Text('344'),
-                    subtitle: Text('out of 500 GB'),
-                  ),
+                  child: basicDeatials == null
+                      ? Container()
+                      : ListTile(
+                          leading: Icon(Icons.folder, size: 50),
+                          title: Text(basicDeatials["usedSpace"].replaceAll('\n', '')),
+                          subtitle:
+                              Text('out of ' + basicDeatials["totalSize"].replaceAll(' ', '')),
+                        ),
                 )
               ],
             )

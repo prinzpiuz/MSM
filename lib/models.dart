@@ -31,6 +31,9 @@ class BasicServerDetails {
     var connect = await client.connect();
     // print("connect $connect");
     var hostname = await client.execute("hostname");
+    var used = await client.execute("du -sh ~/ | awk -F ' ' '{print \$1}'");
+    var total = await client.execute(
+        "df -h /dev/sda2 | awk -F ' ' '{print \$2}' | awk -F 'Size' '{print \$1}'");
     return {
       "hostname": hostname,
       "client": client,
@@ -39,7 +42,9 @@ class BasicServerDetails {
       "port": port,
       "password": password,
       "tvPath": tvPath,
-      "moviePath": moviePath
+      "moviePath": moviePath,
+      "usedSpace": used,
+      "totalSize": total
     };
   }
 }
