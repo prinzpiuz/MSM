@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:msm/settings_page.dart';
 import 'package:msm/upload_page.dart';
 import 'package:msm/models.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() => runApp(MyApp());
 var basicDeatials;
@@ -18,7 +19,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     // TODO: implement initState
-
     super.initState();
   }
 
@@ -38,6 +38,7 @@ class MyHome extends StatefulWidget {
 }
 
 class _MyHomeState extends State<MyHome> {
+  Map<PermissionGroup, PermissionStatus> permissions;
   void pressed(index, context, basicDeatials) {
     if (index == 3) {
       Navigator.push(
@@ -53,8 +54,14 @@ class _MyHomeState extends State<MyHome> {
     }
   }
 
+  setPermissions() async {
+    permissions =
+        await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+  }
+
   @override
   Widget build(BuildContext context) {
+    setPermissions();
     final data = BasicServerDetails().basicDetails();
     data.then((val) {
       basicDeatials = val;
@@ -113,9 +120,10 @@ class _MyHomeState extends State<MyHome> {
                       ? Container()
                       : ListTile(
                           leading: Icon(Icons.folder, size: 50),
-                          title: Text(basicDeatials["usedSpace"].replaceAll('\n', '')),
-                          subtitle:
-                              Text('out of ' + basicDeatials["totalSize"].replaceAll(' ', '')),
+                          title: Text(
+                              basicDeatials["usedSpace"].replaceAll('\n', '')),
+                          subtitle: Text('out of ' +
+                              basicDeatials["totalSize"].replaceAll(' ', '')),
                         ),
                 )
               ],
