@@ -10,10 +10,23 @@ import 'package:ssh/ssh.dart';
 import 'package:workmanager/workmanager.dart';
 
 void callbackDispatcher() {
-  Workmanager.executeTask((task, inputData) {
+  Workmanager.executeTask((task, inputData) async {
+    var client;
+    var _data = BasicServerDetails().basicDetails();
+    _data.then((val) {
+      client = val["client"];
+    }).catchError((error) => print(error));
+    var connect = await client.connect();
     print(task);
     print("Native called background task: " +
         inputData["selectedFiles"]); //simpleTask will be emitted here.
+    await client.sftpUpload(
+      path: inputData["selectedFiles"],
+      toPath: inputData["path"],
+      callback: (progress) {
+        print(progress); // read upload progress
+      },
+    );
     return Future.value(true);
   });
 }
@@ -34,6 +47,7 @@ class _UploadPageState extends State<UploadPage> {
   List<String> selectedFiles = [];
   List<int> select = [];
   bool upload = false;
+  String path;
 
   @override
   void initState() {
@@ -46,6 +60,7 @@ class _UploadPageState extends State<UploadPage> {
   List<String> fileNames = [];
   Future buildImages() async {
     var root = await getExternalStorageDirectory();
+    print(root.path);
     files = await listFiles(root.path + "/Download/",
         extensions: ["mp4", "mkv", "srt", "avi"]);
     return files;
@@ -169,14 +184,10 @@ class _UploadPageState extends State<UploadPage> {
                                 ? fileNames.length
                                 : 1,
                             itemBuilder: (BuildContext context, int index) {
-                              int itemNumber = index + 1;
                               final bool isMultiPath =
                                   fileNames != null && fileNames.isNotEmpty;
-                              final String name = fileNames.isNotEmpty
-                                  ? itemNumber.toString() +
-                                      ' ' +
-                                      fileNames[index]
-                                  : '';
+                              final String name =
+                                  fileNames.isNotEmpty ? fileNames[index] : '';
                               final path = isMultiPath
                                   ? fileNames[index].toString()
                                   : "";
@@ -232,9 +243,20 @@ class _UploadPageState extends State<UploadPage> {
                             isInDebugMode:
                                 true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
                             );
-                        Workmanager.registerOneOffTask("1", "uploadFile",
-                            tag: "tag",
-                            inputData: {"selectedFiles": selectedFiles[0]});
+                        if (_pickingType == "1") {
+                          path = widget.basicDeatials["moviePath"];
+                        } else {
+                          path = widget.basicDeatials["tvPath"];
+                        }
+
+                        for (var i = 0; i < selectedFiles.length; i++) {
+                          Workmanager.registerOneOffTask("1", "uploadFile",
+                              tag: selectedFiles[i],
+                              inputData: {
+                                "selectedFiles": selectedFiles[i],
+                                "path": path
+                              });
+                        }
                       },
                       child: Text("Upload"))
                   : Container(),
