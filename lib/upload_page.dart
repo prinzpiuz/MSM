@@ -11,11 +11,17 @@ import 'package:workmanager/workmanager.dart';
 
 void callbackDispatcher() {
   Workmanager.executeTask((task, inputData) async {
-    var client;
-    var _data = BasicServerDetails().basicDetails();
-    _data.then((val) {
-      client = val["client"];
-    }).catchError((error) => print(error));
+    // var client;
+    // var _data = BasicServerDetails().basicDetails();
+    // _data.then((val) {
+    //   client = val["client"];
+    // }).catchError((error) => print(error));
+    var client = SSHClient(
+      host: inputData["ip"],
+      port: int.parse(inputData["port"]),
+      username: inputData["username"],
+      passwordOrKey: inputData["password"],
+    );
     var connect = await client.connect();
     print(task);
     print("Native called background task: " +
@@ -254,7 +260,11 @@ class _UploadPageState extends State<UploadPage> {
                               tag: selectedFiles[i],
                               inputData: {
                                 "selectedFiles": selectedFiles[i],
-                                "path": path
+                                "path": path,
+                                "ip": widget.basicDeatials["ip"],
+                                "port":widget.basicDeatials["port"],
+                                "password":widget.basicDeatials["password"],
+                                "username":widget.basicDeatials["username"]
                               });
                         }
                       },
