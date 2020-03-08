@@ -9,33 +9,46 @@ import 'package:msm/models.dart';
 import 'package:ssh/ssh.dart';
 import 'package:workmanager/workmanager.dart';
 
-void callbackDispatcher() {
-  Workmanager.executeTask((task, inputData) async {
-    // var client;
-    // var _data = BasicServerDetails().basicDetails();
-    // _data.then((val) {
-    //   client = val["client"];
-    // }).catchError((error) => print(error));
-    var client = SSHClient(
-      host: inputData["ip"],
-      port: int.parse(inputData["port"]),
-      username: inputData["username"],
-      passwordOrKey: inputData["password"],
-    );
-    var connect = await client.connect();
-    print(task);
-    print("Native called background task: " +
-        inputData["selectedFiles"]); //simpleTask will be emitted here.
-    await client.sftpUpload(
-      path: inputData["selectedFiles"],
-      toPath: inputData["path"],
-      callback: (progress) {
-        print(progress); // read upload progress
-      },
-    );
-    return Future.value(true);
-  });
-}
+// void callbackDispatcher() {
+//   Workmanager.executeTask((task, inputData) async {
+//     // var client;
+//     // var _data = BasicServerDetails().basicDetails();
+//     // _data.then((val) {
+//     //   client = val["client"];
+//     // }).catchError((error) => print(error));
+//     var client = SSHClient(
+//       host: inputData["ip"],
+//       port: int.parse(inputData["port"]),
+//       username: inputData["username"],
+//       passwordOrKey: inputData["password"],
+//     );
+//     // var connect = await client.connect();
+//     try {
+//       String result = await client.connect();
+//       if (result == "session_connected") {
+//         result = await client.connectSFTP();
+//         if (result == "sftp_connected") {
+//           // var array = await client.sftpLs();
+//         }
+//       }
+//     } on PlatformException catch (e) {
+//       print('Error: ${e.code}\nError Message: ${e.message}');
+//     }
+//     // var connectSftp = await client.connectSFTP();
+//     // print("connectSftp $connectSftp");
+//     print(task);
+//     print("Native called background task: " +
+//         inputData["selectedFiles"]); //simpleTask will be emitted here.
+//     await client.sftpUpload(
+//       path: inputData["selectedFiles"],
+//       toPath: inputData["path"],
+//       callback: (progress) {
+//         print(progress); // read upload progress
+//       },
+//     );
+//     return Future.value(true);
+//   });
+// }
 
 class UploadPage extends StatefulWidget {
   final basicDeatials;
@@ -239,16 +252,16 @@ class _UploadPageState extends State<UploadPage> {
                       color: Colors.green,
                       onPressed: () async {
                         print("pressed");
-                        print(selectedFiles);
-                        var connect =
-                            await widget.basicDeatials["client"].connect();
-                        print("connect $connect");
-                        print(_controller.text);
-                        Workmanager.initialize(
-                            callbackDispatcher, // The top level function, aka callbackDispatcher
-                            isInDebugMode:
-                                true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
-                            );
+                        // print(selectedFiles);
+                        // var connect =
+                        //     await widget.basicDeatials["client"].connect();
+                        // print("connect $connect");
+                        // print(_controller.text);
+                        // Workmanager.initialize(
+                        //     callbackDispatcher, // The top level function, aka callbackDispatcher
+                        //     isInDebugMode:
+                        //         true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+                        //     );
                         if (_pickingType == "1") {
                           path = widget.basicDeatials["moviePath"];
                         } else {
@@ -256,16 +269,45 @@ class _UploadPageState extends State<UploadPage> {
                         }
 
                         for (var i = 0; i < selectedFiles.length; i++) {
-                          Workmanager.registerOneOffTask("1", "uploadFile",
-                              tag: selectedFiles[i],
-                              inputData: {
-                                "selectedFiles": selectedFiles[i],
-                                "path": path,
-                                "ip": widget.basicDeatials["ip"],
-                                "port":widget.basicDeatials["port"],
-                                "password":widget.basicDeatials["password"],
-                                "username":widget.basicDeatials["username"]
-                              });
+                          // Workmanager.registerOneOffTask("1", "uploadFile",
+                          //     tag: selectedFiles[i],
+                          //     inputData: {
+                          //       "selectedFiles": selectedFiles[i],
+                          //       "path": path,
+                          //       "ip": widget.basicDeatials["ip"],
+                          //       "port":widget.basicDeatials["port"],
+                          //       "password":widget.basicDeatials["password"],
+                          //       "username":widget.basicDeatials["username"]
+                          //     });
+                          // var client = SSHClient(
+                          //   host: widget.basicDeatials["ip"],
+                          //   port: int.parse(widget.basicDeatials["port"]),
+                          //   username: widget.basicDeatials["username"],
+                          //   passwordOrKey: widget.basicDeatials["password"],
+                          // );
+                          // var connect = await client.connect();
+                          try {
+                            String result = await widget.basicDeatials["client"].connect();
+                            if (result == "session_connected") {
+                              result = await widget.basicDeatials["client"].connectSFTP();
+                              if (result == "sftp_connected") {
+                                // var array = await client.sftpLs();
+                              }
+                            }
+                          } on PlatformException catch (e) {
+                            print(
+                                'Error: ${e.code}\nError Message: ${e.message}');
+                          }
+                          // var connectSftp = await client.connectSFTP();
+                          // print("connectSftp $connectSftp");
+                          // print(task);
+                          await widget.basicDeatials["client"].sftpUpload(
+                            path: selectedFiles[i],
+                            toPath: path,
+                            callback: (progress) {
+                              print(progress); // read upload progress
+                            },
+                          );
                         }
                       },
                       child: Text("Upload"))
