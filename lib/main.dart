@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:msm/settings_page.dart';
 import 'package:msm/upload_page.dart';
+import 'package:msm/models.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() => runApp(MyApp());
+var basicDeatials;
 
 class MyApp extends StatefulWidget {
   @override
@@ -16,7 +19,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     // TODO: implement initState
-
     super.initState();
   }
 
@@ -30,8 +32,14 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class MyHome extends StatelessWidget {
-  void pressed(index, context) {
+class MyHome extends StatefulWidget {
+  @override
+  _MyHomeState createState() => _MyHomeState();
+}
+
+class _MyHomeState extends State<MyHome> {
+  Map<PermissionGroup, PermissionStatus> permissions;
+  void pressed(index, context, basicDeatials) {
     if (index == 3) {
       Navigator.push(
         context,
@@ -41,13 +49,23 @@ class MyHome extends StatelessWidget {
     if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => UploadPage()),
+        MaterialPageRoute(builder: (context) => UploadPage(basicDeatials)),
       );
     }
   }
 
+  setPermissions() async {
+    permissions =
+        await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+  }
+
   @override
   Widget build(BuildContext context) {
+    setPermissions();
+    final data = BasicServerDetails().basicDetails();
+    data.then((val) {
+      basicDeatials = val;
+    }).catchError((error) => print(error));
     var headings = ['Upload', 'Server', 'Files', 'Settings'];
     return Scaffold(
         backgroundColor: Colors.white,
@@ -61,7 +79,7 @@ class MyHome extends StatelessWidget {
                 return Container(
                   margin: const EdgeInsets.all(5.0),
                   child: RaisedButton(
-                      onPressed: () => pressed(index, context),
+                      onPressed: () => pressed(index, context, basicDeatials),
                       color: Colors.green,
                       child: Center(
                           child: Text(headings[index],
@@ -74,19 +92,39 @@ class MyHome extends StatelessWidget {
             new Row(
               children: <Widget>[
                 new Flexible(
-                  child: const ListTile(
-                      leading:
-                          Icon(Icons.computer, size: 50, color: Colors.green),
-                      title: Text('Druv 1.0')
-                      // subtitle: is_server_live(),
-                      ),
+                  child: ListTile(
+                    leading: IconButton(
+                        icon: Icon(Icons.computer,
+                            size: 50,
+                            color: basicDeatials != null
+                                ? Colors.green
+                                : Colors.black),
+                        onPressed: () {
+                          setState(() {
+                            final data = BasicServerDetails().basicDetails();
+                            data.then((val) {
+                              basicDeatials = val;
+                            }).catchError((error) => print(error));
+                          });
+                        }),
+                    // Icon(Icons.computer, size: 50, color: Colors.green),
+                    title: basicDeatials != null
+                        ? Text(basicDeatials["hostname"])
+                        : Text("Check Connection"),
+                    subtitle:
+                        basicDeatials == null ? Text("press") : Text("live"),
+                  ),
                 ),
                 new Flexible(
-                  child: const ListTile(
-                    leading: Icon(Icons.folder, size: 50),
-                    title: Text('344'),
-                    subtitle: Text('out of 500 GB'),
-                  ),
+                  child: basicDeatials == null
+                      ? Container()
+                      : ListTile(
+                          leading: Icon(Icons.folder, size: 50),
+                          title: Text(
+                              basicDeatials["usedSpace"].replaceAll('\n', '')),
+                          subtitle: Text('out of ' +
+                              basicDeatials["totalSize"].replaceAll(' ', '')),
+                        ),
                 )
               ],
             )
