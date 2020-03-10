@@ -8,7 +8,7 @@ class TvFolders {
 
   factory TvFolders.fromJson(Map<String, dynamic> json) {
     return TvFolders(
-      folders: json['folders'],
+      folders: json['filename'],
     );
   }
 }

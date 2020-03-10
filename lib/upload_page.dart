@@ -61,7 +61,7 @@ class _UploadPageState extends State<UploadPage> {
   void initState() {
     super.initState();
     buildImages();
-    folder = fetchTvFolders();
+    folder = fetchTvFolders(widget.basicDeatials);
   }
 
   List<File> files;
