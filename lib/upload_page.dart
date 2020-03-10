@@ -4,7 +4,6 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:msm/file_utils.dart';
 import 'package:msm/services.dart';
-import 'package:msm/models.dart';
 import 'package:ssh/ssh.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -49,26 +48,25 @@ class _UploadPageState extends State<UploadPage> {
   String _pickingType;
   int _folderValues;
   TextEditingController _controller = new TextEditingController();
-  Future<TvFolders> folder;
+  Future<List> folderFuture;
   Widget val;
   List<String> selectedFiles = [];
   List<int> select = [];
   bool upload = false;
   String path;
   bool picked = false;
-
+  var foldersValues;
   @override
   void initState() {
     super.initState();
     buildImages();
-    folder = fetchTvFolders(widget.basicDeatials);
+    folderFuture = fetchTvFolders(widget.basicDeatials);
   }
 
   List<File> files;
   List<String> fileNames = [];
   Future buildImages() async {
     var root = await getExternalStorageDirectory();
-    print(root.path);
     files = await listFiles(root.path + "/Download/",
         extensions: ["mp4", "mkv", "srt", "avi"]);
     return files;
@@ -87,8 +85,9 @@ class _UploadPageState extends State<UploadPage> {
     });
   }
 
-  buidDropDown() {
+  buidDropDown(foldersValues) {
     List<DropdownMenuItem> dropDown(data) {
+      print(data);
       List<DropdownMenuItem> dropDownItems = [];
       dropDownItems.add(DropdownMenuItem(
         child: new Text('New Folder'),
@@ -107,37 +106,36 @@ class _UploadPageState extends State<UploadPage> {
       return dropDownItems.toList();
     }
 
-    return FutureBuilder<TvFolders>(
-        future: folder,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: new DropdownButton(
-                  hint: Text('Select TV Folder'),
-                  items: dropDown(snapshot.data.folders),
-                  value: _folderValues,
-                  onChanged: (value) => setState(() {
-                        _folderValues = value;
-                      })),
-            );
-          } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
-          }
-
-          // By default, show a loading spinner.
-          return CircularProgressIndicator();
-        });
+    if (folderFuture != null) {
+      return Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: new DropdownButton(
+            hint: Text('Select TV Folder'),
+            items: dropDown(foldersValues),
+            value: _folderValues,
+            onChanged: (value) => setState(() {
+                  _folderValues = value;
+                })),
+      );
+    } else {
+      return Text("{snapshot.error}");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    folderFuture != null
+        ? folderFuture.then((val) {
+            foldersValues = val;
+          }).catchError((error) => print(error))
+        : foldersValues = ["reload page"];
     Workmanager.initialize(
         callbackDispatcher, // The top level function, aka callbackDispatcher
         isInDebugMode:
             true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
         );
     return new MaterialApp(
+      title: "kd",
       home: new Scaffold(
         body: new Center(
             child: new SingleChildScrollView(
@@ -164,7 +162,7 @@ class _UploadPageState extends State<UploadPage> {
                           _pickingType = value;
                         })),
               ),
-              _pickingType == "2" ? buidDropDown() : Container(),
+              _pickingType == "2" ? buidDropDown(foldersValues) : Container(),
               _folderValues == 0 && _pickingType == "2"
                   ? new TextFormField(
                       maxLength: 15,
