@@ -20,8 +20,7 @@ void callbackDispatcher() {
       String result = await client.connect();
       if (result == "session_connected") {
         result = await client.connectSFTP();
-        if (result == "sftp_connected") {
-        }
+        if (result == "sftp_connected") {}
       }
     } on PlatformException catch (e) {
       print('Error: ${e.code}\nError Message: ${e.message}');
@@ -56,6 +55,7 @@ class _UploadPageState extends State<UploadPage> {
   List<int> select = [];
   bool upload = false;
   String path;
+  bool picked = false;
 
   @override
   void initState() {
@@ -160,15 +160,12 @@ class _UploadPageState extends State<UploadPage> {
                       ),
                     ],
                     onChanged: (value) => setState(() {
+                          picked = true;
                           _pickingType = value;
                         })),
               ),
-              _pickingType == "2"
-                  ? buidDropDown()
-                  :
-                  // Text("dsnflds"):
-                  Container(),
-              _folderValues == 0
+              _pickingType == "2" ? buidDropDown() : Container(),
+              _folderValues == 0 && _pickingType == "2"
                   ? new TextFormField(
                       maxLength: 15,
                       autovalidate: true,
@@ -179,14 +176,16 @@ class _UploadPageState extends State<UploadPage> {
                       textCapitalization: TextCapitalization.none,
                     )
                   : new Container(),
-              new Padding(
-                padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
-                child: RaisedButton(
-                  color: Colors.green,
-                  onPressed: () => _openFileExplorer(),
-                  child: new Text("List Available Files"),
-                ),
-              ),
+              picked
+                  ? new Padding(
+                      padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                      child: RaisedButton(
+                        color: Colors.green,
+                        onPressed: () => _openFileExplorer(),
+                        child: new Text("List Available Files"),
+                      ),
+                    )
+                  : Container(),
               new Builder(
                   builder: (BuildContext context) => Container(
                         padding: const EdgeInsets.only(bottom: 30.0),
