@@ -177,6 +177,10 @@ class _UploadPageState extends State<UploadPage> {
           child: new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Text(
+                "Upload Media",
+                style: TextStyle(fontSize: 20),
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
                 child: new DropdownButton(
