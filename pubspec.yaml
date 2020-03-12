@@ -29,6 +29,8 @@ dependencies:
   ssh: ^0.0.5
   workmanager: ^0.2.0
   permission_handler: "^4.3.0"
+  flushbar: ^1.9.1
+  flutter_local_notifications: ^1.2.2
 
 dev_dependencies:
   flutter_test:
