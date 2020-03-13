@@ -64,7 +64,7 @@ class _MyHomeState extends State<MyHome> {
     data.then((val) {
       basicDeatials = val;
     }).catchError((error) => print(error));
-    var headings = ['Upload', 'Server', 'Files', 'Settings'];
+    var headings = ['Upload', 'Server', 'Media', 'Settings'];
     return Scaffold(
         backgroundColor: Colors.white,
         body: new Column(
