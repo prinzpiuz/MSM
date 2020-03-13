@@ -1,18 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ssh/ssh.dart';
 
-class TvFolders {
-  final List<dynamic> folders;
-
-  TvFolders({this.folders});
-
-  factory TvFolders.fromJson(Map<String, dynamic> json) {
-    return TvFolders(
-      folders: json['folders'],
-    );
-  }
-}
-
 class BasicServerDetails {
   Future<Map<String, dynamic>> basicDetails() async {
     final prefs = await SharedPreferences.getInstance();

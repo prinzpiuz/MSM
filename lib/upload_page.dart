@@ -4,9 +4,13 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:msm/file_utils.dart';
 import 'package:msm/services.dart';
-import 'package:msm/models.dart';
 import 'package:ssh/ssh.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:flushbar/flushbar.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 void callbackDispatcher() {
   Workmanager.executeTask((task, inputData) async {
@@ -21,6 +25,16 @@ void callbackDispatcher() {
       if (result == "session_connected") {
         result = await client.connectSFTP();
         if (result == "sftp_connected") {
+          if (inputData["tv"]) {
+            await client.sftpMkdir(inputData["path"]);
+          }
+          await client.sftpUpload(
+            path: inputData["selectedFiles"],
+            toPath: inputData["path"],
+            callback: (progress) async {
+              await _showNotification(progress, inputData["selectedFiles"]);
+            },
+          );
         }
       }
     } on PlatformException catch (e) {
@@ -28,15 +42,25 @@ void callbackDispatcher() {
     }
     // print("Native called background task: " +
     //     inputData["selectedFiles"]); //simpleTask will be emitted here.
-    await client.sftpUpload(
-      path: inputData["selectedFiles"],
-      toPath: inputData["path"],
-      callback: (progress) {
-        print(progress); // read upload progress
-      },
-    );
     return Future.value(true);
   });
+}
+
+Future<void> _showNotification(progress, data) async {
+  var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'progress channel', 'progress channel', 'progress channel description',
+      channelShowBadge: false,
+      importance: Importance.Max,
+      priority: Priority.High,
+      onlyAlertOnce: true,
+      showProgress: true,
+      maxProgress: 100,
+      progress: progress);
+  var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+  var platformChannelSpecifics = NotificationDetails(
+      androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+  await flutterLocalNotificationsPlugin
+      .show(0, 'Upload', data, platformChannelSpecifics, payload: 'item x');
 }
 
 class UploadPage extends StatefulWidget {
@@ -48,27 +72,37 @@ class UploadPage extends StatefulWidget {
 
 class _UploadPageState extends State<UploadPage> {
   String _pickingType;
-  int _folderValues;
+  String _folderValues;
   TextEditingController _controller = new TextEditingController();
-  Future<TvFolders> folder;
+  Future<List> folderFuture;
   Widget val;
   List<String> selectedFiles = [];
   List<int> select = [];
   bool upload = false;
   String path;
+  bool picked = false;
+  var foldersValues;
+  bool tv = false;
+  bool listed = false;
+  bool proceed = true;
+  List<File> files;
+  List<String> fileNames = [];
 
   @override
   void initState() {
     super.initState();
+    var initializationSettingsAndroid =
+        new AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
     buildImages();
-    folder = fetchTvFolders();
+    folderFuture = fetchTvFolders(widget.basicDeatials);
   }
 
-  List<File> files;
-  List<String> fileNames = [];
   Future buildImages() async {
     var root = await getExternalStorageDirectory();
-    print(root.path);
     files = await listFiles(root.path + "/Download/",
         extensions: ["mp4", "mkv", "srt", "avi"]);
     return files;
@@ -82,17 +116,17 @@ class _UploadPageState extends State<UploadPage> {
 
   void _openFileExplorer() async {
     setState(() {
-      upload = true;
+      listed = true;
       getFileNames();
     });
   }
 
-  buidDropDown() {
+  buidDropDown(foldersValues) {
     List<DropdownMenuItem> dropDown(data) {
       List<DropdownMenuItem> dropDownItems = [];
       dropDownItems.add(DropdownMenuItem(
         child: new Text('New Folder'),
-        value: 0,
+        value: "0",
       ));
       for (var i = 0; i < data.length; i++) {
         dropDownItems.add(DropdownMenuItem(
@@ -102,48 +136,51 @@ class _UploadPageState extends State<UploadPage> {
                     data[i].toString().length,
                     ''))
                 : Text(data[i].toString()),
-            value: i + 1));
+            value: data[i].toString()));
       }
       return dropDownItems.toList();
     }
 
-    return FutureBuilder<TvFolders>(
-        future: folder,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: new DropdownButton(
-                  hint: Text('Select TV Folder'),
-                  items: dropDown(snapshot.data.folders),
-                  value: _folderValues,
-                  onChanged: (value) => setState(() {
-                        _folderValues = value;
-                      })),
-            );
-          } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
-          }
-
-          // By default, show a loading spinner.
-          return CircularProgressIndicator();
-        });
+    if (folderFuture != null) {
+      return Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: new DropdownButton(
+            hint: Text('Select TV Folder'),
+            items: dropDown(foldersValues),
+            value: _folderValues,
+            onChanged: (value) => setState(() {
+                  _folderValues = value;
+                })),
+      );
+    } else {
+      return Text("{snapshot.error}");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    folderFuture != null
+        ? folderFuture.then((val) {
+            foldersValues = val;
+          }).catchError((error) => print(error))
+        : foldersValues = ["reload page"];
     Workmanager.initialize(
         callbackDispatcher, // The top level function, aka callbackDispatcher
         isInDebugMode:
-            true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+            false // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
         );
     return new MaterialApp(
+      title: "Upload Page",
       home: new Scaffold(
         body: new Center(
             child: new SingleChildScrollView(
           child: new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Text(
+                "Upload Media",
+                style: TextStyle(fontSize: 20),
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
                 child: new DropdownButton(
@@ -160,15 +197,12 @@ class _UploadPageState extends State<UploadPage> {
                       ),
                     ],
                     onChanged: (value) => setState(() {
+                          picked = true;
                           _pickingType = value;
                         })),
               ),
-              _pickingType == "2"
-                  ? buidDropDown()
-                  :
-                  // Text("dsnflds"):
-                  Container(),
-              _folderValues == 0
+              _pickingType == "2" ? buidDropDown(foldersValues) : Container(),
+              _folderValues == "0" && _pickingType == "2"
                   ? new TextFormField(
                       maxLength: 15,
                       autovalidate: true,
@@ -179,14 +213,18 @@ class _UploadPageState extends State<UploadPage> {
                       textCapitalization: TextCapitalization.none,
                     )
                   : new Container(),
-              new Padding(
-                padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
-                child: RaisedButton(
-                  color: Colors.green,
-                  onPressed: () => _openFileExplorer(),
-                  child: new Text("List Available Files"),
-                ),
-              ),
+              picked
+                  ? new Padding(
+                      padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                      child: RaisedButton(
+                        color: Colors.green,
+                        onPressed: () {
+                          !listed ? _openFileExplorer() : print("");
+                        },
+                        child: new Text("List Available Files"),
+                      ),
+                    )
+                  : Container(),
               new Builder(
                   builder: (BuildContext context) => Container(
                         padding: const EdgeInsets.only(bottom: 30.0),
@@ -222,6 +260,7 @@ class _UploadPageState extends State<UploadPage> {
                                           : Icon(Icons.radio_button_unchecked),
                                       onLongPress: () {
                                         setState(() {
+                                          upload = false;
                                           select.remove(index);
                                         });
                                       },
@@ -229,6 +268,7 @@ class _UploadPageState extends State<UploadPage> {
                                         selectedFiles.add(name);
 
                                         setState(() {
+                                          upload = true;
                                           select.add(index);
                                         });
                                       },
@@ -245,29 +285,67 @@ class _UploadPageState extends State<UploadPage> {
                   ? RaisedButton(
                       color: Colors.green,
                       onPressed: () async {
-                        print("pressed");
-                        // print(selectedFiles);
-                        // var connect =
-                        //     await widget.basicDeatials["client"].connect();
-                        // print("connect $connect");
-                        // print(_controller.text);
+                        if (_pickingType == "2" && _folderValues == null) {
+                          proceed = false;
+                          Flushbar(
+                            backgroundColor: Colors.green,
+                            title: "folder missing",
+                            isDismissible: true,
+                            message: "select TV folder to upload",
+                            duration: Duration(seconds: 5),
+                          )..show(context);
+                        }
+                        if (_pickingType == "2" &&
+                            _folderValues == "0" &&
+                            _controller.text.isEmpty) {
+                          proceed = false;
+                          Flushbar(
+                            backgroundColor: Colors.green,
+                            title: "folder missing",
+                            isDismissible: true,
+                            message: "Enter new folder name",
+                            duration: Duration(seconds: 5),
+                          )..show(context);
+                        }
                         if (_pickingType == "1") {
                           path = widget.basicDeatials["moviePath"];
                         } else {
-                          path = widget.basicDeatials["tvPath"];
-                        }
+                          if (_folderValues != "0" && _pickingType == "2") {
+                            path = widget.basicDeatials["tvPath"] +
+                                "/" +
+                                _folderValues.toString();
+                          } else {
+                            tv = true;
 
-                        for (var i = 0; i < selectedFiles.length; i++) {
-                          Workmanager.registerOneOffTask("1", "uploadFile",
-                              tag: selectedFiles[i],
-                              inputData: {
-                                "selectedFiles": selectedFiles[i],
-                                "path": path,
-                                "ip": widget.basicDeatials["ip"],
-                                "port": widget.basicDeatials["port"],
-                                "password": widget.basicDeatials["password"],
-                                "username": widget.basicDeatials["username"]
-                              });
+                            path = widget.basicDeatials["tvPath"] +
+                                "/" +
+                                _controller.text;
+                          }
+                        }
+                        if (proceed) {
+                          for (var i = 0; i < selectedFiles.length; i++) {
+                            Workmanager.registerOneOffTask(
+                                "1", "uploadFile" + i.toString(),
+                                existingWorkPolicy: ExistingWorkPolicy.append,
+                                tag: selectedFiles[i],
+                                inputData: {
+                                  "selectedFiles": selectedFiles[i],
+                                  "path": path,
+                                  "ip": widget.basicDeatials["ip"],
+                                  "port": widget.basicDeatials["port"],
+                                  "password": widget.basicDeatials["password"],
+                                  "username": widget.basicDeatials["username"],
+                                  "tv": tv
+                                });
+                          }
+                          Flushbar(
+                            backgroundColor: Colors.green,
+                            title: "Upload Started",
+                            isDismissible: true,
+                            message:
+                                "upload started in background,will get notification once finished",
+                            duration: Duration(seconds: 10),
+                          )..show(context);
                         }
                       },
                       child: Text("Upload"))
