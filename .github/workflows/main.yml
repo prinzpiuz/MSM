@@ -1,5 +1,13 @@
-on: push
-name: Test, Build and Release apk
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the master branch
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+name: Build and Release apk
 jobs:
   build:
     name: Build APK
@@ -13,9 +21,10 @@ jobs:
         with:
           flutter-version: "1.12.13+hotfix.7"
       - run: flutter pub get
-      - run: flutter build apk --debug --split-per-abi
+      - run: flutter build apk --split-per-abi
       - name: Create a Release APK
         uses: ncipollo/release-action@v1
         with:
+          name: msm
           artifacts: "build/app/outputs/apk/debug/*.apk"
           token: ${{ secrets.TOKEN }}
