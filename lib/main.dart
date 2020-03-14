@@ -10,7 +10,6 @@ var basicDeatials;
 class MyApp extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _MyAppState();
   }
 }
@@ -18,7 +17,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -66,7 +64,7 @@ class _MyHomeState extends State<MyHome> {
     data.then((val) {
       basicDeatials = val;
     }).catchError((error) => print(error));
-    var headings = ['Upload', 'Server', 'Files', 'Settings'];
+    var headings = ['Upload', 'Server', 'Media', 'Settings'];
     return Scaffold(
         backgroundColor: Colors.white,
         body: new Column(
