@@ -1,11 +1,12 @@
 on:
   # Trigger the workflow on push or pull request,
   # but only for the master branch
+  push:
+    branches-ignore:
+      - "PR"
   pull_request:
-    branches:
-      - master
-    tags-ignore:
-      - alpha.*
+    branches-ignore:
+      - "PR"
 name: Build and Release apk
 jobs:
   build:
