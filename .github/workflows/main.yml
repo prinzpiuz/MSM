@@ -25,7 +25,7 @@ jobs:
         with:
           flutter-version: "1.12.13+hotfix.7"
       - run: flutter pub get
-      - run: flutter build apk --split-per-abi
+      - run: flutter build apk --debug --split-per-abi
       - name: Create a Release APK
         uses: ncipollo/release-action@v1
         with:
