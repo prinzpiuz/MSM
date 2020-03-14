@@ -1,11 +1,6 @@
 on:
   # Trigger the workflow on push or pull request,
   # but only for the master branch
-  push:
-    branches:
-      - master
-    tags-ignore:
-      - alpha.*
   pull_request:
     branches:
       - master
@@ -31,5 +26,5 @@ jobs:
         with:
           prerelease: true
           name: msm
-          artifacts: "build/app/outputs/apk/debug/*.apk"
+          artifacts: "build/app/outputs/apk/release/*.apk"
           token: ${{ secrets.TOKEN }}
