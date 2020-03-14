@@ -5,12 +5,12 @@ on:
     branches:
       - master
     tags-ignore:
-      - no-release
+      - alpha.*
   pull_request:
     branches:
       - master
     tags-ignore:
-      - no-release
+      - alpha.*
 name: Build and Release apk
 jobs:
   build:
