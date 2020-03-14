@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - master
+    tags-ignore:
+      - no-release
   pull_request:
     branches:
       - master
+    tags-ignore:
+      - no-release
 name: Build and Release apk
 jobs:
   build:
