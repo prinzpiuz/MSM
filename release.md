@@ -4,4 +4,4 @@
 
 ### notes for developers
 
-* Icons are designed using krita. Design files are included in design folder 
+* Icons are designed using krita. Design files are included in design folder. 
