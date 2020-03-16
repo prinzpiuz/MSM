@@ -28,4 +28,5 @@ jobs:
           prerelease: true
           name: msm
           artifacts: "build/app/outputs/apk/release/*.apk"
+          bodyFile: "release.md"
           token: ${{ secrets.TOKEN }}
