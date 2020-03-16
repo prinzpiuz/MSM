@@ -29,6 +29,12 @@ dependencies:
   ssh: ^0.0.5
   workmanager: ^0.2.0
   permission_handler: "^4.3.0"
+  flutter_launcher_icons: "^0.7.3"
+
+flutter_icons:
+  android: "launcher_icon" 
+  ios: true
+  image_path: "design/Icons_pngs/v0.4.0_icon1.1.png"
 
 dev_dependencies:
   flutter_test:
