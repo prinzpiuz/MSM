@@ -36,7 +36,7 @@ dependencies:
 flutter_icons:
   android: "launcher_icon" 
   ios: true
-  image_path: "design/Icons_pngs/v0.4.0_icon1.1.png"
+  image_path: "design/Icons_pngs/v0.4.0_launcher61px.png"
 
 dev_dependencies:
   flutter_test:
