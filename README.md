@@ -10,19 +10,20 @@
 
 </p>
 <hr>
-<p align="center"><a href="#screenshots">Screenshots</a> &bull; <a href="#description">Description</a> &bull; <a href="#features">Features</a> &bull; <a href="#contribution">Contribution</a>&bull; <a href="#setup">How to setup a media server ?</a></p>
+<p align="center"><a href="#screenshots">Screenshots</a> &bull; <a href="#description">Description</a> &bull; <a href="#features">Features</a> &bull; <a href="#contribution">Contribution</a>&bull; <a href="#setup">How to setup a media server</a></p>
 
 <hr>
 
 ## Description
 
-MSM works as wrapper around your Media server(emby, jellyfin, kodi, plex) and helps you to manage your media files(Movies, Series) like CRUD operations also helps to manage server services itself without touching it. all you need is android mobile phone with network same as that of media server
+MSM works as wrapper around your Media server(emby, jellyfin, kodi, plex) and helps you to manage your media files, like CRUD operations also helps to manage server services without touching server. all you need is android mobile phone and media server which are connected to same network
 
 ### Features
 
-- based on ssh
-- crud options on files
-- TV series can be created inside new folders
+- working on ssh
+- CRUD options on files
+- TV series can be created inside new folders or can be uploaded into existing folders
+- Uplloads run as backgroud tasks
 
 ### Coming Features
 
