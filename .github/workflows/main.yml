@@ -1,12 +1,4 @@
-on:
-  # Trigger the workflow on push or pull request,
-  # but only for the master branch
-  push:
-    branches-ignore:
-      - "PR/*"
-  pull_request:
-    branches-ignore:
-      - "PR/*"
+on: push
 name: Build and Release apk
 jobs:
   build:
@@ -26,6 +18,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           prerelease: true
-          name: msm
+          name: msm-v0.4.1-minor
           artifacts: "build/app/outputs/apk/release/*.apk"
+          bodyFile: "release.md"
           token: ${{ secrets.TOKEN }}

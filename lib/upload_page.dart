@@ -92,7 +92,7 @@ class _UploadPageState extends State<UploadPage> {
   void initState() {
     super.initState();
     var initializationSettingsAndroid =
-        new AndroidInitializationSettings('@mipmap/ic_launcher');
+        new AndroidInitializationSettings('notification');
     var initializationSettingsIOS = new IOSInitializationSettings();
     var initializationSettings = new InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
