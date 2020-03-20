@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flushbar/flushbar.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -49,16 +50,10 @@ class _SettingsPageState extends State<SettingsPage> {
     return MaterialApp(
       home: Scaffold(
         // resizeToAvoidBottomPadding: false,
-        appBar: AppBar(
-          backgroundColor: Colors.green,
-          title: Text(
-            'Settings',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
         body: ListView(
           shrinkWrap: true,
           children: <Widget>[
+            Center(child: Text("Settings", style: TextStyle(fontSize: 20))),
             Theme(
               data: new ThemeData(
                   primaryColor: Colors.green,
@@ -224,16 +219,13 @@ class _SettingsPageState extends State<SettingsPage> {
                       prefs.setString('moviePath', moviePathController.text);
                       prefs.setString('tvPath', tvPathController.text);
                       _intial();
-                      return showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            // Retrieve the text the that user has entered by using the
-                            // TextEditingController.
-                            content: Text("settings saved succesfully"),
-                          );
-                        },
-                      );
+                      return Flushbar(
+                        backgroundColor: Colors.green,
+                        title: "Success",
+                        isDismissible: true,
+                        message: "settings saved succesfully",
+                        duration: Duration(seconds: 3),
+                      )..show(context);
                     },
                     child: Icon(
                       Icons.save,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:msm/settings_page.dart';
 import 'package:msm/upload_page.dart';
+import 'package:msm/media_files.dart';
 import 'package:msm/models.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -15,7 +16,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  
   @override
   void initState() {
     super.initState();
@@ -49,6 +49,12 @@ class _MyHomeState extends State<MyHome> {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => UploadPage(basicDeatials)),
+      );
+    }
+    if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MediaFilesPage(basicDeatials)),
       );
     }
   }
