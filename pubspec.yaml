@@ -32,6 +32,8 @@ dependencies:
   flutter_launcher_icons: "^0.7.3"
   flushbar: ^1.9.1
   flutter_local_notifications: ^1.2.2
+  flutter_slidable: "^0.5.4"
+  filesize: ^1.0.4
 
 flutter_icons:
   android: "launcher_icon" 

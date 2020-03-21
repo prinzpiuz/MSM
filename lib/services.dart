@@ -27,7 +27,7 @@ Future<List> fetchTvFolders(basicDeatials) async {
 Future<List> movieList(basicDeatials) async {
   final sshClient = basicDeatials["client"];
   var array;
-  List<String> folderList = [];
+  List<Map<String, dynamic>> folderList = [];
   try {
     String result = await sshClient.connect();
     if (result == "session_connected") {
@@ -38,7 +38,10 @@ Future<List> movieList(basicDeatials) async {
         if (array != null) {
           for (var i = 0; i < array.length; i++) {
             if (!array[i]["isDirectory"]) {
-              folderList.add(array[i]["filename"].toString());
+              folderList.add({
+                "filename": array[i]["filename"].toString(),
+                "size": array[i]["fileSize"]
+              });
             }
           }
         }

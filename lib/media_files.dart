@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:msm/services.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:filesize/filesize.dart';
 
 class MediaFilesPage extends StatefulWidget {
   final basicDeatials;
@@ -10,78 +12,151 @@ class MediaFilesPage extends StatefulWidget {
 
 class _MediaFilesPageState extends State<MediaFilesPage> {
   bool _notlisting = true;
-  Future<List> _folderFuture;
-  var _foldersValues;
+  bool _movieListing = false;
+  bool _tvListing = false;
+  bool sizeSort = false;
+  Future<List> _movieFolderFuture;
+  var _movieFoldersValues;
+  List<Widget> movieTileList = [];
 
   @override
   void initState() {
     super.initState();
-    _folderFuture = movieList(widget.basicDeatials);
+    _movieFolderFuture = movieList(widget.basicDeatials);
+  }
+
+  List<Widget> movieNames(movieList) {
+    if (sizeSort) {
+      movieList.sort((a, b) => int.parse(a["size"].toString())
+          .compareTo(int.parse(b["size"].toString())));
+      print(movieList);
+    } else {
+      movieList.sort((a, b) =>
+          a["filename"].toString().compareTo(b["filename"].toString()));
+      print(movieList);
+    }
+    for (var i = 0; i < movieList.length; i++) {
+      movieTileList.add(Slidable(
+        actionPane: SlidableDrawerActionPane(),
+        actionExtentRatio: 0.25,
+        child: Container(
+          color: Colors.white,
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: Colors.green,
+              child: Text(movieList[i]["filename"][0]),
+              foregroundColor: Colors.white,
+            ),
+            title: Text(movieList[i]["filename"]),
+            subtitle: Text(filesize(movieList[i]["size"].toString())),
+          ),
+        ),
+        actions: <Widget>[
+          IconSlideAction(
+            caption: 'Edit',
+            color: Colors.green,
+            icon: Icons.edit,
+            onTap: () {
+              print("ontap");
+            },
+          ),
+        ],
+        secondaryActions: <Widget>[
+          IconSlideAction(
+            caption: 'More',
+            color: Colors.green,
+            icon: Icons.expand_more,
+            onTap: () {
+              print("ontap");
+            },
+          ),
+          IconSlideAction(
+            caption: 'Delete',
+            color: Colors.red,
+            icon: Icons.delete,
+            closeOnTap: true,
+            onTap: () async {
+              var result = await widget.basicDeatials["client"].connectSFTP();
+              if (result == "sftp_connected") {
+                await widget.basicDeatials["client"].sftpRm(
+                    widget.basicDeatials["moviePath"] +
+                        '/' +
+                        movieList[i]["filename"]);
+              }
+            },
+          ),
+        ],
+      ));
+    }
+    return movieTileList;
   }
 
   @override
   Widget build(BuildContext context) {
-    _folderFuture != null
-        ? _folderFuture.then((val) {
-            _foldersValues = val;
+    _movieFolderFuture != null
+        ? _movieFolderFuture.then((val) {
+            _movieFoldersValues = val;
           }).catchError((error) => print(error))
-        : _foldersValues = ["reload page"];
+        : _movieFoldersValues = ["reload page"];
     return new MaterialApp(
         title: "Media Files",
         home: new Scaffold(
             body: Center(
-          child: SingleChildScrollView(
-            child: new Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    _notlisting ? "List Media" : "",
-                    style: TextStyle(fontSize: 30),
-                  ),
-                  _notlisting
-                      ? RaisedButton(
-                          child: Text("List Movies"),
-                          color: Colors.green,
-                          onPressed: () {
-                            setState(() {
-                              _notlisting = false;
-                            });
-                          },
-                        )
-                      : _foldersValues == null
-                          ? CircularProgressIndicator(
-                              backgroundColor: Colors.green,
+              child: SingleChildScrollView(
+                child: new Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        _notlisting ? "List Media" : "",
+                        style: TextStyle(fontSize: 30),
+                      ),
+                      _notlisting
+                          ? RaisedButton(
+                              child: Text("List Movies"),
+                              color: Colors.green,
+                              onPressed: () {
+                                setState(() {
+                                  _notlisting = false;
+                                  _movieListing = true;
+                                });
+                              },
                             )
-                          : Builder(
-                              builder: (BuildContext context) => Container(
-                                  padding: const EdgeInsets.only(bottom: 30.0),
-                                  // height: MediaQuery.of(context).size.height * 0.50,
-                                  child: new Scrollbar(
-                                      child: new ListView.separated(
-                                    shrinkWrap: true,
-                                    itemCount: _foldersValues.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return ListTile(
-                                          title: Text(_foldersValues[index]));
-                                    },
-                                    separatorBuilder:
-                                        (BuildContext context, int index) =>
-                                            new Divider(),
-                                  )))),
-                  _notlisting
-                      ? RaisedButton(
-                          child: Text("List TV"),
-                          color: Colors.green,
-                          onPressed: () {
-                            setState(() {
-                              _notlisting = false;
-                            });
-                          },
-                        )
-                      : Container()
-                ]),
-          ),
-        )));
+                          : _movieFoldersValues == null
+                              ? CircularProgressIndicator(
+                                  backgroundColor: Colors.green,
+                                )
+                              : _movieListing || sizeSort
+                                  ? Column(
+                                      children: movieNames(_movieFoldersValues))
+                                  : Container(),
+                      _notlisting
+                          ? RaisedButton(
+                              child: Text("List TV"),
+                              color: Colors.green,
+                              onPressed: () {
+                                setState(() {
+                                  _notlisting = false;
+                                  _tvListing = true;
+                                });
+                              },
+                            )
+                          : Container()
+                    ]),
+              ),
+            ),
+            floatingActionButton: _movieListing
+                ? FloatingActionButton(
+                    onPressed: () {
+                      // Add your onPressed code here!
+                      setState(() {
+                        // _notlisting = false;
+                        // _movieListing = true;
+                        sizeSort = true;
+                      });
+                    },
+                    child: Icon(Icons.sort),
+                    backgroundColor: Colors.green,
+                  )
+                : SizedBox.shrink()));
   }
 }
