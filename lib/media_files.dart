@@ -18,6 +18,10 @@ class _MediaFilesPageState extends State<MediaFilesPage> {
   Future<List> _movieFolderFuture;
   var _movieFoldersValues;
   List<Widget> movieTileList = [];
+  final renameController = TextEditingController();
+  String oldName = '';
+  bool changed = false;
+  TextEditingController _controller = new TextEditingController();
 
   @override
   void initState() {
@@ -29,12 +33,12 @@ class _MediaFilesPageState extends State<MediaFilesPage> {
     if (sizeSort) {
       movieList.sort((a, b) => int.parse(a["size"].toString())
           .compareTo(int.parse(b["size"].toString())));
-      print(movieList);
+      sizeSort = false;
     } else {
       movieList.sort((a, b) =>
           a["filename"].toString().compareTo(b["filename"].toString()));
-      print(movieList);
     }
+    movieTileList.clear();
     for (var i = 0; i < movieList.length; i++) {
       movieTileList.add(Slidable(
         actionPane: SlidableDrawerActionPane(),
@@ -57,7 +61,72 @@ class _MediaFilesPageState extends State<MediaFilesPage> {
             color: Colors.green,
             icon: Icons.edit,
             onTap: () {
-              print("ontap");
+              renameController.text = movieList[i]["filename"];
+              showDialog<void>(
+                context: context,
+                barrierDismissible: false, // user must tap button!
+                builder: (BuildContext context) {
+                  return Theme(
+                    data: new ThemeData(
+                        primaryColor: Colors.green,
+                        accentColor: Colors.orange,
+                        hintColor: Colors.grey),
+                    child: AlertDialog(
+                      title: Text('Edit file name'),
+                      content: TextFormField(
+                        controller: renameController,
+                        decoration: new InputDecoration(
+                          fillColor: Colors.green,
+                        ),
+                        validator: (val) {
+                          if (val.length == 0) {
+                            return "name cannot be empty";
+                          } else {
+                            return null;
+                          }
+                        },
+                        style: new TextStyle(
+                          fontFamily: "Poppins",
+                        ),
+                      ),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text('Cancel'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        FlatButton(
+                          child: Text('Rename'),
+                          onPressed: () async {
+                            setState(() {
+                              changed = true;
+                              oldName = movieList[i]["filename"];
+                              _movieFoldersValues[i]["filename"] =
+                                  renameController.text;
+                            });
+                            Navigator.of(context).pop();
+                            var result = await widget.basicDeatials["client"]
+                                .connectSFTP();
+                            if (result == "sftp_connected") {
+                              await widget.basicDeatials["client"].sftpRename(
+                                oldPath: widget.basicDeatials["moviePath"] +
+                                    '/' +
+                                    oldName,
+                                newPath: widget.basicDeatials["moviePath"] +
+                                    '/' +
+                                    renameController.text,
+                              );
+                              await widget.basicDeatials["client"]
+                                  .disconnectSFTP();
+                            }
+                          },
+                        )
+                      ],
+                    ),
+                  );
+                },
+              );
             },
           ),
         ],
@@ -76,12 +145,16 @@ class _MediaFilesPageState extends State<MediaFilesPage> {
             icon: Icons.delete,
             closeOnTap: true,
             onTap: () async {
+              setState(() {
+                changed = true;
+                oldName = movieList[i]["filename"];
+                _movieFoldersValues.removeAt(i);
+              });
               var result = await widget.basicDeatials["client"].connectSFTP();
               if (result == "sftp_connected") {
-                await widget.basicDeatials["client"].sftpRm(
-                    widget.basicDeatials["moviePath"] +
-                        '/' +
-                        movieList[i]["filename"]);
+                await widget.basicDeatials["client"]
+                    .sftpRm(widget.basicDeatials["moviePath"] + '/' + oldName);
+                await widget.basicDeatials["client"].disconnectSFTP();
               }
             },
           ),
@@ -93,11 +166,13 @@ class _MediaFilesPageState extends State<MediaFilesPage> {
 
   @override
   Widget build(BuildContext context) {
-    _movieFolderFuture != null
-        ? _movieFolderFuture.then((val) {
-            _movieFoldersValues = val;
-          }).catchError((error) => print(error))
-        : _movieFoldersValues = ["reload page"];
+    if (!changed) {
+      _movieFolderFuture != null
+          ? _movieFolderFuture.then((val) {
+              _movieFoldersValues = val;
+            }).catchError((error) => print(error))
+          : _movieFoldersValues = ["reload page"];
+    }
     return new MaterialApp(
         title: "Media Files",
         home: new Scaffold(
