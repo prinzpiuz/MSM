@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:msm/services.dart';
+import 'package:msm/tv_files.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:filesize/filesize.dart';
 
@@ -21,7 +22,6 @@ class _MediaFilesPageState extends State<MediaFilesPage> {
   final renameController = TextEditingController();
   String oldName = '';
   bool changed = false;
-  TextEditingController _controller = new TextEditingController();
 
   @override
   void initState() {
@@ -211,7 +211,12 @@ class _MediaFilesPageState extends State<MediaFilesPage> {
                               onPressed: () {
                                 setState(() {
                                   _notlisting = false;
-                                  _tvListing = true;
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            TvFilespage(widget.basicDeatials)),
+                                  );
                                 });
                               },
                             )
