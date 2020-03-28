@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:msm/services.dart';
-import 'package:msm/tv_folders.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:filesize/filesize.dart';
 
@@ -13,9 +12,7 @@ class TvFilesPage extends StatefulWidget {
 }
 
 class _TvFilesPageState extends State<TvFilesPage> {
-  bool _notlisting = true;
-  bool _tvListing = false;
-  bool sizeSort = false;
+  bool nameSort = true;
   Future<List> _tvFilesFuture;
   var _tvFilesValues;
   List<Widget> tvTileList = [];
@@ -30,10 +27,9 @@ class _TvFilesPageState extends State<TvFilesPage> {
   }
 
   List<Widget> tvFileNames(tvFileNameList) {
-    if (sizeSort) {
+    if (nameSort) {
       tvFileNameList.sort((a, b) => int.parse(a["size"].toString())
           .compareTo(int.parse(b["size"].toString())));
-      sizeSort = false;
     } else {
       tvFileNameList.sort((a, b) =>
           a["filename"].toString().compareTo(b["filename"].toString()));
@@ -132,14 +128,6 @@ class _TvFilesPageState extends State<TvFilesPage> {
         ],
         secondaryActions: <Widget>[
           IconSlideAction(
-            caption: 'More',
-            color: Colors.green,
-            icon: Icons.expand_more,
-            onTap: () {
-              print("ontap");
-            },
-          ),
-          IconSlideAction(
             caption: 'Delete',
             color: Colors.red,
             icon: Icons.delete,
@@ -177,16 +165,24 @@ class _TvFilesPageState extends State<TvFilesPage> {
           : _tvFilesValues = ["reload page"];
     }
     return new MaterialApp(
-        title: "Media Files",
+        title: "Files in " + widget.tvFolderName,
         home: new Scaffold(
+            appBar: AppBar(
+              title: Text(widget.tvFolderName,
+                  style: TextStyle(color: Colors.black)),
+              elevation: 0,
+              backgroundColor: Colors.white,
+            ),
             body: Center(
               child: SingleChildScrollView(
                 child: new Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       _tvFilesValues == null
-                          ? CircularProgressIndicator(
-                              backgroundColor: Colors.green,
+                          ? LinearProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.green),
+                              backgroundColor: Colors.white,
                             )
                           : Column(children: tvFileNames(_tvFilesValues))
                     ]),
@@ -195,11 +191,15 @@ class _TvFilesPageState extends State<TvFilesPage> {
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 // Add your onPressed code here!
-                setState(() {
-                  // _notlisting = false;
-                  // _tvFileNameListing = true;
-                  sizeSort = true;
-                });
+                if (nameSort) {
+                  setState(() {
+                    nameSort = false;
+                  });
+                } else {
+                  setState(() {
+                    nameSort = true;
+                  });
+                }
               },
               child: Icon(Icons.sort),
               backgroundColor: Colors.green,

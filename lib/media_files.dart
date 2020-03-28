@@ -15,7 +15,7 @@ class _MediaFilesPageState extends State<MediaFilesPage> {
   bool _notlisting = true;
   bool _movieListing = false;
   bool _tvListing = false;
-  bool sizeSort = false;
+  bool nameSort = true;
   Future<List> _movieFolderFuture;
   var _movieFoldersValues;
   List<Widget> movieTileList = [];
@@ -30,14 +30,14 @@ class _MediaFilesPageState extends State<MediaFilesPage> {
   }
 
   List<Widget> movieNames(movieList) {
-    if (sizeSort) {
+    if (nameSort) {
       movieList.sort((a, b) => int.parse(a["size"].toString())
           .compareTo(int.parse(b["size"].toString())));
-      sizeSort = false;
     } else {
       movieList.sort((a, b) =>
           a["filename"].toString().compareTo(b["filename"].toString()));
     }
+
     movieTileList.clear();
     for (var i = 0; i < movieList.length; i++) {
       movieTileList.add(Slidable(
@@ -132,14 +132,6 @@ class _MediaFilesPageState extends State<MediaFilesPage> {
         ],
         secondaryActions: <Widget>[
           IconSlideAction(
-            caption: 'More',
-            color: Colors.green,
-            icon: Icons.expand_more,
-            onTap: () {
-              print("ontap");
-            },
-          ),
-          IconSlideAction(
             caption: 'Delete',
             color: Colors.red,
             icon: Icons.delete,
@@ -178,16 +170,33 @@ class _MediaFilesPageState extends State<MediaFilesPage> {
     }
     return new MaterialApp(
         title: "Media Files",
-        home: new Scaffold(
+        home: Scaffold(
+            appBar: AppBar(
+                title: _notlisting
+                    ? Text("List Media", style: TextStyle(color: Colors.black))
+                    : Text("Movie Names",
+                        style: TextStyle(color: Colors.black)),
+                elevation: 0,
+                backgroundColor: Colors.white,
+                leading: Container(
+                    child: IconButton(
+                  color: Colors.black,
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    if (_notlisting) {
+                      Navigator.maybePop(context);
+                    } else {
+                      setState(() {
+                        _notlisting = true;
+                      });
+                    }
+                  },
+                ))),
             body: Center(
               child: SingleChildScrollView(
-                child: new Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      Text(
-                        _notlisting ? "List Media" : "",
-                        style: TextStyle(fontSize: 30),
-                      ),
                       _notlisting
                           ? RaisedButton(
                               child: Text("List Movies"),
@@ -200,10 +209,12 @@ class _MediaFilesPageState extends State<MediaFilesPage> {
                               },
                             )
                           : _movieFoldersValues == null
-                              ? CircularProgressIndicator(
-                                  backgroundColor: Colors.green,
+                              ? LinearProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.green),
+                                  backgroundColor: Colors.white,
                                 )
-                              : _movieListing || sizeSort
+                              : _movieListing
                                   ? Column(
                                       children: movieNames(_movieFoldersValues))
                                   : Container(),
@@ -213,7 +224,6 @@ class _MediaFilesPageState extends State<MediaFilesPage> {
                               color: Colors.green,
                               onPressed: () {
                                 setState(() {
-                                  _notlisting = false;
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -231,11 +241,15 @@ class _MediaFilesPageState extends State<MediaFilesPage> {
                 ? FloatingActionButton(
                     onPressed: () {
                       // Add your onPressed code here!
-                      setState(() {
-                        // _notlisting = false;
-                        // _movieListing = true;
-                        sizeSort = true;
-                      });
+                      if (nameSort) {
+                        setState(() {
+                          nameSort = false;
+                        });
+                      } else {
+                        setState(() {
+                          nameSort = true;
+                        });
+                      }
                     },
                     child: Icon(Icons.sort),
                     backgroundColor: Colors.green,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:msm/services.dart';
 import 'package:msm/tv_files.dart';
+import 'package:msm/media_files.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class TvFoldersPage extends StatefulWidget {
@@ -11,13 +12,9 @@ class TvFoldersPage extends StatefulWidget {
 }
 
 class _TvFoldersPageState extends State<TvFoldersPage> {
-  bool _notlisting = true;
-  bool _movieListing = false;
   bool _tvListing = false;
   bool sizeSort = false;
-  Future<List> _movieFolderFuture;
   Future<List> _tvfolderFuture;
-  var _movieFoldersValues;
   var _tvFoldersValues;
   List<Widget> movieTileList = [];
   List<Widget> tvTileList = [];
@@ -37,7 +34,6 @@ class _TvFoldersPageState extends State<TvFoldersPage> {
     for (var i = 0; i < tvfolders.length; i++) {
       tvTileList.add(FlatButton(
         onPressed: () {
-          print("ndc");
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -136,14 +132,6 @@ class _TvFoldersPageState extends State<TvFoldersPage> {
           ],
           secondaryActions: <Widget>[
             IconSlideAction(
-              caption: 'More',
-              color: Colors.green,
-              icon: Icons.expand_more,
-              onTap: () {
-                print("ontap");
-              },
-            ),
-            IconSlideAction(
               caption: 'Delete',
               color: Colors.red,
               icon: Icons.delete,
@@ -180,14 +168,34 @@ class _TvFoldersPageState extends State<TvFoldersPage> {
     return new MaterialApp(
         title: "TV Folders",
         home: new Scaffold(
+            appBar: AppBar(
+                title:
+                    Text("TV Folders", style: TextStyle(color: Colors.black)),
+                elevation: 0,
+                backgroundColor: Colors.white,
+                leading: Container(
+                    child: IconButton(
+                  color: Colors.black,
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              MediaFilesPage(widget.basicDeatials)),
+                    );
+                  },
+                ))),
             body: Center(
               child: SingleChildScrollView(
                 child: new Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       _tvFoldersValues == null
-                          ? CircularProgressIndicator(
-                              backgroundColor: Colors.green,
+                          ? LinearProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.green),
+                              backgroundColor: Colors.white,
                             )
                           : Column(children: tvFolderNames(_tvFoldersValues))
                     ]),
