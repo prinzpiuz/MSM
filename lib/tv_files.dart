@@ -189,6 +189,7 @@ class _TvFilesPageState extends State<TvFilesPage> {
               ),
             ),
             floatingActionButton: FloatingActionButton(
+              heroTag: "btn3",
               onPressed: () {
                 // Add your onPressed code here!
                 if (nameSort) {

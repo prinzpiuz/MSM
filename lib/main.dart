@@ -37,6 +37,7 @@ class MyHome extends StatefulWidget {
 }
 
 class _MyHomeState extends State<MyHome> {
+  bool _connected = false;
   Map<PermissionGroup, PermissionStatus> permissions;
   void pressed(index, context, basicDeatials) {
     if (index == 3) {
@@ -67,11 +68,22 @@ class _MyHomeState extends State<MyHome> {
   @override
   Widget build(BuildContext context) {
     setPermissions();
-    final data = BasicServerDetails().basicDetails();
-    data.then((val) {
-      basicDeatials = val;
-    }).catchError((error) => print(error));
-    var headings = ['Upload', 'Server', 'Media', 'Settings'];
+    if (!_connected) {
+      final data = BasicServerDetails().basicDetails();
+      data.then((val) {
+        setState(() {
+          basicDeatials = val;
+          _connected = true;
+        });
+      }).catchError((error) => print(error));
+    }
+
+    var headings = [
+      Icon(Icons.file_upload, size: 50, color: Colors.white),
+      Icon(Icons.info_outline, size: 50, color: Colors.white),
+      Icon(Icons.movie_filter, size: 50, color: Colors.white),
+      Icon(Icons.settings, size: 50, color: Colors.white)
+    ];
     return Scaffold(
         backgroundColor: Colors.white,
         body: new Column(
@@ -87,10 +99,8 @@ class _MyHomeState extends State<MyHome> {
                       onPressed: () => pressed(index, context, basicDeatials),
                       color: Colors.green,
                       child: Center(
-                          child: Text(headings[index],
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 30)))),
+                        child: headings[index],
+                      )),
                 );
               }),
             )),
@@ -99,11 +109,10 @@ class _MyHomeState extends State<MyHome> {
                 new Flexible(
                   child: ListTile(
                     leading: IconButton(
-                        icon: Icon(Icons.computer,
-                            size: 50,
-                            color: basicDeatials != null
-                                ? Colors.green
-                                : Colors.black),
+                        icon: basicDeatials != null
+                            ? Icon(Icons.cloud, size: 50, color: Colors.green)
+                            : Icon(Icons.cloud_off,
+                                size: 50, color: Colors.black),
                         onPressed: () {
                           setState(() {
                             final data = BasicServerDetails().basicDetails();
@@ -124,7 +133,8 @@ class _MyHomeState extends State<MyHome> {
                   child: basicDeatials == null
                       ? Container()
                       : ListTile(
-                          leading: Icon(Icons.folder, size: 50),
+                          leading:
+                              Icon(Icons.folder, size: 50, color: Colors.green),
                           title: Text(
                               basicDeatials["usedSpace"].replaceAll('\n', '')),
                           subtitle: Text('out of ' +

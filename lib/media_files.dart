@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:msm/services.dart';
 import 'package:msm/tv_folders.dart';
+import 'package:msm/main.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:filesize/filesize.dart';
 
@@ -168,92 +169,102 @@ class _MediaFilesPageState extends State<MediaFilesPage> {
             }).catchError((error) => print(error))
           : _movieFoldersValues = ["reload page"];
     }
-    return new MaterialApp(
-        title: "Media Files",
-        home: Scaffold(
-            appBar: AppBar(
-                title: _notlisting
-                    ? Text("List Media", style: TextStyle(color: Colors.black))
-                    : Text("Movie Names",
-                        style: TextStyle(color: Colors.black)),
-                elevation: 0,
-                backgroundColor: Colors.white,
-                leading: Container(
-                    child: IconButton(
-                  color: Colors.black,
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () {
-                    if (_notlisting) {
-                      Navigator.maybePop(context);
-                    } else {
-                      setState(() {
-                        _notlisting = true;
-                      });
-                    }
-                  },
-                ))),
-            body: Center(
-              child: SingleChildScrollView(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      _notlisting
-                          ? RaisedButton(
-                              child: Text("List Movies"),
-                              color: Colors.green,
-                              onPressed: () {
-                                setState(() {
-                                  _notlisting = false;
-                                  _movieListing = true;
-                                });
-                              },
-                            )
-                          : _movieFoldersValues == null
-                              ? LinearProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.green),
-                                  backgroundColor: Colors.white,
-                                )
-                              : _movieListing
-                                  ? Column(
-                                      children: movieNames(_movieFoldersValues))
-                                  : Container(),
-                      _notlisting
-                          ? RaisedButton(
-                              child: Text("List TV"),
-                              color: Colors.green,
-                              onPressed: () {
-                                setState(() {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => TvFoldersPage(
-                                            widget.basicDeatials)),
-                                  );
-                                });
-                              },
-                            )
-                          : Container()
-                    ]),
-              ),
-            ),
-            floatingActionButton: _movieListing
-                ? FloatingActionButton(
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: MaterialApp(
+          title: "Media Files",
+          home: Scaffold(
+              appBar: AppBar(
+                  title: _notlisting
+                      ? Text("List Media",
+                          style: TextStyle(color: Colors.black))
+                      : Text("Movie Names",
+                          style: TextStyle(color: Colors.black)),
+                  elevation: 0,
+                  backgroundColor: Colors.white,
+                  leading: Container(
+                      child: IconButton(
+                    color: Colors.black,
+                    icon: Icon(Icons.arrow_back),
                     onPressed: () {
-                      // Add your onPressed code here!
-                      if (nameSort) {
+                      if (_notlisting) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MyApp()),
+                        );
+                      }
+                      if (_movieListing) {
                         setState(() {
-                          nameSort = false;
-                        });
-                      } else {
-                        setState(() {
-                          nameSort = true;
+                          _notlisting = true;
                         });
                       }
                     },
-                    child: Icon(Icons.sort),
-                    backgroundColor: Colors.green,
-                  )
-                : SizedBox.shrink()));
+                  ))),
+              body: Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        _notlisting
+                            ? RaisedButton(
+                                child: Text("List Movies"),
+                                color: Colors.green,
+                                onPressed: () {
+                                  setState(() {
+                                    _notlisting = false;
+                                    _movieListing = true;
+                                  });
+                                },
+                              )
+                            : _movieFoldersValues == null
+                                ? LinearProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.green),
+                                    backgroundColor: Colors.white,
+                                  )
+                                : _movieListing
+                                    ? Column(
+                                        children:
+                                            movieNames(_movieFoldersValues))
+                                    : Container(),
+                        _notlisting
+                            ? RaisedButton(
+                                child: Text("List TV"),
+                                color: Colors.green,
+                                onPressed: () {
+                                  setState(() {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => TvFoldersPage(
+                                              widget.basicDeatials)),
+                                    );
+                                  });
+                                },
+                              )
+                            : Container()
+                      ]),
+                ),
+              ),
+              floatingActionButton: _movieListing
+                  ? FloatingActionButton(
+                      heroTag: "btn1",
+                      onPressed: () {
+                        // Add your onPressed code here!
+                        if (nameSort) {
+                          setState(() {
+                            nameSort = false;
+                          });
+                        } else {
+                          setState(() {
+                            nameSort = true;
+                          });
+                        }
+                      },
+                      child: Icon(Icons.sort),
+                      backgroundColor: Colors.green,
+                    )
+                  : SizedBox.shrink())),
+    );
   }
 }

@@ -165,55 +165,59 @@ class _TvFoldersPageState extends State<TvFoldersPage> {
             }).catchError((error) => print(error))
           : _tvFoldersValues = ["reload page"];
     }
-    return new MaterialApp(
-        title: "TV Folders",
-        home: new Scaffold(
-            appBar: AppBar(
-                title:
-                    Text("TV Folders", style: TextStyle(color: Colors.black)),
-                elevation: 0,
-                backgroundColor: Colors.white,
-                leading: Container(
-                    child: IconButton(
-                  color: Colors.black,
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              MediaFilesPage(widget.basicDeatials)),
-                    );
-                  },
-                ))),
-            body: Center(
-              child: SingleChildScrollView(
-                child: new Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      _tvFoldersValues == null
-                          ? LinearProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.green),
-                              backgroundColor: Colors.white,
-                            )
-                          : Column(children: tvFolderNames(_tvFoldersValues))
-                    ]),
-              ),
-            ),
-            floatingActionButton: _tvListing
-                ? FloatingActionButton(
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: MaterialApp(
+          title: "TV Folders",
+          home: Scaffold(
+              appBar: AppBar(
+                  title:
+                      Text("TV Folders", style: TextStyle(color: Colors.black)),
+                  elevation: 0,
+                  backgroundColor: Colors.white,
+                  leading: Container(
+                      child: IconButton(
+                    color: Colors.black,
+                    icon: Icon(Icons.arrow_back),
                     onPressed: () {
-                      // Add your onPressed code here!
-                      setState(() {
-                        // _notlisting = false;
-                        // _movieListing = true;
-                        sizeSort = true;
-                      });
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                MediaFilesPage(widget.basicDeatials)),
+                      );
                     },
-                    child: Icon(Icons.sort),
-                    backgroundColor: Colors.green,
-                  )
-                : SizedBox.shrink()));
+                  ))),
+              body: Center(
+                child: SingleChildScrollView(
+                  child: new Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        _tvFoldersValues == null
+                            ? LinearProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.green),
+                                backgroundColor: Colors.white,
+                              )
+                            : Column(children: tvFolderNames(_tvFoldersValues))
+                      ]),
+                ),
+              ),
+              floatingActionButton: _tvListing
+                  ? FloatingActionButton(
+                      heroTag: "btn2",
+                      onPressed: () {
+                        // Add your onPressed code here!
+                        setState(() {
+                          // _notlisting = false;
+                          // _movieListing = true;
+                          sizeSort = true;
+                        });
+                      },
+                      child: Icon(Icons.sort),
+                      backgroundColor: Colors.green,
+                    )
+                  : SizedBox.shrink())),
+    );
   }
 }
