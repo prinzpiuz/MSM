@@ -41,7 +41,7 @@ void callbackDispatcher() {
       print('Error: ${e.code}\nError Message: ${e.message}');
     }
     // print("Native called background task: " +
-    //     inputData["selectedFiles"]); //simpleTask will be emitted here.
+    //     inputData["selectedFiles "]); //simpleTask will be emitted here.
     return Future.value(true);
   });
 }
