@@ -14,31 +14,36 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 void callbackDispatcher() {
   Workmanager.executeTask((task, inputData) async {
-    var client = SSHClient(
-      host: inputData["ip"],
-      port: int.parse(inputData["port"]),
-      username: inputData["username"],
-      passwordOrKey: inputData["password"],
-    );
-    try {
-      String result = await client.connect();
-      if (result == "session_connected") {
-        result = await client.connectSFTP();
-        if (result == "sftp_connected") {
-          if (inputData["tv"]) {
-            await client.sftpMkdir(inputData["path"]);
+    for (var i = 0; i < inputData["selectedFiles"].length; i++) {
+      var client = SSHClient(
+        host: inputData["ip"],
+        port: int.parse(inputData["port"]),
+        username: inputData["username"],
+        passwordOrKey: inputData["password"],
+      );
+      try {
+        String result = await client.connect();
+        if (result == "session_connected") {
+          result = await client.connectSFTP();
+          if (result == "sftp_connected") {
+            if (inputData["tv"] && i == 0) {
+              await client.sftpMkdir(inputData["path"]);
+            }
+            print(i);
+            print(inputData["path"]);
+            await client.sftpUpload(
+              path: inputData["selectedFiles"][i],
+              toPath: inputData["path"],
+              callback: (progress) async {
+                await _showNotification(
+                    progress, inputData["selectedFiles"][i]);
+              },
+            );
           }
-          await client.sftpUpload(
-            path: inputData["selectedFiles"],
-            toPath: inputData["path"],
-            callback: (progress) async {
-              await _showNotification(progress, inputData["selectedFiles"]);
-            },
-          );
         }
+      } on PlatformException catch (e) {
+        print('Error: ${e.code}\nError Message: ${e.message}');
       }
-    } on PlatformException catch (e) {
-      print('Error: ${e.code}\nError Message: ${e.message}');
     }
     // print("Native called background task: " +
     //     inputData["selectedFiles "]); //simpleTask will be emitted here.
@@ -87,6 +92,8 @@ class _UploadPageState extends State<UploadPage> {
   bool proceed = true;
   List<File> files;
   List<String> fileNames = [];
+  bool _showDialog = true;
+  bool _showText = false;
 
   @override
   void initState() {
@@ -150,6 +157,12 @@ class _UploadPageState extends State<UploadPage> {
             value: _folderValues,
             onChanged: (value) => setState(() {
                   _folderValues = value;
+                  _showDialog = true;
+                  if (value == "0") {
+                    _showText = true;
+                  } else {
+                    _showText = false;
+                  }
                 })),
       );
     } else {
@@ -169,167 +182,210 @@ class _UploadPageState extends State<UploadPage> {
         isInDebugMode:
             false // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
         );
-    return new MaterialApp(
+    return MaterialApp(
+      color: Colors.black,
       title: "Upload Page",
-      home: new Scaffold(
-        body: new Center(
-            child: new SingleChildScrollView(
-          child: new Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                "Upload Media",
-                style: TextStyle(fontSize: 20),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: new DropdownButton(
-                    hint: new Text('Movie/TV'),
-                    value: _pickingType,
-                    items: <DropdownMenuItem>[
-                      new DropdownMenuItem(
-                        child: new Text('Movies'),
-                        value: "1",
-                      ),
-                      new DropdownMenuItem(
-                        child: new Text('Tv Series'),
-                        value: "2",
-                      ),
-                    ],
-                    onChanged: (value) => setState(() {
-                          picked = true;
-                          _pickingType = value;
-                        })),
-              ),
-              _pickingType == "2" ? buidDropDown(foldersValues) : Container(),
-              _folderValues == "0" && _pickingType == "2"
-                  ? new TextFormField(
-                      maxLength: 15,
-                      autovalidate: true,
-                      controller: _controller,
-                      decoration:
-                          InputDecoration(labelText: 'Enter New Folder Name'),
-                      keyboardType: TextInputType.text,
-                      textCapitalization: TextCapitalization.none,
-                    )
-                  : new Container(),
-              picked
-                  ? new Padding(
-                      padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
-                      child: RaisedButton(
-                        color: Colors.green,
-                        onPressed: () {
-                          !listed ? _openFileExplorer() : print("");
-                        },
-                        child: new Text("List Available Files"),
-                      ),
-                    )
-                  : Container(),
-              new Builder(
-                  builder: (BuildContext context) => Container(
-                        padding: const EdgeInsets.only(bottom: 30.0),
-                        height: MediaQuery.of(context).size.height * 0.50,
-                        child: new Scrollbar(
-                          child: new ListView.separated(
-                            itemCount: fileNames != null && fileNames.isNotEmpty
-                                ? fileNames.length
-                                : 1,
-                            itemBuilder: (BuildContext context, int index) {
-                              final bool isMultiPath =
-                                  fileNames != null && fileNames.isNotEmpty;
-                              final String name =
-                                  fileNames.isNotEmpty ? fileNames[index] : '';
-                              final path = isMultiPath
-                                  ? fileNames[index].toString()
-                                  : "";
-
-                              return name != ''
-                                  ? ListTile(
-                                      title: name != null
-                                          ? new Text(
-                                              name,
-                                            )
-                                          : Text(" "),
-                                      subtitle: path != null
-                                          ? new Text(path)
-                                          : Text(" "),
-                                      selected:
-                                          select.contains(index) ? true : false,
-                                      trailing: select.contains(index)
-                                          ? Icon(Icons.radio_button_checked)
-                                          : Icon(Icons.radio_button_unchecked),
-                                      onLongPress: () {
-                                        setState(() {
-                                          upload = false;
-                                          select.remove(index);
-                                        });
-                                      },
-                                      onTap: () {
-                                        selectedFiles.add(name);
-
-                                        setState(() {
-                                          upload = true;
-                                          select.add(index);
-                                        });
-                                      },
-                                    )
-                                  : Container();
-                            },
-                            separatorBuilder:
-                                (BuildContext context, int index) =>
-                                    new Divider(),
+      home: Scaffold(
+        body: Center(
+            child: SingleChildScrollView(
+          child: Theme(
+            data: new ThemeData(
+                primaryColor: Colors.green,
+                accentColor: Colors.orange,
+                hintColor: Colors.grey),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "Upload Media",
+                  style: TextStyle(fontSize: 20),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: DropdownButton(
+                      hint: Text('Movie/TV'),
+                      value: _pickingType,
+                      items: <DropdownMenuItem>[
+                        DropdownMenuItem(
+                          child: Text('Movies'),
+                          value: "1",
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Tv Series'),
+                          value: "2",
+                        ),
+                      ],
+                      onChanged: (value) => setState(() {
+                            picked = true;
+                            _pickingType = value;
+                          })),
+                ),
+                _pickingType == "2" ? buidDropDown(foldersValues) : Container(),
+                _folderValues == "0" && _pickingType == "2" && _showDialog
+                    ? AlertDialog(
+                        title: Text('Enter new folder name'),
+                        content: TextFormField(
+                          controller: _controller,
+                          decoration: new InputDecoration(
+                            fillColor: Colors.green,
+                          ),
+                          validator: (val) {
+                            if (val.length == 0) {
+                              return "name cannot be empty";
+                            } else {
+                              return null;
+                            }
+                          },
+                          style: new TextStyle(
+                            fontFamily: "Poppins",
                           ),
                         ),
-                      )),
-              upload
-                  ? RaisedButton(
-                      color: Colors.green,
-                      onPressed: () async {
-                        if (_pickingType == "2" && _folderValues == null) {
-                          proceed = false;
-                          Flushbar(
-                            backgroundColor: Colors.green,
-                            title: "folder missing",
-                            isDismissible: true,
-                            message: "select TV folder to upload",
-                            duration: Duration(seconds: 5),
-                          )..show(context);
-                        }
-                        if (_pickingType == "2" &&
-                            _folderValues == "0" &&
-                            _controller.text.isEmpty) {
-                          proceed = false;
-                          Flushbar(
-                            backgroundColor: Colors.green,
-                            title: "folder missing",
-                            isDismissible: true,
-                            message: "Enter new folder name",
-                            duration: Duration(seconds: 5),
-                          )..show(context);
-                        }
-                        if (_pickingType == "1") {
-                          path = widget.basicDeatials["moviePath"];
-                        } else {
-                          if (_folderValues != "0" && _pickingType == "2") {
-                            path = widget.basicDeatials["tvPath"] +
-                                "/" +
-                                _folderValues.toString();
-                          } else {
-                            tv = true;
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text('Cancel'),
+                            onPressed: () {
+                              setState(() {
+                                _showDialog = false;
+                              });
+                            },
+                          ),
+                          FlatButton(
+                            child: Text('Ok'),
+                            onPressed: () {
+                              setState(() {
+                                _showDialog = false;
+                              });
+                            },
+                          )
+                        ],
+                      )
+                    : new Container(),
+                _controller.text != " " && _controller.text != "" && _showText
+                    ? Text(
+                        "Uploading to " + _controller.text,
+                        style: TextStyle(fontSize: 20),
+                      )
+                    : SizedBox.shrink(),
+                picked
+                    ? new Padding(
+                        padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
+                        child: RaisedButton(
+                          color: Colors.green,
+                          onPressed: () {
+                            !listed ? _openFileExplorer() : print("");
+                          },
+                          child: new Text("List Available Files"),
+                        ),
+                      )
+                    : Container(),
+                new Builder(
+                    builder: (BuildContext context) => Container(
+                          padding: const EdgeInsets.only(bottom: 30.0),
+                          height: MediaQuery.of(context).size.height * 0.50,
+                          child: new Scrollbar(
+                            child: new ListView.separated(
+                              itemCount:
+                                  fileNames != null && fileNames.isNotEmpty
+                                      ? fileNames.length
+                                      : 1,
+                              itemBuilder: (BuildContext context, int index) {
+                                final bool isMultiPath =
+                                    fileNames != null && fileNames.isNotEmpty;
+                                final String name = fileNames.isNotEmpty
+                                    ? fileNames[index]
+                                    : '';
+                                final path = isMultiPath
+                                    ? fileNames[index].toString()
+                                    : "";
 
-                            path = widget.basicDeatials["tvPath"] +
-                                "/" +
-                                _controller.text;
+                                return name != ''
+                                    ? ListTile(
+                                        title: name != null
+                                            ? new Text(
+                                                name,
+                                              )
+                                            : Text(" "),
+                                        subtitle: path != null
+                                            ? new Text(path)
+                                            : Text(" "),
+                                        selected: select.contains(index)
+                                            ? true
+                                            : false,
+                                        trailing: select.contains(index)
+                                            ? Icon(Icons.radio_button_checked)
+                                            : Icon(
+                                                Icons.radio_button_unchecked),
+                                        onLongPress: () {
+                                          setState(() {
+                                            upload = false;
+                                            select.remove(index);
+                                          });
+                                        },
+                                        onTap: () {
+                                          selectedFiles.add(name);
+
+                                          setState(() {
+                                            upload = true;
+                                            select.add(index);
+                                          });
+                                        },
+                                      )
+                                    : Container();
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) =>
+                                      new Divider(),
+                            ),
+                          ),
+                        )),
+                upload
+                    ? RaisedButton(
+                        color: Colors.green,
+                        onPressed: () async {
+                          if (_pickingType == "2" && _folderValues == null) {
+                            proceed = false;
+                            Flushbar(
+                              backgroundColor: Colors.green,
+                              title: "folder missing",
+                              isDismissible: true,
+                              message: "select TV folder to upload",
+                              duration: Duration(seconds: 5),
+                            )..show(context);
                           }
-                        }
-                        if (proceed) {
-                          for (var i = 0; i < selectedFiles.length; i++) {
-                            Workmanager.registerOneOffTask(
-                                "1", "uploadFile" + i.toString(),
+                          if (_pickingType == "2" &&
+                              _folderValues == "0" &&
+                              _controller.text.isEmpty) {
+                            proceed = false;
+                            Flushbar(
+                              backgroundColor: Colors.green,
+                              title: "folder missing",
+                              isDismissible: true,
+                              message: "Enter new folder name",
+                              duration: Duration(seconds: 5),
+                            )..show(context);
+                          }
+                          if (_pickingType == "1") {
+                            path = widget.basicDeatials["moviePath"];
+                          } else {
+                            if (_folderValues != "0" && _pickingType == "2") {
+                              path = widget.basicDeatials["tvPath"] +
+                                  "/" +
+                                  _folderValues.toString();
+                            } else {
+                              tv = true;
+
+                              path = widget.basicDeatials["tvPath"] +
+                                  "/" +
+                                  _controller.text;
+                            }
+                          }
+                          if (proceed) {
+                            // for (var i = 0; i < selectedFiles.length; i++) {
+                            Workmanager.registerOneOffTask("1", "uploadFile",
                                 existingWorkPolicy: ExistingWorkPolicy.append,
-                                tag: selectedFiles[i],
+                                tag: selectedFiles[0],
                                 inputData: {
-                                  "selectedFiles": selectedFiles[i],
+                                  "selectedFiles": selectedFiles,
                                   "path": path,
                                   "ip": widget.basicDeatials["ip"],
                                   "port": widget.basicDeatials["port"],
@@ -337,20 +393,21 @@ class _UploadPageState extends State<UploadPage> {
                                   "username": widget.basicDeatials["username"],
                                   "tv": tv
                                 });
+                            // }
+                            Flushbar(
+                              backgroundColor: Colors.green,
+                              title: "Upload Started",
+                              isDismissible: true,
+                              message:
+                                  "upload started in background,will get notification once finished",
+                              duration: Duration(seconds: 10),
+                            )..show(context);
                           }
-                          Flushbar(
-                            backgroundColor: Colors.green,
-                            title: "Upload Started",
-                            isDismissible: true,
-                            message:
-                                "upload started in background,will get notification once finished",
-                            duration: Duration(seconds: 10),
-                          )..show(context);
-                        }
-                      },
-                      child: Text("Upload"))
-                  : Container(),
-            ],
+                        },
+                        child: Text("Upload"))
+                    : Container(),
+              ],
+            ),
           ),
         )),
       ),

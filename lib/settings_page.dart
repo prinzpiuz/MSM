@@ -48,6 +48,8 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      color: Colors.black,
+      title: 'Settings',
       home: Scaffold(
         // resizeToAvoidBottomPadding: false,
         body: ListView(
