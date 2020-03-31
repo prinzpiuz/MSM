@@ -172,6 +172,7 @@ class _MediaFilesPageState extends State<MediaFilesPage> {
     return WillPopScope(
       onWillPop: () async => false,
       child: MaterialApp(
+          color: Colors.black,
           title: "Media Files",
           home: Scaffold(
               appBar: AppBar(

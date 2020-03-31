@@ -106,10 +106,14 @@ class _TvFilesPageState extends State<TvFilesPage> {
                                 .connectSFTP();
                             if (result == "sftp_connected") {
                               await widget.basicDeatials["client"].sftpRename(
-                                oldPath: widget.basicDeatials["moviePath"] +
+                                oldPath: widget.basicDeatials["tvPath"] +
+                                    '/' +
+                                    widget.tvFolderName +
                                     '/' +
                                     oldName,
-                                newPath: widget.basicDeatials["moviePath"] +
+                                newPath: widget.basicDeatials["tvPath"] +
+                                    '/' +
+                                    widget.tvFolderName +
                                     '/' +
                                     renameController.text,
                               );
@@ -140,8 +144,12 @@ class _TvFilesPageState extends State<TvFilesPage> {
               });
               var result = await widget.basicDeatials["client"].connectSFTP();
               if (result == "sftp_connected") {
-                await widget.basicDeatials["client"]
-                    .sftpRm(widget.basicDeatials["moviePath"] + '/' + oldName);
+                await widget.basicDeatials["client"].sftpRm(
+                    widget.basicDeatials["tvPath"] +
+                        '/' +
+                        widget.tvFolderName +
+                        '/' +
+                        oldName);
                 await widget.basicDeatials["client"].disconnectSFTP();
               }
             },
@@ -165,6 +173,7 @@ class _TvFilesPageState extends State<TvFilesPage> {
           : _tvFilesValues = ["reload page"];
     }
     return new MaterialApp(
+        color: Colors.black,
         title: "Files in " + widget.tvFolderName,
         home: new Scaffold(
             appBar: AppBar(

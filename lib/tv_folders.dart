@@ -168,6 +168,7 @@ class _TvFoldersPageState extends State<TvFoldersPage> {
     return WillPopScope(
       onWillPop: () async => false,
       child: MaterialApp(
+          color: Colors.black,
           title: "TV Folders",
           home: Scaffold(
               appBar: AppBar(

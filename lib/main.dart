@@ -23,8 +23,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final title = 'Media Server Manager';
+    final title = 'MSM';
     return MaterialApp(
+      color: Colors.black,
       title: title,
       home: MyHome(),
     );

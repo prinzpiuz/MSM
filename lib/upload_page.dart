@@ -14,31 +14,36 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 void callbackDispatcher() {
   Workmanager.executeTask((task, inputData) async {
-    var client = SSHClient(
-      host: inputData["ip"],
-      port: int.parse(inputData["port"]),
-      username: inputData["username"],
-      passwordOrKey: inputData["password"],
-    );
-    try {
-      String result = await client.connect();
-      if (result == "session_connected") {
-        result = await client.connectSFTP();
-        if (result == "sftp_connected") {
-          if (inputData["tv"]) {
-            await client.sftpMkdir(inputData["path"]);
+    for (var i = 0; i < inputData["selectedFiles"].length; i++) {
+      var client = SSHClient(
+        host: inputData["ip"],
+        port: int.parse(inputData["port"]),
+        username: inputData["username"],
+        passwordOrKey: inputData["password"],
+      );
+      try {
+        String result = await client.connect();
+        if (result == "session_connected") {
+          result = await client.connectSFTP();
+          if (result == "sftp_connected") {
+            if (inputData["tv"] && i == 0) {
+              await client.sftpMkdir(inputData["path"]);
+            }
+            print(i);
+            print(inputData["path"]);
+            await client.sftpUpload(
+              path: inputData["selectedFiles"][i],
+              toPath: inputData["path"],
+              callback: (progress) async {
+                await _showNotification(
+                    progress, inputData["selectedFiles"][i]);
+              },
+            );
           }
-          await client.sftpUpload(
-            path: inputData["selectedFiles"],
-            toPath: inputData["path"],
-            callback: (progress) async {
-              await _showNotification(progress, inputData["selectedFiles"]);
-            },
-          );
         }
+      } on PlatformException catch (e) {
+        print('Error: ${e.code}\nError Message: ${e.message}');
       }
-    } on PlatformException catch (e) {
-      print('Error: ${e.code}\nError Message: ${e.message}');
     }
     // print("Native called background task: " +
     //     inputData["selectedFiles "]); //simpleTask will be emitted here.
@@ -170,6 +175,7 @@ class _UploadPageState extends State<UploadPage> {
             false // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
         );
     return new MaterialApp(
+      color: Colors.black,
       title: "Upload Page",
       home: new Scaffold(
         body: new Center(
@@ -323,21 +329,20 @@ class _UploadPageState extends State<UploadPage> {
                           }
                         }
                         if (proceed) {
-                          for (var i = 0; i < selectedFiles.length; i++) {
-                            Workmanager.registerOneOffTask(
-                                "1", "uploadFile" + i.toString(),
-                                existingWorkPolicy: ExistingWorkPolicy.append,
-                                tag: selectedFiles[i],
-                                inputData: {
-                                  "selectedFiles": selectedFiles[i],
-                                  "path": path,
-                                  "ip": widget.basicDeatials["ip"],
-                                  "port": widget.basicDeatials["port"],
-                                  "password": widget.basicDeatials["password"],
-                                  "username": widget.basicDeatials["username"],
-                                  "tv": tv
-                                });
-                          }
+                          // for (var i = 0; i < selectedFiles.length; i++) {
+                          Workmanager.registerOneOffTask("1", "uploadFile",
+                              existingWorkPolicy: ExistingWorkPolicy.append,
+                              tag: selectedFiles[0],
+                              inputData: {
+                                "selectedFiles": selectedFiles,
+                                "path": path,
+                                "ip": widget.basicDeatials["ip"],
+                                "port": widget.basicDeatials["port"],
+                                "password": widget.basicDeatials["password"],
+                                "username": widget.basicDeatials["username"],
+                                "tv": tv
+                              });
+                          // }
                           Flushbar(
                             backgroundColor: Colors.green,
                             title: "Upload Started",
