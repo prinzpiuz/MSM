@@ -4,9 +4,9 @@
 <p align="center"><a href="#"><img src="https://f-droid.org/wiki/images/0/06/F-Droid-button_get-it-on.png"></a></p>
 
 <p align="center">
-<a href="https://github.com/prinzpiuz/MSM_mobile/releases" alt="build"><img src="https://github.com/prinzpiuz/MSM_mobile/workflows/Build%20and%20Release%20apk/badge.svg?branch=v0.4.0"></a>
+<a href="https://github.com/prinzpiuz/MSM_mobile/releases" alt="build"><img src="https://github.com/prinzpiuz/MSM_mobile/workflows/Build%20and%20Release%20apk/badge.svg?branch=v0.8.3"></a>
 <a href="https://www.gnu.org/licenses/gpl-3.0" alt="License: GPLv3"><img src="https://img.shields.io/badge/License-GPL%20v3-blue.svg"></a>
-<a href="https://t.me/joinchat/FDVzK06Rt7vsNQLBLi2/home/prinzpiuz/Projects/MSM-media-server-manager/android/app/src/main/res/drawable/notification.pngicw" alt="telegram: #msm"><img src="https://img.shields.io/badge/chat-Telegram-brightgreen"></a>
+<a href="https://t.me/joinchat/FDVzK06Rt7vsNQLBLi2icw" alt="telegram: #msm"><img src="https://img.shields.io/badge/chat-Telegram-brightgreen"></a>
 
 </p>
 <hr>
