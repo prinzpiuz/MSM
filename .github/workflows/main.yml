@@ -11,14 +11,15 @@ jobs:
           java-version: "12.x"
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: "1.12.13+hotfix.7"
+          flutter-version: "1.15.17"
+      - run: flutter clean
       - run: flutter pub get
       - run: flutter build apk --split-per-abi
       - name: Create a Release APK
         uses: ncipollo/release-action@v1
         with:
           prerelease: true
-          name: v0.8.3-alpha-stable
+          name: v0.8.3
           artifacts: "build/app/outputs/apk/release/*.apk"
           bodyFile: "release.md"
           token: ${{ secrets.TOKEN }}
