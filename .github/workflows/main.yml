@@ -18,7 +18,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           prerelease: true
-          name: msmv0.8.3
+          name: v0.8.3-alpha-stable
           artifacts: "build/app/outputs/apk/release/*.apk"
           bodyFile: "release.md"
           token: ${{ secrets.TOKEN }}
