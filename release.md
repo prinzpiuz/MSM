@@ -1,16 +1,3 @@
-# MSM v0.4.1
-
-- updated launcher icon
-- updated notification icon
-
-### notes for developers
-
-- Icons are designed using krita. Design files are included in design folder.
-
-# MSM v0.4.1 minor update
-
-- changed pixel size of launcher and notification icons
-
 # MSM v0.8.3
 
 - Added listing for Movies and TV files
@@ -23,3 +10,16 @@
 
 - bug fixed with multiple upload
 - automatic connection problem fixed
+
+# MSM v0.4.1
+
+- updated launcher icon
+- updated notification icon
+
+### notes for developers
+
+- Icons are designed using krita. Design files are included in design folder.
+
+# MSM v0.4.1 minor update
+
+- changed pixel size of launcher and notification icons
