@@ -68,8 +68,8 @@ class _MyHomeState extends State<MyHome> {
 
   @override
   Widget build(BuildContext context) {
-    setPermissions();
     if (!_connected) {
+      setPermissions();
       final data = BasicServerDetails().basicDetails();
       data.then((val) {
         setState(() {
