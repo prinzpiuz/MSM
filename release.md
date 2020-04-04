@@ -10,6 +10,7 @@
 
 - bug fixed with multiple upload
 - automatic connection problem fixed
+- bug fixed with internet permission
 
 # MSM v0.4.1
 
