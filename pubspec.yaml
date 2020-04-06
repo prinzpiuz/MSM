@@ -26,7 +26,7 @@ dependencies:
   shared_preferences: ^0.5.6+1
   path_provider: 0.5.0+1
   http: ^0.12.0+4
-  ssh: ^0.0.5
+  ssh: ^0.0.6
   workmanager: ^0.2.0
   permission_handler: "^4.3.0"
   flutter_launcher_icons: "^0.7.3"

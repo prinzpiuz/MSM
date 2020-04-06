@@ -142,7 +142,7 @@ class _TvFoldersPageState extends State<TvFoldersPage> {
                   oldName = tvfolders[i];
                   _tvFoldersValues.removeAt(i);
                 });
-                var execute = await widget.basicDeatials["client"].execute(
+                await widget.basicDeatials["client"].execute(
                     "rm -rf " + widget.basicDeatials["tvPath"] + "/" + oldName);
               },
             ),

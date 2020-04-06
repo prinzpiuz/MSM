@@ -15,7 +15,6 @@ class MediaFilesPage extends StatefulWidget {
 class _MediaFilesPageState extends State<MediaFilesPage> {
   bool _notlisting = true;
   bool _movieListing = false;
-  bool _tvListing = false;
   bool nameSort = true;
   Future<List> _movieFolderFuture;
   var _movieFoldersValues;
