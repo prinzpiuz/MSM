@@ -3,6 +3,7 @@ import 'package:msm/settings_page.dart';
 import 'package:msm/upload_page.dart';
 import 'package:msm/media_files.dart';
 import 'package:msm/models.dart';
+import 'package:msm/script_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() => runApp(MyApp());
@@ -57,6 +58,12 @@ class _MyHomeState extends State<MyHome> {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => MediaFilesPage(basicDeatials)),
+      );
+    }
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ScriptPage(basicDeatials)),
       );
     }
   }
