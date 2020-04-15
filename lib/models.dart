@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ssh/ssh.dart';
+import 'dart:convert';
 
 class BasicServerDetails {
   Future<Map<String, dynamic>> basicDetails() async {
@@ -46,5 +47,46 @@ class BasicServerDetails {
       print(e);
     }
     return details;
+  }
+}
+
+class Command {
+  String name;
+  String command;
+
+  Command();
+
+  Command.fromJson(Map<String, dynamic> json)
+      : name = json['name'],
+        command = json['command'];
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'command': command,
+      };
+}
+
+class SharedPref {
+  getlist() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> commandList =
+        (prefs.getStringList('commandList') ?? List<String>());
+    return commandList;
+  }
+
+  read(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    return json.decode(prefs.getString(key));
+  }
+
+  save(List commandList) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('commandList', commandList);
+    // prefs.setString(key, json.encode(value));
+  }
+
+  remove(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove(key);
   }
 }
