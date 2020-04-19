@@ -88,7 +88,7 @@ class _MyHomeState extends State<MyHome> {
 
     var headings = [
       Icon(Icons.file_upload, size: 50, color: Colors.white),
-      Icon(Icons.info_outline, size: 50, color: Colors.white),
+      Icon(Icons.code, size: 50, color: Colors.white),
       Icon(Icons.movie_filter, size: 50, color: Colors.white),
       Icon(Icons.settings, size: 50, color: Colors.white)
     ];

@@ -17,6 +17,8 @@ class _ScriptPageState extends State<ScriptPage> {
   bool showOutput = false;
   bool liveShell = false;
   bool setup = true;
+  bool showCmdOut = false;
+  var cmdOutput = '';
   var output = '';
   var cmd = '';
 
@@ -46,7 +48,7 @@ class _ScriptPageState extends State<ScriptPage> {
 
       for (var i = 0; i < jsonList.length; i++) {
         commandTiles.add(ListTile(
-          leading: Icon(Icons.code),
+          // leading: Icon(Icons.code),
           title: Text(jsonList[i]["name"]),
           subtitle: Text(jsonList[i]["command"]),
         ));
@@ -57,15 +59,95 @@ class _ScriptPageState extends State<ScriptPage> {
                 'Delete',
                 style: TextStyle(color: Colors.red),
               ),
-              onPressed: () {/* ... */},
+              onPressed: () {
+                setState(() {
+                  commandList.removeAt(i);
+                  sharedPref.save(commandList);
+                });
+              },
             ),
             FlatButton(
               child: const Text('Edit'),
-              onPressed: () {/* ... */},
+              onPressed: () async {
+                commandNameController.text = jsonList[i]["name"];
+                commandSaveController.text = jsonList[i]["command"];
+                showDialog<void>(
+                  context: context,
+                  barrierDismissible: false, // user must tap button!
+                  builder: (BuildContext context) {
+                    return Theme(
+                      data: new ThemeData(
+                          primaryColor: Colors.green,
+                          accentColor: Colors.orange,
+                          hintColor: Colors.grey),
+                      child: AlertDialog(
+                        title: Text('Edit command'),
+                        content: SingleChildScrollView(
+                          child: ListBody(
+                            children: <Widget>[
+                              TextFormField(
+                                controller: commandNameController,
+                                decoration: new InputDecoration(
+                                  labelText: "Name",
+                                  fillColor: Colors.green,
+                                ),
+                                style: new TextStyle(
+                                  fontFamily: "Poppins",
+                                ),
+                              ),
+                              TextFormField(
+                                controller: commandSaveController,
+                                decoration: new InputDecoration(
+                                  labelText: "Command",
+                                  fillColor: Colors.green,
+                                ),
+                                style: new TextStyle(
+                                  fontFamily: "Poppins",
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text('Cancel'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          FlatButton(
+                            child: Text('Save'),
+                            onPressed: () async {
+                              setState(() {
+                                setup = true;
+                                commandList.removeAt(i);
+                                commandSave.name = commandNameController.text;
+                                commandSave.command =
+                                    commandSaveController.text;
+                                commandList.add(json.encode(commandSave));
+                                sharedPref.save(commandList);
+                              });
+                              commandNameController.text = '';
+                              commandSaveController.text = '';
+                              Navigator.of(context).pop();
+                            },
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
             ),
             FlatButton(
               child: const Text('Run'),
-              onPressed: () {/* ... */},
+              onPressed: () async {
+                cmdOutput = await widget.basicDeatials["client"]
+                    .execute(jsonList[i]["command"]);
+                setState(() {
+                  showCmdOut = true;
+                });
+              },
             ),
           ],
         ));
@@ -76,6 +158,7 @@ class _ScriptPageState extends State<ScriptPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("s");
     if (setup) {
       Future<dynamic> savedCommands = sharedPref.getlist();
       savedCommands.then((val) {
@@ -273,11 +356,15 @@ class _ScriptPageState extends State<ScriptPage> {
                                       : comandListGenerator(commandList))),
                         ),
                       ),
-                      PreferredSize(
-                        preferredSize: Size.fromHeight(50.0),
-                        child: Text("data"),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: <Widget>[
+                              showCmdOut ? Text(cmdOutput) : Text(""),
+                            ],
+                          ),
+                        ),
                       ),
-                      //TabBarView(children: [ImageList(),])
                     ])),
             )));
   }
