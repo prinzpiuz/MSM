@@ -3,6 +3,7 @@ import 'package:msm/settings_page.dart';
 import 'package:msm/upload_page.dart';
 import 'package:msm/media_files.dart';
 import 'package:msm/models.dart';
+import 'package:msm/script_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() => runApp(MyApp());
@@ -59,6 +60,12 @@ class _MyHomeState extends State<MyHome> {
         MaterialPageRoute(builder: (context) => MediaFilesPage(basicDeatials)),
       );
     }
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ScriptPage(basicDeatials)),
+      );
+    }
   }
 
   setPermissions() async {
@@ -81,7 +88,7 @@ class _MyHomeState extends State<MyHome> {
 
     var headings = [
       Icon(Icons.file_upload, size: 50, color: Colors.white),
-      Icon(Icons.info_outline, size: 50, color: Colors.white),
+      Icon(Icons.code, size: 50, color: Colors.white),
       Icon(Icons.movie_filter, size: 50, color: Colors.white),
       Icon(Icons.settings, size: 50, color: Colors.white)
     ];

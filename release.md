@@ -1,3 +1,15 @@
+# MSM v1.1.4
+
+**Note**:This is stable release version (v1.1.4) this application is developed and tested on Moto G3 2015 edition, running on
+lineage os version 14.1 and android version 7.1.2
+
+- Added final page for interacting with server through commands
+- Live shell to execute commands in server
+- Saving commands in phone
+- Run saved commands
+- CRUD operations on saved commands
+- Manage server icon changed
+
 # MSM v0.8.3
 
 - Added listing for Movies and TV files
