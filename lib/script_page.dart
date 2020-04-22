@@ -158,7 +158,6 @@ class _ScriptPageState extends State<ScriptPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("s");
     if (setup) {
       Future<dynamic> savedCommands = sharedPref.getlist();
       savedCommands.then((val) {
@@ -360,7 +359,14 @@ class _ScriptPageState extends State<ScriptPage> {
                         child: SingleChildScrollView(
                           child: Column(
                             children: <Widget>[
-                              showCmdOut ? Text(cmdOutput) : Text(""),
+                              Container(
+                                  color: Colors.black,
+                                  child: showCmdOut
+                                      ? Text(
+                                          cmdOutput,
+                                          style: TextStyle(color: Colors.green),
+                                        )
+                                      : Text("")),
                             ],
                           ),
                         ),
