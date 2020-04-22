@@ -18,8 +18,8 @@ jobs:
       - name: Create a Release APK
         uses: ncipollo/release-action@v1
         with:
-          prerelease: true
-          name: msm-v0.8.3
+          prerelease: false
+          name: msm-v1.1.4
           artifacts: "build/app/outputs/apk/release/*.apk"
           bodyFile: "release.md"
           token: ${{ secrets.TOKEN }}
