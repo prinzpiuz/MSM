@@ -25,7 +25,6 @@
 [<img src="screenshots/tv_listing.jpg" width=160>](screenshots/tv_listing.jpg)
 [<img src="screenshots/tv_files.jpg" width=160>](screenshots/tv_files.jpg)
 [<img src="screenshots/list_media.jpg" width=160>](screenshots/list_media.jpg)
-[<img src="screenshots/upload_progress.jpg" width=350>](screenshots/upload_progress.jpg)
 
 ## Description
 
