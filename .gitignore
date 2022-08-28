@@ -94,3 +94,5 @@ doc/api/
 node_modules/
 package-lock.json
 package.json
+
+.flutter-plugins-dependencies
