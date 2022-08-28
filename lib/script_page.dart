@@ -283,7 +283,7 @@ class _ScriptPageState extends State<ScriptPage> {
                       ),
                     )
                   ]),
-              resizeToAvoidBottomPadding: liveShell ? true : false,
+              // resizeToAvoidBottomPadding: liveShell ? true : false,
               body: liveShell
                   ? Theme(
                       data: ThemeData(
