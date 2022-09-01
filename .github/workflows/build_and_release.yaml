@@ -13,7 +13,7 @@ jobs:
         id: semantic
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: echo ${{ steps.semantic.outputs.release-version }}
+      - run: echo ${{ steps.semantic.outputs.release-version }}
       - env:
           OUTPUTS: ${{ toJson(steps.semantic.outputs) }}
   build:
@@ -22,6 +22,12 @@ jobs:
     name: Build app
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-java@v2
+        with:
+          channel: "stable"
+          distribution: "zulu"
+          java-version: "11"
+          release-version: ${{ steps.semantic.outputs.release-version }}
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.3.0"
