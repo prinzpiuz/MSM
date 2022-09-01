@@ -45,7 +45,7 @@ class _HomePageScaffoldState extends State<HomePageScaffold> {
                     color: CommonColors.commonGreenColor,
                     margin: EdgeInsets.all(8.h),
                     child: OutlinedButton(
-                        onPressed: () => {print(index)},
+                        onPressed: () => {debugPrint(index.toString())},
                         child: Center(
                           child: HomeCommonWidgets.homeIconList[index],
                         )),

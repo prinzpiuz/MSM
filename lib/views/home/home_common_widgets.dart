@@ -52,7 +52,7 @@ class HomeCommonWidgets {
               padding: EdgeInsets.only(bottom: 10.h),
               child: IconButton(
                   onPressed: () {
-                    print("Conecting");
+                    debugPrint("Conecting");
                   },
                   icon: homePageIcon(Icons.cloud,
                       color: CommonColors.commonGreenColor)),

@@ -14,3 +14,7 @@ repos:
     rev: "4a1df675bb74dea371c17934933e257e46f8dd98"
     hooks:
       - id: flutter-format
+  - repo: https://github.com/dluksza/flutter-analyze-pre-commit
+    rev: "0bfdb7415bb2d02794a884bf2b763a92772001eb"
+    hooks:
+      - id: flutter-analyze
