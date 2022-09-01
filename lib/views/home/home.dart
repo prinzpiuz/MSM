@@ -32,50 +32,52 @@ class _HomePageScaffoldState extends State<HomePageScaffold> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            GridView.count(
-              shrinkWrap: true,
-              padding: EdgeInsets.all(16.h),
-              crossAxisCount: 2,
-              children: List.generate(4, (index) {
-                return Container(
-                  color: CommonColors.commonGreenColor,
-                  margin: EdgeInsets.all(8.h),
-                  child: OutlinedButton(
-                      onPressed: () => {print(index)},
-                      child: Center(
-                        child: HomeCommonWidgets.homeIconList[index],
-                      )),
-                );
-              }),
-            ),
-            Stack(children: <Widget>[
-              SizedBox(
-                width: 200.w,
-                height: 200.w,
-                child: TweenAnimationBuilder(
-                  tween: Tween<double>(begin: 0.0, end: .7),
-                  duration: const Duration(milliseconds: 3500),
-                  builder: (context, double value, _) =>
-                      CircularProgressIndicator(
-                    strokeWidth: 15.sp,
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              GridView.count(
+                shrinkWrap: true,
+                padding: EdgeInsets.all(16.h),
+                crossAxisCount: 2,
+                children: List.generate(4, (index) {
+                  return Container(
                     color: CommonColors.commonGreenColor,
-                    backgroundColor: CommonColors.diskUsageBackgroundColor,
-                    value: value,
-                    semanticsLabel: 'System Disk Usage Data',
+                    margin: EdgeInsets.all(8.h),
+                    child: OutlinedButton(
+                        onPressed: () => {print(index)},
+                        child: Center(
+                          child: HomeCommonWidgets.homeIconList[index],
+                        )),
+                  );
+                }),
+              ),
+              Stack(children: <Widget>[
+                SizedBox(
+                  width: 200.w,
+                  height: 200.w,
+                  child: TweenAnimationBuilder(
+                    tween: Tween<double>(begin: 0.0, end: .7),
+                    duration: const Duration(milliseconds: 3500),
+                    builder: (context, double value, _) =>
+                        CircularProgressIndicator(
+                      strokeWidth: 15.sp,
+                      color: CommonColors.commonGreenColor,
+                      backgroundColor: CommonColors.diskUsageBackgroundColor,
+                      value: value,
+                      semanticsLabel: 'System Disk Usage Data',
+                    ),
                   ),
                 ),
-              ),
-              Positioned(
-                top: 15.h,
-                left: 10.w,
-                right: 10.w,
-                child: HomeCommonWidgets.serverDetails(),
-              )
-            ]),
-          ],
+                Positioned(
+                  top: 15.h,
+                  left: 10.w,
+                  right: 10.w,
+                  child: HomeCommonWidgets.serverDetails(),
+                )
+              ]),
+            ],
+          ),
         ));
   }
 }

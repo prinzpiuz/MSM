@@ -1,4 +1,4 @@
-<p align="center"><a href="#"><img src="design/Icons_pngs/v0.4.0_launcher512px_bg_black.png" width="250"></a></p> 
+<p align="center"><a href="#"><img src="design/Icons_pngs/v0.4.0_launcher512px_bg_black.png" width="250"></a></p>
 <h2 align="center"><b>MSM</b></h2>
 <h4 align="center">All in one manager for your media server</h4>
 <!-- <p align="center"><a href="#"><img src="https://f-droid.org/wiki/images/0/06/F-Droid-button_get-it-on.png"></a></p> -->
@@ -54,7 +54,7 @@ The more is done the better it gets! please join [Telegram](https://t.me/joincha
 
 #### Server
 
-- You need to configure ssh in your server 
+- You need to configure ssh in your server
 - then configure a media server like [Emby](https://emby.media/), [Jellyfin](https://jellyfin.org/)
 - Note the paths for  saving movies and tv shows (full path), root password, username, port (22(default) in most cases), IP address
 
