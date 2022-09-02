@@ -34,7 +34,7 @@ jobs:
       - run: flutter pub get
       - run: flutter build appbundle
   github_release:
-    needs: update_release_draft
+    needs: build
     runs-on: ubuntu-latest
     name: Release on github
     steps:
