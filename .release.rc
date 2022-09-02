@@ -1,5 +1,18 @@
 {
   "branches": [
-    "new_Design"
+    "new_Design",
+    "master"
+  ],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/github",
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "set-version ${nextRelease.version}",
+        "publishCmd": "publish-package"
+      }
+    ]
   ]
 }
