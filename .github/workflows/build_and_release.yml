@@ -4,26 +4,31 @@ on:
   push:
     branches:
       - new_Design
-  pull_request:
-    types: [opened, reopened, synchronize]
-permissions:
-  contents: read
 jobs:
-  update_release_draft:
-    permissions:
-      contents: write
-      pull-requests: write
+  release_notes:
     runs-on: ubuntu-latest
+    name: Creating Release Notes
     steps:
-      - uses: release-drafter/release-drafter@v5
-        with:
-          commitish: new_Design
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Semantic Release
+        uses: cycjimmy/semantic-release-action@v3
+        id: semantic
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Do something when a new release published
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          echo ${{ steps.semantic.outputs.new_release_version }}
+          echo ${{ steps.semantic.outputs.new_release_major_version }}
+          echo ${{ steps.semantic.outputs.new_release_minor_version }}
+          echo ${{ steps.semantic.outputs.new_release_patch_version }}
   build:
     needs: update_release_draft
     runs-on: ubuntu-latest
-    name: Build app
+    name: Build App
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
@@ -32,18 +37,18 @@ jobs:
           channel: "stable"
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter build apk --split-per-abi --no-shrink --build-name=${{ steps.update_release_draft.outputs.tag_name }}
+      - run: flutter build apk --split-per-abi --no-shrink --build-name=${{ steps.semantic.outputs.new_release_version }}
       - run: flutter pub get
       - run: flutter build appbundle
   github_release:
     needs: build
     runs-on: ubuntu-latest
-    name: Release on github
+    name: Release On Github
     steps:
       - uses: ncipollo/release-action@v1
         with:
           prerelease: true
-          name: msm-v${{ steps.update_release_draft.outputs.tag_name }}
+          name: msm-v${{ steps.semantic.outputs.new_release_version }}
           artifacts: "build/app/outputs/apk/release/*.apk"
           body: ${{ steps.update_release_draft.outputs.body }}
           token: ${{ secrets.TOKEN }}
