@@ -1,20 +1,12 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
+    rev: v4.3.0
     hooks:
       - id: check-yaml
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: check-merge-conflict
   - repo: https://github.com/Cretezy/flutter-format-pre-commit
-    rev: "master"
+    rev: "4a1df675bb74dea371c17934933e257e46f8dd98"
     hooks:
       - id: flutter-format
-  - repo: https://github.com/dluksza/flutter-analyze-pre-commit
-    rev: "master"
-    hooks:
-      - id: flutter-analyze
-  - repo: https://github.com/fluttercommunity/import_sorter
-    rev: "master"
-    hooks:
-      - id: flutter-import-sorter

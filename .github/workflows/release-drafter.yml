@@ -1,0 +1,46 @@
+name: Build And Release
+
+on:
+  push:
+    branches:
+      - new_Design
+  pull_request:
+    types: [opened, reopened, synchronize]
+permissions:
+  contents: read
+jobs:
+  update_release_draft:
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: release-drafter/release-drafter@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build:
+    runs-on: ubuntu-latest
+    name: Build app
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.3.0"
+          channel: "stable"
+      - run: flutter --version
+      - run: flutter pub get
+      - run: flutter build apk --split-per-abi --no-shrink --build-name=${{ steps.update_release_draft.outputs.tag_name }}
+      - run: flutter pub get
+      - run: flutter build appbundle
+  github_release:
+    runs-on: ubuntu-latest
+    name: Release on github
+    steps:
+      - uses: ncipollo/release-action@v1
+        with:
+          release-version: ${{ steps.update_release_draft.outputs.tag_name }}
+          prerelease: true
+          name: msm-v${{ steps.update_release_draft.outputs.tag_name }}
+          artifacts: "build/app/outputs/apk/release/*.apk"
+          bodyFile: ${{ steps.update_release_draft.outputs.body }}
+          token: ${{ secrets.TOKEN }}

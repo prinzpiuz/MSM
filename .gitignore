@@ -4,8 +4,6 @@
 .dart_tool/
 .packages
 build/
-# If you're building an application, you may want to check-in your pubspec.lock
-pubspec.lock
 
 # Directory created by dartdoc
 # If you don't generate documentation locally you can remove this line.
@@ -42,7 +40,6 @@ doc/api/
 
 # Flutter/Dart/Pub related
 **/doc/api/
-.dart_tool/
 .flutter-plugins
 .packages
 .pub-cache/
@@ -96,3 +93,4 @@ package-lock.json
 package.json
 
 .flutter-plugins-dependencies
+.env
