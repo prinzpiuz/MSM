@@ -14,6 +14,10 @@ jobs:
         id: semantic
         with:
           semantic_version: 16
+          extra_plugins: |
+            "@semantic-release/commit-analyzer",
+            "@semantic-release/release-notes-generator",
+            "@semantic-release/github",
           branches: |
             [
               '+([0-9])?(.{+([0-9]),x}).x',
