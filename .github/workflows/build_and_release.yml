@@ -31,11 +31,7 @@ jobs:
             ]
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo ${{ steps.semantic.outputs.new_release_version }}
-          echo ${{ steps.semantic.outputs.new_release_major_version }}
-          echo ${{ steps.semantic.outputs.new_release_minor_version }}
-          echo ${{ steps.semantic.outputs.new_release_patch_version }}
+      - run: echo ${{ steps.semantic.outputs.new_release_version }}
   build:
     needs: release_notes
     runs-on: ubuntu-latest
@@ -61,5 +57,5 @@ jobs:
           prerelease: true
           name: msm-v${{ steps.semantic.outputs.new_release_version }}
           artifacts: "build/app/outputs/apk/release/*.apk"
-          body: ${{ steps.update_release_draft.outputs.body }}
+          # body: ${{ steps.update_release_draft.outputs.body }}
           token: ${{ secrets.TOKEN }}
