@@ -19,6 +19,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build:
+    needs: update_release_draft
     runs-on: ubuntu-latest
     name: Build app
     steps:
@@ -33,6 +34,7 @@ jobs:
       - run: flutter pub get
       - run: flutter build appbundle
   github_release:
+    needs: update_release_draft
     runs-on: ubuntu-latest
     name: Release on github
     steps:
