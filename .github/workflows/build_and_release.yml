@@ -9,14 +9,29 @@ jobs:
     runs-on: ubuntu-latest
     name: Creating Release Notes
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Semantic Release
+      - uses: actions/checkout@v3
       - uses: cycjimmy/semantic-release-action@v3
         id: semantic
+        with:
+          semantic_version: 16
+          branches: |
+            [
+              '+([0-9])?(.{+([0-9]),x}).x',
+              'master',
+              'new_Design',
+              'release',
+              {
+                name: 'beta',
+                prerelease: true
+              },
+              {
+                name: 'alpha',
+                prerelease: true
+              }
+            ]
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: |
+        run: |
           echo ${{ steps.semantic.outputs.new_release_version }}
           echo ${{ steps.semantic.outputs.new_release_major_version }}
           echo ${{ steps.semantic.outputs.new_release_minor_version }}
