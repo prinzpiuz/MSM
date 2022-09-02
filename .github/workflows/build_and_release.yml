@@ -10,6 +10,7 @@ permissions:
   contents: read
 jobs:
   update_release_draft:
+    needs: [pre-commit, sort_analyse_test]
     permissions:
       contents: write
       pull-requests: write
