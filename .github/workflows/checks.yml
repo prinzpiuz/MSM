@@ -10,7 +10,7 @@ jobs:
       - uses: subosito/flutter-action@v2
       - uses: pre-commit/action@v3.0.0
   sort_analyse_test:
-    name: Sort Imports
+    name: Sort Analyze Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
