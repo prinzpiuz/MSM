@@ -7,31 +7,12 @@ on:
 jobs:
   release_notes:
     runs-on: ubuntu-latest
-    name: Creating Release Notes
     steps:
-      - uses: actions/checkout@v3
-      - uses: cycjimmy/semantic-release-action@v3
-        id: semantic
+      - name: Generate Release Notes
+        uses: paolorevillosa/release-change-logs@master
         with:
-          semantic_version: 16
-          branches: |
-            [
-              '+([0-9])?(.{+([0-9]),x}).x',
-              'master',
-              'new_Design',
-              'release',
-              {
-                name: 'beta',
-                prerelease: true
-              },
-              {
-                name: 'alpha',
-                prerelease: true
-              }
-            ]
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: echo ${{ steps.semantic.outputs.new_release_version }}
+          custom_tag: '{"b":"Bugfix","f": "Feature Added"}'
+      - run: echo ${{ steps.release_notes.outputs }}
   build:
     needs: release_notes
     runs-on: ubuntu-latest
@@ -42,6 +23,7 @@ jobs:
         with:
           flutter-version: "3.3.0"
           channel: "stable"
+      - run: echo ${{ steps.release_notes.outputs }}
       - run: flutter --version
       - run: flutter pub get
       - run: flutter build apk --split-per-abi --no-shrink --build-name=${{ steps.semantic.outputs.new_release_version }}
