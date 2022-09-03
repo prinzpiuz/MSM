@@ -11,7 +11,7 @@ jobs:
       - name: Generate Release Notes
         uses: paolorevillosa/release-change-logs@master
         with:
-          custom_tag: '{"b":"Bugfix","f": "Feature Added"}'
+          custom_tags: '{"b":"Bugfix","f": "Feature Added"}'
       - run: echo ${{ steps.release_notes.outputs }}
   build:
     needs: release_notes
