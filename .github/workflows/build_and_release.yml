@@ -21,6 +21,8 @@ jobs:
       - name: Changelog
         uses: glennawatson/ChangeLog@v1
         id: changelog
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
     outputs:
       new_tag: ${{ steps.autoversion.outputs.new_tag }}
       changelog: ${{ steps.changelog.outputs.changelog }}
@@ -34,6 +36,7 @@ jobs:
         with:
           flutter-version: "3.3.0"
           channel: "stable"
+      - run: echo ${{ steps.Changelog.outputs.changelog }}
       - run: flutter --version
       - run: flutter pub get
       - run: flutter build apk --split-per-abi --no-shrink --build-name=${{ needs.tag.outputs.new_tag }}
@@ -47,8 +50,9 @@ jobs:
       - uses: ncipollo/release-action@v1.10.0
         with:
           tag: ${{ needs.tag.outputs.new_tag }}
-          body: ${{ needs.tag.outputs.changelog }}
+          body: |
+            ${{ steps.Changelog.outputs.changelog }}
           prerelease: true
           name: msm-v${{ needs.tag.outputs.new_tag }}
-          artifacts: "build/app/outputs/apk/release/*.apk"
+          artifacts: "build/app/outputs/flutter-apk/*.apk"
           token: ${{ secrets.GITHUB_TOKEN }}
