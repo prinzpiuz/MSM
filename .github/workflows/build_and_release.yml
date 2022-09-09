@@ -21,9 +21,9 @@ jobs:
       - name: Changelog
         uses: glennawatson/ChangeLog@v1
         id: changelog
-      - uses: hole19/git-tag-action@master
-        env:
-          TAG: ${{ steps.autoversion.outputs.new_tag }}
+      - name: Push Tag
+      - uses: mathieudutour/github-tag-action@v6.0
+        with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     outputs:
       new_tag: ${{ steps.autoversion.outputs.new_tag }}
@@ -40,17 +40,15 @@ jobs:
           channel: "stable"
       - run: flutter --version
       - run: flutter pub get
-      # - run: flutter build apk --split-per-abi --no-shrink --build-name=${{ needs.tag.outputs.new_tag }}
+      - run: flutter build apk --split-per-abi --no-shrink --build-name=${{ needs.tag.outputs.new_tag }}
       - run: flutter pub get
-      # - run: flutter build appbundle
+      - run: flutter build appbundle
   github_release:
     needs: build
     runs-on: ubuntu-latest
     name: Release On Github
     steps:
       - uses: softprops/action-gh-release@v1
-        env:
-          tag_name: ${{ needs.tag.outputs.new_tag }}
         with:
           tag_name: ${{ needs.tag.outputs.new_tag }}
           body: ${{ needs.tag.outputs.changelog }}
