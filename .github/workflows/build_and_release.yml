@@ -12,11 +12,14 @@ jobs:
         with:
           fetch-depth: "0"
       - name: Bump version and push tag
+        id: autoversion
         uses: moble/github-tag-action@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
           DRY_RUN: true
+    outputs:
+      new_tag: ${{ steps.autoversion.outputs.new_tag }}
   build:
     needs: tag
     runs-on: ubuntu-latest
@@ -40,6 +43,7 @@ jobs:
     steps:
       - uses: ncipollo/release-action@v1
         with:
+          tag: ${{ needs.tag.outputs.new_tag }}
           prerelease: true
           name: msm-v${{ needs.tag.outputs.new_tag }}
           artifacts: "build/app/outputs/apk/release/*.apk"
