@@ -40,12 +40,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Release On Github
     steps:
-      - uses: ncipollo/release-action@v1.10.0
+      - uses: softprops/action-gh-release@v1
         with:
-          allowUpdates: true
-          generateReleaseNotes: true
-          tag: ${{ needs.tag.outputs.new_tag }}
+          generate_release_notes: true
+          tag_name: ${{ needs.tag.outputs.new_tag }}
           prerelease: true
           name: msm-${{ needs.tag.outputs.new_tag }}
-          artifacts: build/app/outputs/bundle/release/app-release.aab
+          files: build/app/outputs/bundle/release/app-release.aab
           token: ${{ secrets.GITHUB_TOKEN }}
