@@ -45,11 +45,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Release On Github
     steps:
-      - uses: ncipollo/release-action@v1
+      - uses: softprops/action-gh-release@v1
         with:
-          tag: ${{ needs.tag.outputs.new_tag }}
+          tag_name: ${{ needs.tag.outputs.new_tag }}
           body: ${{ needs.tag.outputs.changelog }}
           prerelease: true
           name: msm-v${{ needs.tag.outputs.new_tag }}
-          artifacts: "build/app/outputs/apk/release/*.apk"
+          files: "build/app/outputs/apk/release/*.apk"
           token: ${{ secrets.TOKEN }}
