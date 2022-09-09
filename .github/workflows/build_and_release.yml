@@ -38,18 +38,19 @@ jobs:
         with:
           flutter-version: "3.3.0"
           channel: "stable"
-      - run: echo ${{ needs.tag.outputs }}
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter build apk --split-per-abi --no-shrink --build-name=${{ needs.tag.outputs.new_tag }}
+      # - run: flutter build apk --split-per-abi --no-shrink --build-name=${{ needs.tag.outputs.new_tag }}
       - run: flutter pub get
-      - run: flutter build appbundle
+      # - run: flutter build appbundle
   github_release:
     needs: build
     runs-on: ubuntu-latest
     name: Release On Github
     steps:
       - uses: softprops/action-gh-release@v1
+        env:
+          tag_name: ${{ needs.tag.outputs.new_tag }}
         with:
           tag_name: ${{ needs.tag.outputs.new_tag }}
           body: ${{ needs.tag.outputs.changelog }}
