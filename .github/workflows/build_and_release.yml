@@ -18,7 +18,7 @@ jobs:
           WITH_V: true
       - run: echo ${{ steps.tag.outputs }}
   build:
-    needs: release_notes
+    needs: tag
     runs-on: ubuntu-latest
     name: Build App
     steps:
@@ -34,7 +34,7 @@ jobs:
       - run: flutter pub get
       - run: flutter build appbundle
   github_release:
-    needs: build
+    needs: tag
     runs-on: ubuntu-latest
     name: Release On Github
     steps:
