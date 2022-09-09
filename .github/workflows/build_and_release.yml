@@ -47,5 +47,5 @@ jobs:
           tag: ${{ needs.tag.outputs.new_tag }}
           prerelease: true
           name: msm-${{ needs.tag.outputs.new_tag }}
-          artifacts: "build/app/outputs/bundle/release/app-release.aab"
+          artifacts: build/app/outputs/bundle/release/app-release.aab
           token: ${{ secrets.GITHUB_TOKEN }}
