@@ -5,14 +5,18 @@ on:
     branches:
       - new_Design
 jobs:
-  release_notes:
+  tag:
     runs-on: ubuntu-latest
     steps:
-      - name: Generate Release Notes
-        uses: paolorevillosa/release-change-logs@master
+      - uses: actions/checkout@v2
         with:
-          custom_tags: '{"b":"Bugfix","f": "Feature Added"}'
-      - run: echo ${{ steps.release_notes.outputs }}
+          fetch-depth: "0"
+      - name: Bump version and push tag
+        uses: moble/github-tag-action@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+      - run: echo ${{ steps.tag.outputs }}
   build:
     needs: release_notes
     runs-on: ubuntu-latest
@@ -26,7 +30,7 @@ jobs:
       - run: echo ${{ steps.release_notes.outputs }}
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter build apk --split-per-abi --no-shrink --build-name=${{ steps.semantic.outputs.new_release_version }}
+      - run: flutter build apk --split-per-abi --no-shrink --build-name=${{ steps.tag.outputs.new_tag }}
       - run: flutter pub get
       - run: flutter build appbundle
   github_release:
@@ -37,7 +41,6 @@ jobs:
       - uses: ncipollo/release-action@v1
         with:
           prerelease: true
-          name: msm-v${{ steps.semantic.outputs.new_release_version }}
+          name: msm-v${{ steps.tag.outputs.new_tag }}
           artifacts: "build/app/outputs/apk/release/*.apk"
-          # body: ${{ steps.update_release_draft.outputs.body }}
           token: ${{ secrets.TOKEN }}
