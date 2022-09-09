@@ -22,7 +22,7 @@ jobs:
         uses: glennawatson/ChangeLog@v1
         id: changelog
       - name: Push Tag
-      - uses: mathieudutour/github-tag-action@v6.0
+        uses: mathieudutour/github-tag-action@v6.0
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     outputs:
