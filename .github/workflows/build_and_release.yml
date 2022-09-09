@@ -3,7 +3,7 @@ name: Build And Release
 on:
   push:
     branches:
-      - new_Design
+      - release
 jobs:
   tag:
     runs-on: ubuntu-latest
