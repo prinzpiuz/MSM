@@ -51,4 +51,4 @@ jobs:
           prerelease: true
           name: msm-v${{ needs.tag.outputs.new_tag }}
           artifacts: "build/app/outputs/apk/release/*.apk"
-          token: ${{ secrets.TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
