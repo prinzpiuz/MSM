@@ -20,10 +20,10 @@ jobs:
           DRY_RUN: true
     outputs:
       new_tag: ${{ steps.autoversion.outputs.new_tag }}
-  build:
+  build_and_release:
     needs: tag
     runs-on: ubuntu-latest
-    name: Build App
+    name: Build and Release App
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
@@ -41,18 +41,5 @@ jobs:
           tag_name: ${{ needs.tag.outputs.new_tag }}
           prerelease: true
           name: msm-${{ needs.tag.outputs.new_tag }}
-          files: build/app/outputs/flutter-apk/*.apk
+          files: build/app/outputs/flutter-apk/*.apk, build/app/outputs/bundle/release/app-release.aab
           token: ${{ secrets.GITHUB_TOKEN }}
-  # github_release:
-  #   needs: [tag, build]
-  #   runs-on: ubuntu-latest
-  #   name: Release On Github
-  #   steps:
-  #     - uses: softprops/action-gh-release@v1
-  #       with:
-  #         generate_release_notes: true
-  #         tag_name: ${{ needs.tag.outputs.new_tag }}
-  #         prerelease: true
-  #         name: msm-${{ needs.tag.outputs.new_tag }}
-  #         files: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
-  #         token: ${{ secrets.GITHUB_TOKEN }}
