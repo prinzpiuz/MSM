@@ -35,16 +35,24 @@ jobs:
       - run: flutter build apk --split-per-abi --no-shrink --build-name=${{ needs.tag.outputs.new_tag }}
       - run: flutter pub get
       - run: flutter build appbundle
-  github_release:
-    needs: [tag, build]
-    runs-on: ubuntu-latest
-    name: Release On Github
-    steps:
       - uses: softprops/action-gh-release@v1
         with:
           generate_release_notes: true
           tag_name: ${{ needs.tag.outputs.new_tag }}
           prerelease: true
           name: msm-${{ needs.tag.outputs.new_tag }}
-          files: build/app/outputs/bundle/release/app-release.aab
+          files: build/app/outputs/flutter-apk/*.apk
           token: ${{ secrets.GITHUB_TOKEN }}
+  # github_release:
+  #   needs: [tag, build]
+  #   runs-on: ubuntu-latest
+  #   name: Release On Github
+  #   steps:
+  #     - uses: softprops/action-gh-release@v1
+  #       with:
+  #         generate_release_notes: true
+  #         tag_name: ${{ needs.tag.outputs.new_tag }}
+  #         prerelease: true
+  #         name: msm-${{ needs.tag.outputs.new_tag }}
+  #         files: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+  #         token: ${{ secrets.GITHUB_TOKEN }}
