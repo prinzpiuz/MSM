@@ -21,6 +21,10 @@ jobs:
       - name: Changelog
         uses: glennawatson/ChangeLog@v1
         id: changelog
+      - uses: hole19/git-tag-action@master
+        env:
+          TAG: ${{ steps.autoversion.outputs.new_tag }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     outputs:
       new_tag: ${{ steps.autoversion.outputs.new_tag }}
       changelog: ${{ steps.changelog.outputs.changelog }}
@@ -34,7 +38,7 @@ jobs:
         with:
           flutter-version: "3.3.0"
           channel: "stable"
-      - run: echo ${{ steps.release_notes.outputs }}
+      - run: echo ${{ needs.tag.outputs }}
       - run: flutter --version
       - run: flutter pub get
       - run: flutter build apk --split-per-abi --no-shrink --build-name=${{ needs.tag.outputs.new_tag }}
