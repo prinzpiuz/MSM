@@ -3,31 +3,27 @@ name: Build And Release
 on:
   push:
     branches:
-      - new_Design
+      - release
 jobs:
-  release_notes:
+  tag:
     runs-on: ubuntu-latest
-    name: Creating Release Notes
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Semantic Release
-        uses: cycjimmy/semantic-release-action@v3
-        id: semantic
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: "0"
+      - name: Bump version and push tag
+        id: autoversion
+        uses: moble/github-tag-action@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Do something when a new release published
-        run: |
-          echo ${{ steps.semantic.outputs.new_release_version }}
-          echo ${{ steps.semantic.outputs.new_release_major_version }}
-          echo ${{ steps.semantic.outputs.new_release_minor_version }}
-          echo ${{ steps.semantic.outputs.new_release_patch_version }}
-  build:
-    needs: release_notes
+          WITH_V: true
+          DRY_RUN: true
+    outputs:
+      new_tag: ${{ steps.autoversion.outputs.new_tag }}
+  build_and_release:
+    needs: tag
     runs-on: ubuntu-latest
-    name: Build App
+    name: Build and Release App
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
@@ -36,18 +32,14 @@ jobs:
           channel: "stable"
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter build apk --split-per-abi --no-shrink --build-name=${{ steps.semantic.outputs.new_release_version }}
+      - run: flutter build apk --split-per-abi --no-shrink --build-name=${{ needs.tag.outputs.new_tag }}
       - run: flutter pub get
       - run: flutter build appbundle
-  github_release:
-    needs: build
-    runs-on: ubuntu-latest
-    name: Release On Github
-    steps:
-      - uses: ncipollo/release-action@v1
+      - uses: softprops/action-gh-release@v1
         with:
+          generate_release_notes: true
+          tag_name: ${{ needs.tag.outputs.new_tag }}
           prerelease: true
-          name: msm-v${{ steps.semantic.outputs.new_release_version }}
-          artifacts: "build/app/outputs/apk/release/*.apk"
-          body: ${{ steps.update_release_draft.outputs.body }}
-          token: ${{ secrets.TOKEN }}
+          name: msm-${{ needs.tag.outputs.new_tag }}
+          files: build/app/outputs/flutter-apk/*.apk, build/app/outputs/bundle/release/app-release.aab
+          token: ${{ secrets.GITHUB_TOKEN }}
