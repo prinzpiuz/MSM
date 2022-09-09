@@ -16,7 +16,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
-      - run: echo ${{ steps.tag.outputs }}
+          DRY_RUN: true
   build:
     needs: tag
     runs-on: ubuntu-latest
@@ -30,17 +30,17 @@ jobs:
       - run: echo ${{ steps.release_notes.outputs }}
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter build apk --split-per-abi --no-shrink --build-name=${{ steps.tag.outputs.new_tag }}
+      - run: flutter build apk --split-per-abi --no-shrink --build-name=${{ needs.tag.outputs.new_tag }}
       - run: flutter pub get
       - run: flutter build appbundle
   github_release:
-    needs: tag
+    needs: build
     runs-on: ubuntu-latest
     name: Release On Github
     steps:
       - uses: ncipollo/release-action@v1
         with:
           prerelease: true
-          name: msm-v${{ steps.tag.outputs.new_tag }}
+          name: msm-v${{ needs.tag.outputs.new_tag }}
           artifacts: "build/app/outputs/apk/release/*.apk"
           token: ${{ secrets.TOKEN }}
