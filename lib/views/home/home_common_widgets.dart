@@ -8,8 +8,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // Project imports:
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/font_sizes.dart';
-import 'package:msm/views/ui/text.dart';
-import 'package:msm/views/ui/textstyles.dart';
+import 'package:msm/views/ui_components/text.dart';
+import 'package:msm/views/ui_components/textstyles.dart';
 
 class HomeCommonWidgets {
   static Widget homePageIcon(IconData icon,
@@ -20,6 +20,7 @@ class HomeCommonWidgets {
   }
 
   static List<Widget> homeIconList = [
+    //order matters
     homePageIcon(Icons.cloud_upload_outlined),
     homePageIcon(FontAwesomeIcons.screwdriverWrench, fontAwesome: true),
     homePageIcon(Icons.folder_outlined),
