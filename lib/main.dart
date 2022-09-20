@@ -28,9 +28,7 @@ class _MSMState extends State<MSM> {
   }
 
   void requestPermissions() async {
-    await [
-      Permission.storage,
-    ].request();
+    await [Permission.storage].request();
   }
 
   @override

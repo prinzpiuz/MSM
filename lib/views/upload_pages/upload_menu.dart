@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Package imports:
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 // Project imports:
 import 'package:msm/constants/colors.dart';
@@ -29,42 +30,73 @@ class UploadMenuPageState extends State<UploadMenuPage> {
   }
 }
 
+// TODO need to consider the case of custom folders
+// TODO also need to find an algorithm to handle the grids size when custom folders come
+
 Widget uploadMenu(BuildContext context) {
   return Scaffold(
       backgroundColor: CommonColors.commonWhiteColor,
       body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              menuBox(
-                  icon: Icons.movie_filter_outlined,
-                  onPressed: () => goToPage(UploadCatogories.movies, context)),
-              menuBox(
-                  icon: Icons.tv,
-                  onPressed: () => goToPage(UploadCatogories.movies, context)),
-              menuBox(
-                  icon: FontAwesomeIcons.book,
-                  onPressed: () => goToPage(UploadCatogories.movies, context))
-            ],
+        child: Padding(
+          padding: EdgeInsets.all(16.h),
+          child: StaggeredGrid.count(
+            crossAxisCount: 4,
+            mainAxisSpacing: 4.h,
+            crossAxisSpacing: 4.h,
+            children: tiles(context),
           ),
         ),
       ));
 }
 
-Widget menuBox({required IconData icon, required Function onPressed}) {
-  return Padding(
-    padding: EdgeInsets.only(top: 10.h, bottom: 10.h),
-    child: Container(
-      height: 204.h,
-      width: 304.h,
-      color: CommonColors.commonGreenColor,
-      child: OutlinedButton(
-        onPressed: () => onPressed(),
-        child: Center(
-            child: Icon(icon,
-                color: CommonColors.commonWhiteColor,
-                size: AppFontSizes.homePageIconFontSize.h)),
-      ),
+Widget menuBox(
+    {required IconData icon,
+    required Function onPressed,
+    required double iconSize}) {
+  return Container(
+    color: CommonColors.commonGreenColor,
+    child: OutlinedButton(
+      onPressed: () => onPressed(),
+      child: Center(
+          child:
+              Icon(icon, color: CommonColors.commonWhiteColor, size: iconSize)),
     ),
   );
+}
+
+List<StaggeredGridTile> tiles(BuildContext context) {
+  return [
+    StaggeredGridTile.count(
+      crossAxisCellCount: 2,
+      mainAxisCellCount: 2,
+      child: menuBox(
+          icon: Icons.movie_filter_outlined,
+          onPressed: () => goToPage(UploadCatogories.movies, context),
+          iconSize: AppFontSizes.homePageIconFontSize.h),
+    ),
+    StaggeredGridTile.count(
+      crossAxisCellCount: 2,
+      mainAxisCellCount: 3,
+      child: menuBox(
+          icon: Icons.tv,
+          onPressed: () => goToPage(UploadCatogories.movies, context),
+          iconSize: AppFontSizes.homePageIconFontSize.h),
+    ),
+    StaggeredGridTile.count(
+      crossAxisCellCount: 1,
+      mainAxisCellCount: 1,
+      child: menuBox(
+          icon: FontAwesomeIcons.book,
+          onPressed: () => goToPage(UploadCatogories.movies, context),
+          iconSize: AppFontSizes.smallTileIconSize.h),
+    ),
+    StaggeredGridTile.count(
+      crossAxisCellCount: 1,
+      mainAxisCellCount: 1,
+      child: menuBox(
+          icon: FontAwesomeIcons.image,
+          onPressed: () => goToPage(UploadCatogories.movies, context),
+          iconSize: AppFontSizes.smallTileIconSize.h),
+    )
+  ];
 }

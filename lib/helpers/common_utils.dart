@@ -7,6 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/font_sizes.dart';
 import 'package:msm/router/router_utils.dart';
+import 'package:msm/views/ui_components/text.dart';
+import 'package:msm/views/ui_components/textstyles.dart';
 
 WillPopScope handleBackButton(
     {String? backRoute,
@@ -25,11 +27,16 @@ WillPopScope handleBackButton(
 }
 
 PreferredSizeWidget commonAppBar(
-    {required BuildContext context, bool send = false}) {
+    {required BuildContext context, bool send = false, String? text}) {
   const Color appBarIconColor = CommonColors.commonBlackColor;
   const double appBarIconSIze = AppFontSizes.appBarIconSIze;
   EdgeInsetsGeometry appBarIconPadding = EdgeInsets.all(10.h);
   return AppBar(
+    title: text != null
+        ? AppText.singleLineText(text,
+            style: AppTextStyles.bold(CommonColors.commonBlackColor,
+                AppFontSizes.titleBarFontSize.sp))
+        : const SizedBox(),
     elevation: 0,
     backgroundColor: CommonColors.commonWhiteColor,
     leading: Padding(
@@ -57,3 +64,8 @@ PreferredSizeWidget commonAppBar(
     ],
   );
 }
+
+Widget get commonCircularProgressIndicator => const Center(
+        child: CircularProgressIndicator(
+      color: CommonColors.commonGreenColor,
+    ));

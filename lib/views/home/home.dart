@@ -29,9 +29,11 @@ Widget home(BuildContext context) {
       backgroundColor: CommonColors.commonWhiteColor,
       body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            menuGrid(context),
+            Padding(
+              padding: EdgeInsets.only(top: 18.h, bottom: 30.h),
+              child: menuGrid(context),
+            ),
             serverDetails,
           ],
         ),

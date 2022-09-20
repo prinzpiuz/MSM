@@ -10,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/font_sizes.dart';
 import 'package:msm/helpers/common_utils.dart';
+import 'package:msm/helpers/file_manager.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/ui_components/text.dart';
 import 'package:msm/views/ui_components/textstyles.dart';
@@ -25,22 +26,6 @@ class CommonUploadPage extends StatefulWidget {
 
 class CommonUploadPageState extends State<CommonUploadPage> {
   @override
-  void initState() {
-    getFiles();
-
-    super.initState();
-  }
-
-  void getFiles() async {
-    Directory dir = Directory('/storage/emulated/0/Movies');
-    debugPrint(dir.path);
-    if (await Permission.storage.request().isGranted) {
-      // Either the permission was already granted before or the user just granted it.
-      debugPrint(dir.listSync(recursive: true).whereType<File>().toString());
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     return handleBackButton(
         child: commonUpload(context),
@@ -51,14 +36,27 @@ class CommonUploadPageState extends State<CommonUploadPage> {
 
 Widget commonUpload(BuildContext context) {
   return Scaffold(
-      appBar: commonAppBar(context: context),
+      appBar: commonAppBar(context: context, text: "Movies"),
       backgroundColor: CommonColors.commonWhiteColor,
-      body: Column(
-        children: <Widget>[uploadItemCard(context)],
+      body: FutureBuilder<List<FileObject>>(
+        future: FileManager
+            .getAllFiles(), // a previously-obtained Future<String> or null
+        builder:
+            (BuildContext context, AsyncSnapshot<List<FileObject>> snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return uploadItemCard(context, snapshot.data![index]);
+                });
+          } else {
+            return commonCircularProgressIndicator;
+          }
+        },
       ));
 }
 
-Widget uploadItemCard(BuildContext context) {
+Widget uploadItemCard(BuildContext context, FileObject data) {
   return Padding(
     padding: EdgeInsets.only(top: 10.h),
     child: Stack(
@@ -78,17 +76,16 @@ Widget uploadItemCard(BuildContext context) {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AppText.singleLineText(
-                          "Bacurau.2019.720p.BluRay.x264.AAC-[YTS.MX].mp4",
+                      AppText.singleLineText(data.name,
                           style: AppTextStyles.medium(
                               CommonColors.commonBlackColor, 15)),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          AppText.text("Downloads",
+                          AppText.text(data.location,
                               style: AppTextStyles.medium(
                                   CommonColors.commonGreyColor, 10)),
-                          AppText.text("MKV, 1GB",
+                          AppText.text("${data.extention}, ${data.size}",
                               style: AppTextStyles.medium(
                                   CommonColors.commonGreyColor, 10))
                         ],
@@ -102,8 +99,8 @@ Widget uploadItemCard(BuildContext context) {
           bottom: 15.h,
           right: 50.w,
           child: Container(
-            width: 50,
-            height: 50,
+            width: 60,
+            height: 60,
             decoration: const BoxDecoration(
                 shape: BoxShape.circle, color: CommonColors.commonGreenColor),
             child: IconButton(
@@ -111,7 +108,7 @@ Widget uploadItemCard(BuildContext context) {
                 icon: Icon(
                   Icons.add,
                   color: CommonColors.commonWhiteColor,
-                  size: 35.h,
+                  size: 30.h,
                 )),
           ),
         )
