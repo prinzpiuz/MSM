@@ -9,7 +9,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 // Project imports:
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/font_sizes.dart';
-import 'package:msm/helpers/common_utils.dart';
+import 'package:msm/common_utils.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/upload_pages/upload_page_utils.dart';
 
@@ -79,7 +79,7 @@ List<StaggeredGridTile> tiles(BuildContext context) {
       mainAxisCellCount: 3,
       child: menuBox(
           icon: Icons.tv,
-          onPressed: () => goToPage(UploadCatogories.movies, context),
+          onPressed: () => goToPage(UploadCatogories.tvShows, context),
           iconSize: AppFontSizes.homePageIconFontSize.h),
     ),
     StaggeredGridTile.count(
@@ -87,7 +87,7 @@ List<StaggeredGridTile> tiles(BuildContext context) {
       mainAxisCellCount: 1,
       child: menuBox(
           icon: FontAwesomeIcons.book,
-          onPressed: () => goToPage(UploadCatogories.movies, context),
+          onPressed: () => goToPage(UploadCatogories.books, context),
           iconSize: AppFontSizes.smallTileIconSize.h),
     ),
     StaggeredGridTile.count(
@@ -95,7 +95,7 @@ List<StaggeredGridTile> tiles(BuildContext context) {
       mainAxisCellCount: 1,
       child: menuBox(
           icon: FontAwesomeIcons.image,
-          onPressed: () => goToPage(UploadCatogories.movies, context),
+          onPressed: () => goToPage(UploadCatogories.pictures, context),
           iconSize: AppFontSizes.smallTileIconSize.h),
     )
   ];

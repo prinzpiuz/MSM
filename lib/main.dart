@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 
 // Project imports:
 import 'package:msm/providers/app_provider.dart';
+import 'package:msm/providers/upload_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'config.dart';
 
@@ -19,10 +20,12 @@ class MSM extends StatefulWidget {
 
 class _MSMState extends State<MSM> {
   late AppService appService;
+  late UploadState uploadService;
 
   @override
   void initState() {
     appService = AppService();
+    uploadService = UploadState();
     requestPermissions();
     super.initState();
   }
@@ -33,6 +36,6 @@ class _MSMState extends State<MSM> {
 
   @override
   Widget build(BuildContext context) {
-    return materialApp(appService);
+    return materialApp(appService, uploadService);
   }
 }

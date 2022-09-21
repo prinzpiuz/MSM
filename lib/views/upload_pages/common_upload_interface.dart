@@ -1,21 +1,16 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'dart:io';
-
-// Package imports:
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // Project imports:
 import 'package:msm/constants/colors.dart';
-import 'package:msm/constants/font_sizes.dart';
-import 'package:msm/helpers/common_utils.dart';
-import 'package:msm/helpers/file_manager.dart';
+import 'package:msm/common_utils.dart';
+import 'package:msm/models/file_manager.dart';
+import 'package:msm/providers/upload_provider.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/ui_components/text.dart';
 import 'package:msm/views/ui_components/textstyles.dart';
-import 'package:msm/views/upload_pages/upload_page_utils.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 class CommonUploadPage extends StatefulWidget {
   const CommonUploadPage({Key? key}) : super(key: key);
@@ -35,20 +30,25 @@ class CommonUploadPageState extends State<CommonUploadPage> {
 }
 
 Widget commonUpload(BuildContext context) {
+  UploadState uploadState = Provider.of<UploadState>(context);
   return Scaffold(
-      appBar: commonAppBar(context: context, text: "Movies"),
+      appBar:
+          commonAppBar(context: context, text: uploadState.getCurrentListing),
       backgroundColor: CommonColors.commonWhiteColor,
-      body: FutureBuilder<List<FileObject>>(
-        future: FileManager
-            .getAllFiles(), // a previously-obtained Future<String> or null
-        builder:
-            (BuildContext context, AsyncSnapshot<List<FileObject>> snapshot) {
+      body: FutureBuilder<List<FileOrDirectory>>(
+        future: FileManager.getAllFiles(uploadState),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<FileOrDirectory>> snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
                 itemCount: snapshot.data!.length,
                 itemBuilder: (BuildContext context, int index) {
                   return uploadItemCard(context, snapshot.data![index]);
                 });
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return commonCircularProgressIndicator;
           } else {
             return commonCircularProgressIndicator;
           }
@@ -56,7 +56,7 @@ Widget commonUpload(BuildContext context) {
       ));
 }
 
-Widget uploadItemCard(BuildContext context, FileObject data) {
+Widget uploadItemCard(BuildContext context, FileOrDirectory data) {
   return Padding(
     padding: EdgeInsets.only(top: 10.h),
     child: Stack(
@@ -82,10 +82,13 @@ Widget uploadItemCard(BuildContext context, FileObject data) {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          AppText.text(data.location,
+                          AppText.text(data.location.toString(),
                               style: AppTextStyles.medium(
                                   CommonColors.commonGreyColor, 10)),
-                          AppText.text("${data.extention}, ${data.size}",
+                          AppText.text(
+                              data.isFile
+                                  ? "${data.extention}, ${data.size}"
+                                  : "Files: ${data.fileCount}",
                               style: AppTextStyles.medium(
                                   CommonColors.commonGreyColor, 10))
                         ],
@@ -98,19 +101,26 @@ Widget uploadItemCard(BuildContext context, FileObject data) {
         Positioned(
           bottom: 15.h,
           right: 50.w,
-          child: Container(
-            width: 60,
-            height: 60,
-            decoration: const BoxDecoration(
-                shape: BoxShape.circle, color: CommonColors.commonGreenColor),
-            child: IconButton(
-                onPressed: (() => debugPrint("added")),
-                icon: Icon(
-                  Icons.add,
-                  color: CommonColors.commonWhiteColor,
-                  size: 30.h,
-                )),
-          ),
+          child: data.isFile
+              ? Container(
+                  width: 60,
+                  height: 60,
+                  decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: CommonColors.commonGreenColor),
+                  child: IconButton(
+                      onPressed: (() => debugPrint("added")),
+                      icon: Icon(
+                        Icons.add,
+                        color: CommonColors.commonWhiteColor,
+                        size: 30.h,
+                      )),
+                )
+              : Icon(
+                  Icons.folder,
+                  color: CommonColors.commonGreyColor,
+                  size: 40.h,
+                ),
         )
       ],
     ),

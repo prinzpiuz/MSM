@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Project imports:
-import 'package:msm/helpers/storage.dart';
+import 'package:msm/models/storage.dart';
 
 class AppService with ChangeNotifier {
   //TODO add server class also here for having the connection status

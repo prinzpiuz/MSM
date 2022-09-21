@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
 import 'package:msm/constants/colors.dart';
-import 'package:msm/helpers/common_utils.dart';
+import 'package:msm/common_utils.dart';
 import 'package:msm/views/home/home_common_widgets.dart';
 import 'package:msm/views/home/home_utils.dart';
 
