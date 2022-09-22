@@ -5,11 +5,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Project imports:
 import 'package:msm/constants/colors.dart';
 import 'package:msm/common_utils.dart';
+import 'package:msm/constants/font_sizes.dart';
 import 'package:msm/models/file_manager.dart';
 import 'package:msm/providers/upload_provider.dart';
-import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/ui_components/text.dart';
 import 'package:msm/views/ui_components/textstyles.dart';
+import 'package:msm/views/upload_pages/upload_page_utils.dart';
 import 'package:provider/provider.dart';
 
 class CommonUploadPage extends StatefulWidget {
@@ -22,33 +23,48 @@ class CommonUploadPage extends StatefulWidget {
 class CommonUploadPageState extends State<CommonUploadPage> {
   @override
   Widget build(BuildContext context) {
+    UploadState uploadState = Provider.of<UploadState>(context);
     return handleBackButton(
-        child: commonUpload(context),
+        child: commonUpload(context, uploadState),
         context: context,
-        backRoute: Pages.upload.toPath);
+        backRoute: getBackPage(uploadState),
+        uploadState: uploadState);
   }
 }
 
-Widget commonUpload(BuildContext context) {
-  UploadState uploadState = Provider.of<UploadState>(context);
+Widget commonUpload(BuildContext context, UploadState uploadState) {
   return Scaffold(
-      appBar:
-          commonAppBar(context: context, text: uploadState.getCurrentListing),
+      appBar: commonAppBar(
+          context: context,
+          text: uploadState.getCurrentListing,
+          backroute: getBackPage(uploadState),
+          uploadState: uploadState),
       backgroundColor: CommonColors.commonWhiteColor,
       body: FutureBuilder<List<FileOrDirectory>>(
         future: FileManager.getAllFiles(uploadState),
         builder: (BuildContext context,
             AsyncSnapshot<List<FileOrDirectory>> snapshot) {
           if (snapshot.hasData) {
-            return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return uploadItemCard(context, snapshot.data![index]);
-                });
+            if (snapshot.data!.isEmpty) {
+              return Center(
+                child: AppText.centerText(
+                    "No ${uploadState.getCategory.getTitle} Here",
+                    style: AppTextStyles.bold(CommonColors.commonBlackColor,
+                        AppFontSizes.noDataFontSize.sp)),
+              );
+            } else {
+              return ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return TextButton(
+                        onPressed: () {
+                          goInside(snapshot.data![index], uploadState, context);
+                        },
+                        child: uploadItemCard(context, snapshot.data![index]));
+                  });
+            }
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return commonCircularProgressIndicator;
           } else {
             return commonCircularProgressIndicator;
           }
@@ -82,7 +98,8 @@ Widget uploadItemCard(BuildContext context, FileOrDirectory data) {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          AppText.text(data.location.toString(),
+                          AppText.text(
+                              data.isFile ? data.location.toString() : "Folder",
                               style: AppTextStyles.medium(
                                   CommonColors.commonGreyColor, 10)),
                           AppText.text(

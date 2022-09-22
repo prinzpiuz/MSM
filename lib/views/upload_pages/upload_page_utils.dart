@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -18,7 +20,7 @@ extension UploadCategoriesExtention on UploadCatogories {
       case UploadCatogories.movies:
         return "Movies";
       case UploadCatogories.tvShows:
-        return "TV";
+        return "TV Shows";
       case UploadCatogories.books:
         return "Books";
       case UploadCatogories.pictures:
@@ -54,4 +56,21 @@ void goToPage(UploadCatogories catogories, BuildContext context) {
       break;
   }
   return GoRouter.of(context).go(Pages.commonUpload.toPath);
+}
+
+void goInside(FileOrDirectory fileOrDirectory, UploadState uploadState,
+    BuildContext context) {
+  if (!fileOrDirectory.isFile) {
+    uploadState.setRecursive = true;
+    uploadState.setNextFilesDirectory = Directory(fileOrDirectory.location);
+    goToPage(uploadState.getCategory, context);
+  }
+}
+
+String getBackPage(UploadState uploadState) {
+  if (uploadState.getNextFilesDirectory.isEmpty) {
+    return Pages.upload.toPath;
+  } else {
+    return Pages.commonUpload.toPath;
+  }
 }

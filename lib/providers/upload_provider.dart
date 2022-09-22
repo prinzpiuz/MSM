@@ -8,6 +8,8 @@ class UploadState with ChangeNotifier {
   UploadCatogories _category = UploadCatogories.movies;
   List<String> _categoryExtentions = FileManager.allowedMovieExtentions;
   String _currentListing = UploadCatogories.movies.getTitle;
+  bool _recursive = false;
+  final List<Directory> _nextFilesDirectory = [];
   final List<Directory> _directories = FileManager.defaultDirectories;
 
   UploadState();
@@ -16,6 +18,8 @@ class UploadState with ChangeNotifier {
   List<String> get getCategoryExtentions => _categoryExtentions;
   List<Directory> get getCategoryDirectories => _directories;
   String get getCurrentListing => _currentListing;
+  bool get getRecursive => _recursive;
+  List<Directory> get getNextFilesDirectory => _nextFilesDirectory;
 
   set setCategory(UploadCatogories currentCategory) {
     _category = currentCategory;
@@ -29,5 +33,22 @@ class UploadState with ChangeNotifier {
 
   set setCurrentListing(String currentCategory) {
     _currentListing = currentCategory;
+  }
+
+  set setRecursive(bool recursive) {
+    _recursive = recursive;
+  }
+
+  set setNextFilesDirectory(Directory nextDirectory) {
+    _nextFilesDirectory.add(nextDirectory);
+  }
+
+  popLastDirectory() {
+    if (_nextFilesDirectory.isNotEmpty) {
+      _nextFilesDirectory.removeLast();
+    } else {
+      _recursive = false;
+    }
+    notifyListeners();
   }
 }

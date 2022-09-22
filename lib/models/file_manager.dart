@@ -8,7 +8,7 @@ enum FileType { file, directory }
 
 abstract class FileOrDirectory {
   String get name => '';
-  String get location => "Folder";
+  String get location => '';
   String get size => '';
   String get extention => '';
   FileType get type => FileType.file;
@@ -48,8 +48,10 @@ class DirectoryObject extends FileOrDirectory {
   final String _name;
   final FileType _type;
   final int _fileCount;
+  final String _location;
 
-  DirectoryObject(this.directory, this._name, this._type, this._fileCount);
+  DirectoryObject(
+      this.directory, this._name, this._type, this._fileCount, this._location);
 
   @override
   String get name => _name;
@@ -59,6 +61,9 @@ class DirectoryObject extends FileOrDirectory {
 
   @override
   int get fileCount => _fileCount;
+
+  @override
+  String get location => _location;
 }
 
 class FileManager {
@@ -150,7 +155,7 @@ class FileManager {
           fileEntities.whereType<Directory>();
       for (Directory directory in directoryIterables) {
         files.add(DirectoryObject(directory, getDirectoryName(directory),
-            FileType.directory, directoryIterables.length));
+            FileType.directory, directoryIterables.length, directory.path));
       }
       for (File file in filesIterable) {
         files.add(FileObject(file, getFileName(file), getFileSize(file),
@@ -163,9 +168,16 @@ class FileManager {
   static Future<List<FileOrDirectory>> getAllFiles(
       UploadState uploadState) async {
     List<FileOrDirectory> allFiles = [];
-    for (Directory dir in uploadState.getCategoryDirectories) {
-      allFiles.addAll(await getFiles(dir, uploadState));
+    if (uploadState.getRecursive &&
+        uploadState.getNextFilesDirectory.isNotEmpty) {
+      allFiles.addAll(
+          await getFiles(uploadState.getNextFilesDirectory.last, uploadState));
+    } else {
+      for (Directory dir in uploadState.getCategoryDirectories) {
+        allFiles.addAll(await getFiles(dir, uploadState));
+      }
     }
+
     return allFiles;
   }
 }
