@@ -2,9 +2,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Package imports:
 import 'package:go_router/go_router.dart';
+import 'package:msm/constants/colors.dart';
 import 'package:msm/models/file_manager.dart';
 import 'package:msm/providers/upload_provider.dart';
 
@@ -73,4 +75,28 @@ String getBackPage(UploadState uploadState) {
   } else {
     return Pages.commonUpload.toPath;
   }
+}
+
+Future<void> bottomSheet(BuildContext context) {
+  return showModalBottomSheet<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return Container(
+        height: 300.h,
+        color: CommonColors.commonWhiteColor,
+        child: ListView.builder(
+          itemCount: 25,
+          itemBuilder: (BuildContext context, int index) {
+            return ListTile(
+              title: Text('Item $index'),
+              trailing: IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => print("object"),
+              ),
+            );
+          },
+        ),
+      );
+    },
+  );
 }

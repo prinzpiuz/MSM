@@ -34,112 +34,137 @@ class CommonUploadPageState extends State<CommonUploadPage> {
 
 Widget commonUpload(BuildContext context, UploadState uploadState) {
   return Scaffold(
-      appBar: commonAppBar(
-          context: context,
-          text: uploadState.getCurrentListing,
-          backroute: getBackPage(uploadState),
-          uploadState: uploadState),
+      appBar: appBar(context, uploadState),
       backgroundColor: CommonColors.commonWhiteColor,
-      body: FutureBuilder<List<FileOrDirectory>>(
-        future: FileManager.getAllFiles(uploadState),
-        builder: (BuildContext context,
-            AsyncSnapshot<List<FileOrDirectory>> snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data!.isEmpty) {
-              return Center(
-                child: AppText.centerText(
-                    "No ${uploadState.getCategory.getTitle} Here",
-                    style: AppTextStyles.bold(CommonColors.commonBlackColor,
-                        AppFontSizes.noDataFontSize.sp)),
-              );
-            } else {
-              return ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return TextButton(
-                        onPressed: () {
-                          goInside(snapshot.data![index], uploadState, context);
-                        },
-                        child: uploadItemCard(context, snapshot.data![index]));
-                  });
-            }
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else {
-            return commonCircularProgressIndicator;
-          }
-        },
-      ));
+      body: body(context, uploadState));
 }
 
 Widget uploadItemCard(BuildContext context, FileOrDirectory data) {
   return Padding(
     padding: EdgeInsets.only(top: 10.h),
     child: Stack(
-      children: [
-        Center(
-          child: Card(
-            elevation: 3,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-            ),
-            child: SizedBox(
-              width: 300.w,
-              height: 122.h,
-              child: Padding(
-                padding: EdgeInsets.all(15.h),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AppText.singleLineText(data.name,
-                          style: AppTextStyles.medium(
-                              CommonColors.commonBlackColor, 15)),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          AppText.text(
-                              data.isFile ? data.location.toString() : "Folder",
-                              style: AppTextStyles.medium(
-                                  CommonColors.commonGreyColor, 10)),
-                          AppText.text(
-                              data.isFile
-                                  ? "${data.extention}, ${data.size}"
-                                  : "Files: ${data.fileCount}",
-                              style: AppTextStyles.medium(
-                                  CommonColors.commonGreyColor, 10))
-                        ],
-                      )
-                    ]),
-              ),
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: 15.h,
-          right: 50.w,
-          child: data.isFile
-              ? Container(
-                  width: 60,
-                  height: 60,
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: CommonColors.commonGreenColor),
-                  child: IconButton(
-                      onPressed: (() => debugPrint("added")),
-                      icon: Icon(
-                        Icons.add,
-                        color: CommonColors.commonWhiteColor,
-                        size: 30.h,
-                      )),
-                )
-              : Icon(
-                  Icons.folder,
-                  color: CommonColors.commonGreyColor,
-                  size: 40.h,
-                ),
+      children: [dataCard(data), cardButton(data)],
+    ),
+  );
+}
+
+PreferredSizeWidget appBar(BuildContext context, UploadState uploadState) {
+  return commonAppBar(
+      context: context,
+      text: uploadState.getCurrentListing,
+      backroute: getBackPage(uploadState),
+      actions: [
+        Padding(
+          padding: EdgeInsets.all(10.h),
+          child: IconButton(
+              onPressed: (() => bottomSheet(context)), icon: sendIcon),
         )
       ],
+      uploadState: uploadState);
+}
+
+Widget get sendIcon => const Icon(
+      Icons.send_outlined,
+      color: CommonColors.commonBlackColor,
+      size: AppFontSizes.appBarIconSIze,
+    );
+
+Widget body(BuildContext context, UploadState uploadState) {
+  return FutureBuilder<List<FileOrDirectory>>(
+    future: FileManager.getAllFiles(uploadState),
+    builder:
+        (BuildContext context, AsyncSnapshot<List<FileOrDirectory>> snapshot) {
+      if (snapshot.hasData) {
+        if (snapshot.data!.isEmpty) {
+          return Center(
+            child: AppText.centerText(
+                "No ${uploadState.getCategory.getTitle} Here",
+                style: AppTextStyles.bold(CommonColors.commonBlackColor,
+                    AppFontSizes.noDataFontSize.sp)),
+          );
+        } else {
+          return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (BuildContext context, int index) {
+                return TextButton(
+                    onPressed: () {
+                      goInside(snapshot.data![index], uploadState, context);
+                    },
+                    child: uploadItemCard(context, snapshot.data![index]));
+              });
+        }
+      } else if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');
+      } else {
+        return commonCircularProgressIndicator;
+      }
+    },
+  );
+}
+
+Widget dataCard(FileOrDirectory data) {
+  return Center(
+    child: Card(
+      elevation: 3,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+      ),
+      child: SizedBox(
+        width: 300.w,
+        height: 122.h,
+        child: Padding(
+          padding: EdgeInsets.all(15.h),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppText.singleLineText(data.name,
+                    style: AppTextStyles.medium(
+                        CommonColors.commonBlackColor, 15)),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppText.text(
+                        data.isFile ? data.location.toString() : "Folder",
+                        style: AppTextStyles.medium(
+                            CommonColors.commonGreyColor, 10)),
+                    AppText.text(
+                        data.isFile
+                            ? "${data.extention}, ${data.size}"
+                            : "Files: ${data.fileCount}",
+                        style: AppTextStyles.medium(
+                            CommonColors.commonGreyColor, 10))
+                  ],
+                )
+              ]),
+        ),
+      ),
     ),
+  );
+}
+
+Widget cardButton(FileOrDirectory data) {
+  return Positioned(
+    bottom: 15.h,
+    right: 50.w,
+    child: data.isFile
+        ? Container(
+            width: 60.w,
+            height: 60.h,
+            decoration: const BoxDecoration(
+                shape: BoxShape.circle, color: CommonColors.commonGreenColor),
+            child: IconButton(
+                onPressed: (() => debugPrint("added")),
+                icon: Icon(
+                  Icons.add,
+                  color: CommonColors.commonWhiteColor,
+                  size: 30.h,
+                )),
+          )
+        : Icon(
+            Icons.folder,
+            color: CommonColors.commonGreyColor,
+            size: 40.h,
+          ),
   );
 }
