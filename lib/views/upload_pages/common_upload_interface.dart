@@ -57,7 +57,9 @@ PreferredSizeWidget appBar(BuildContext context, UploadState uploadState) {
         Padding(
           padding: EdgeInsets.all(10.h),
           child: IconButton(
-              onPressed: (() => bottomSheet(context)), icon: sendIcon),
+              // TODO consider the case of catogories of TV show uplaod and other uploads
+              onPressed: (() => bottomSheet(context)),
+              icon: sendIcon),
         )
       ],
       uploadState: uploadState);
@@ -102,6 +104,26 @@ Widget body(BuildContext context, UploadState uploadState) {
   );
 }
 
+Widget fileName(FileOrDirectory data) {
+  return AppText.singleLineText(data.name,
+      style: AppTextStyles.medium(CommonColors.commonBlackColor, 15));
+}
+
+Widget fileMetaData(FileOrDirectory data) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      AppText.text(data.isFile ? data.location.toString() : "Folder",
+          style: AppTextStyles.medium(CommonColors.commonGreyColor, 10)),
+      AppText.text(
+          data.isFile
+              ? "${data.extention}, ${data.size}"
+              : "Files: ${data.fileCount}",
+          style: AppTextStyles.medium(CommonColors.commonGreyColor, 10))
+    ],
+  );
+}
+
 Widget dataCard(FileOrDirectory data) {
   return Center(
     child: Card(
@@ -117,26 +139,7 @@ Widget dataCard(FileOrDirectory data) {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AppText.singleLineText(data.name,
-                    style: AppTextStyles.medium(
-                        CommonColors.commonBlackColor, 15)),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AppText.text(
-                        data.isFile ? data.location.toString() : "Folder",
-                        style: AppTextStyles.medium(
-                            CommonColors.commonGreyColor, 10)),
-                    AppText.text(
-                        data.isFile
-                            ? "${data.extention}, ${data.size}"
-                            : "Files: ${data.fileCount}",
-                        style: AppTextStyles.medium(
-                            CommonColors.commonGreyColor, 10))
-                  ],
-                )
-              ]),
+              children: [fileName(data), fileMetaData(data)]),
         ),
       ),
     ),

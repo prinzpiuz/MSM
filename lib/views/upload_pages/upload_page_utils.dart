@@ -84,19 +84,42 @@ Future<void> bottomSheet(BuildContext context) {
       return Container(
         height: 300.h,
         color: CommonColors.commonWhiteColor,
-        child: ListView.builder(
-          itemCount: 25,
-          itemBuilder: (BuildContext context, int index) {
-            return ListTile(
-              title: Text('Item $index'),
-              trailing: IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => print("object"),
-              ),
-            );
-          },
-        ),
+        child: Column(children: [
+          DropdownButton<String>(
+            value: "New",
+            icon: const Icon(Icons.arrow_downward),
+            elevation: 16,
+            style: const TextStyle(color: CommonColors.commonBlackColor),
+            underline: Container(
+              height: 2,
+              color: CommonColors.commonBlackColor,
+            ),
+            onChanged: (String? value) {
+              // This is called when the user selects an item.
+            },
+            items: ["New", "Strange Things", "The DropOut", "World War"]
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          )
+        ]),
       );
     },
   );
 }
+
+// ListView.builder(
+//           itemCount: 25,
+//           itemBuilder: (BuildContext context, int index) {
+//             return ListTile(
+//               title: Text('Item $index'),
+//               trailing: IconButton(
+//                 icon: const Icon(Icons.close),
+//                 onPressed: () => print("object"),
+//               ),
+//             );
+//           },
+//         )
