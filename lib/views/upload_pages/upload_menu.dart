@@ -1,15 +1,15 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Package imports:
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // Project imports:
+import 'package:msm/common_utils.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/font_sizes.dart';
-import 'package:msm/common_utils.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/upload_pages/upload_page_utils.dart';
 

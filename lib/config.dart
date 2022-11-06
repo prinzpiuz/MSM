@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:msm/providers/upload_provider.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
 import 'package:msm/providers/app_provider.dart';
+import 'package:msm/providers/upload_provider.dart';
 import 'package:msm/router/router.dart';
 
 bool get appENV {

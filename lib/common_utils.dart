@@ -1,9 +1,11 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Package imports:
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+
+// Project imports:
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/font_sizes.dart';
 import 'package:msm/providers/upload_provider.dart';

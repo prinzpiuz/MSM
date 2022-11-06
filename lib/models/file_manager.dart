@@ -1,8 +1,12 @@
+// Dart imports:
 import 'dart:io';
 
-import 'package:msm/providers/upload_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
+// Package imports:
 import 'package:filesize/filesize.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+// Project imports:
+import 'package:msm/providers/upload_provider.dart';
 
 enum FileType { file, directory }
 

@@ -1,10 +1,12 @@
 // Flutter imports:
 import 'package:flutter/widgets.dart';
 
+// Package imports:
+import 'package:permission_handler/permission_handler.dart';
+
 // Project imports:
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/upload_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'config.dart';
 
 void main() {

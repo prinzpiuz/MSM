@@ -1,18 +1,21 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:io';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Package imports:
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
+// Project imports:
 import 'package:msm/constants/colors.dart';
 import 'package:msm/models/file_manager.dart';
 import 'package:msm/providers/upload_provider.dart';
-
-// Project imports:
 import 'package:msm/router/router_utils.dart';
-import 'package:provider/provider.dart';
+import 'package:msm/views/ui_components/text.dart';
+import 'package:msm/views/ui_components/textstyles.dart';
 
 enum UploadCatogories { movies, tvShows, books, pictures }
 
@@ -77,49 +80,58 @@ String getBackPage(UploadState uploadState) {
   }
 }
 
-Future<void> bottomSheet(BuildContext context) {
+Future<void> bottomSheet(BuildContext context, {bool inside = false}) {
   return showModalBottomSheet<void>(
     context: context,
     builder: (BuildContext context) {
       return Container(
         height: 300.h,
         color: CommonColors.commonWhiteColor,
-        child: Column(children: [
-          DropdownButton<String>(
-            value: "New",
-            icon: const Icon(Icons.arrow_downward),
-            elevation: 16,
-            style: const TextStyle(color: CommonColors.commonBlackColor),
-            underline: Container(
-              height: 2,
-              color: CommonColors.commonBlackColor,
-            ),
-            onChanged: (String? value) {
-              // This is called when the user selects an item.
-            },
-            items: ["New", "Strange Things", "The DropOut", "World War"]
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          )
-        ]),
+        child: GridView.count(
+          padding: EdgeInsets.all(15.h),
+          crossAxisCount: 4,
+          children: <Widget>[
+            if (inside) folderButton(context, inside: inside),
+            folderButton(context, newFolder: true),
+            folderButton(context),
+            folderButton(context),
+            folderButton(context),
+            folderButton(context),
+            folderButton(context),
+            folderButton(context),
+            folderButton(context),
+            folderButton(context),
+            folderButton(context),
+          ],
+        ),
       );
     },
   );
 }
 
-// ListView.builder(
-//           itemCount: 25,
-//           itemBuilder: (BuildContext context, int index) {
-//             return ListTile(
-//               title: Text('Item $index'),
-//               trailing: IconButton(
-//                 icon: const Icon(Icons.close),
-//                 onPressed: () => print("object"),
-//               ),
-//             );
-//           },
-//         )
+Widget folderButton(BuildContext context,
+    {bool newFolder = false, bool inside = false}) {
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    children: <Widget>[
+      inside
+          ? IconButton(
+              icon: const Icon(
+                Icons.save_alt,
+                color: CommonColors.commonGreenColor,
+              ),
+              onPressed: () {})
+          : IconButton(
+              icon: Icon(newFolder ? Icons.create_new_folder : Icons.folder),
+              onPressed: () {
+                bottomSheet(context, inside: true);
+              }),
+      inside
+          ? AppText.centerText("Save Here",
+              style:
+                  AppTextStyles.extraBold(CommonColors.commonGreenColor, 8.sp))
+          : AppText.singleLineText(newFolder ? "New" : "Movie name",
+              style: AppTextStyles.bold(CommonColors.commonBlackColor, 8.sp)),
+    ],
+  );
+}
