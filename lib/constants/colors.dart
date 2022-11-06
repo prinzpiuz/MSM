@@ -5,6 +5,8 @@ class CommonColors {
   static const commonGreenColor = Color.fromRGBO(9, 135, 6, 1);
   static const diskUsageBackgroundColor = Color.fromRGBO(175, 185, 175, 1);
   static const commonBlackColor = Colors.black;
+  static const commonWhiteColor = Colors.white;
+  static const commonGreyColor = Color.fromRGBO(63, 63, 63, 1);
 }
 
 ///Text Form Field
