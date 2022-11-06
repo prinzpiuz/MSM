@@ -11,7 +11,6 @@ import 'package:msm/constants/font_sizes.dart';
 import 'package:msm/providers/upload_provider.dart';
 import 'package:msm/views/ui_components/text.dart';
 import 'package:msm/views/ui_components/textstyles.dart';
-import 'package:msm/views/upload_pages/upload_page_utils.dart';
 
 WillPopScope handleBackButton(
     {String? backRoute,
