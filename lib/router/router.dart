@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/home/home.dart';
+import 'package:msm/views/system_tools/system_tools.dart';
 import 'package:msm/views/upload_pages/common_upload_interface.dart';
 import 'package:msm/views/upload_pages/upload_menu.dart';
 
@@ -35,6 +36,11 @@ class AppRouter {
         path: Pages.commonUpload.toPath,
         name: Pages.commonUpload.toName,
         builder: (context, state) => const CommonUploadPage(),
+      ),
+      GoRoute(
+        path: Pages.systemTools.toPath,
+        name: Pages.systemTools.toName,
+        builder: (context, state) => const Sytemtools(),
       )
     ],
     // errorBuilder: (context, state) => ErrorPage(error: state.error.toString()),
