@@ -1,4 +1,4 @@
-enum Pages { home, upload, commonUpload }
+enum Pages { home, upload, commonUpload, systemTools }
 
 extension AppPageExtension on Pages {
   String get toPath {
@@ -9,6 +9,8 @@ extension AppPageExtension on Pages {
         return "/upload";
       case Pages.commonUpload:
         return "/commonUpload";
+      case Pages.systemTools:
+        return "/systemTools";
       default:
         return "/";
     }
@@ -22,6 +24,8 @@ extension AppPageExtension on Pages {
         return "UPLOAD";
       case Pages.commonUpload:
         return "COMMON UPLOAD";
+      case Pages.systemTools:
+        return "SYSTEM TOOLS";
       default:
         return "HOME";
     }
@@ -35,6 +39,8 @@ extension AppPageExtension on Pages {
         return "upload";
       case Pages.commonUpload:
         return "common upload";
+      case Pages.systemTools:
+        return "system tools";
       default:
         return "home";
     }

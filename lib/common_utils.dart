@@ -18,6 +18,7 @@ WillPopScope handleBackButton(
     required BuildContext context,
     UploadState? uploadState,
     bool pop = false}) {
+  // to handle the backroutes of the app
   return WillPopScope(
     onWillPop: () async {
       if (backRoute != null) {
@@ -30,6 +31,7 @@ WillPopScope handleBackButton(
 }
 
 PreferredSizeWidget commonAppBar(
+    //common appbar for the project
     {required BuildContext context,
     bool send = false,
     String? text,

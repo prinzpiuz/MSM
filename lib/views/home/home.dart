@@ -10,14 +10,9 @@ import 'package:msm/constants/colors.dart';
 import 'package:msm/views/home/home_common_widgets.dart';
 import 'package:msm/views/home/home_utils.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  @override
-  HomePageState createState() => HomePageState();
-}
-
-class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return handleBackButton(child: home(context), context: context);
