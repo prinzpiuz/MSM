@@ -11,8 +11,8 @@ import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/font_sizes.dart';
 import 'package:msm/models/file_manager.dart';
 import 'package:msm/providers/upload_provider.dart';
-import 'package:msm/views/ui_components/text.dart';
-import 'package:msm/views/ui_components/textstyles.dart';
+import 'package:msm/views/ui_components/text/text.dart';
+import 'package:msm/views/ui_components/text/textstyles.dart';
 import 'package:msm/views/upload_pages/upload_page_utils.dart';
 
 class CommonUploadPage extends StatefulWidget {
@@ -70,7 +70,7 @@ PreferredSizeWidget appBar(BuildContext context, UploadState uploadState) {
 Widget get sendIcon => const Icon(
       Icons.send_outlined,
       color: CommonColors.commonBlackColor,
-      size: AppFontSizes.appBarIconSIze,
+      size: AppFontSizes.appBarIconSize,
     );
 
 Widget body(BuildContext context, UploadState uploadState) {

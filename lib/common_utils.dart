@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
 // Project imports:
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/font_sizes.dart';
 import 'package:msm/providers/upload_provider.dart';
-import 'package:msm/views/ui_components/text.dart';
-import 'package:msm/views/ui_components/textstyles.dart';
+import 'package:msm/views/ui_components/text/text.dart';
+import 'package:msm/views/ui_components/text/textstyles.dart';
 
 WillPopScope handleBackButton(
     {String? backRoute,
@@ -38,7 +39,7 @@ PreferredSizeWidget commonAppBar(
     UploadState? uploadState,
     List<Widget>? actions,
     required String backroute}) {
-  const double appBarIconSIze = AppFontSizes.appBarIconSIze;
+  double appBarIconSIze = AppFontSizes.appBarIconSize.sp;
   EdgeInsetsGeometry appBarIconPadding = EdgeInsets.all(10.h);
   return AppBar(
     title: text != null
@@ -46,12 +47,12 @@ PreferredSizeWidget commonAppBar(
             style: AppTextStyles.bold(CommonColors.commonBlackColor,
                 AppFontSizes.titleBarFontSize.sp))
         : const SizedBox(),
-    elevation: 0,
+    elevation: AppConstants.appBarElevation,
     backgroundColor: CommonColors.commonWhiteColor,
     leading: Padding(
       padding: appBarIconPadding,
       child: IconButton(
-        icon: const Icon(
+        icon: Icon(
           Icons.arrow_back,
           color: CommonColors.commonBlackColor,
           size: appBarIconSIze,
@@ -74,4 +75,26 @@ void handleBack(
     uploadState.popLastDirectory();
   }
   GoRouter.of(context).go(backRoute);
+}
+
+PopupMenuButton commonPopUpMenu(List menuListValues) {
+  return PopupMenuButton(
+      icon: Icon(
+        FontAwesomeIcons.ellipsisVertical,
+        color: CommonColors.commonBlackColor,
+        size: AppFontSizes.appBarIconSize.sp,
+      ),
+      onSelected: (dynamic item) {},
+      itemBuilder: (BuildContext context) => buildPopupMenus(menuListValues));
+}
+
+List<PopupMenuEntry> buildPopupMenus(List menuListValues) {
+  List<PopupMenuEntry> menuList = [];
+  for (var item in menuListValues) {
+    menuList.add(PopupMenuItem(
+      value: item,
+      child: Text(item.menuText),
+    ));
+  }
+  return menuList;
 }

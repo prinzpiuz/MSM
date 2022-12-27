@@ -7,8 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Project imports:
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/font_sizes.dart';
-import 'package:msm/views/ui_components/text.dart';
-import 'package:msm/views/ui_components/textstyles.dart';
+import 'package:msm/views/ui_components/text/text.dart';
+import 'package:msm/views/ui_components/text/textstyles.dart';
 
 Widget systemToolTile(
     {required IconData icon,

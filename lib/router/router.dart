@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 // Project imports:
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/router/router_utils.dart';
+import 'package:msm/views/file_listing/file_listing.dart';
 import 'package:msm/views/home/home.dart';
 import 'package:msm/views/system_tools/system_tools.dart';
 import 'package:msm/views/upload_pages/common_upload_interface.dart';
@@ -41,6 +42,11 @@ class AppRouter {
         path: Pages.systemTools.toPath,
         name: Pages.systemTools.toName,
         builder: (context, state) => const Sytemtools(),
+      ),
+      GoRoute(
+        path: Pages.fileList.toPath,
+        name: Pages.fileList.toName,
+        builder: (context, state) => const FileListing(),
       )
     ],
     // errorBuilder: (context, state) => ErrorPage(error: state.error.toString()),

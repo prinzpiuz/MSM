@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 // Project imports:
 import 'package:msm/providers/app_provider.dart';
+import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/providers/upload_provider.dart';
 import 'package:msm/router/router.dart';
 
@@ -16,11 +17,14 @@ bool get appENV {
   return isProd;
 }
 
-MultiProvider materialApp(AppService appService, UploadState uploadService) {
+MultiProvider materialApp(AppService appService, UploadState uploadService,
+    FileListingState fileListingService) {
   return MultiProvider(
     providers: [
       ChangeNotifierProvider<AppService>(create: (_) => appService),
       ChangeNotifierProvider<UploadState>(create: (_) => uploadService),
+      ChangeNotifierProvider<FileListingState>(
+          create: (_) => fileListingService),
       Provider<AppRouter>(create: (_) => AppRouter(appService)),
     ],
     child: Builder(

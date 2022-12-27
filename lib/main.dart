@@ -6,6 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 // Project imports:
 import 'package:msm/providers/app_provider.dart';
+import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/providers/upload_provider.dart';
 import 'config.dart';
 
@@ -23,11 +24,13 @@ class MSM extends StatefulWidget {
 class _MSMState extends State<MSM> {
   late AppService appService;
   late UploadState uploadService;
+  late FileListingState fileListingService;
 
   @override
   void initState() {
     appService = AppService();
     uploadService = UploadState();
+    fileListingService = FileListingState();
     requestPermissions();
     super.initState();
   }
@@ -38,6 +41,6 @@ class _MSMState extends State<MSM> {
 
   @override
   Widget build(BuildContext context) {
-    return materialApp(appService, uploadService);
+    return materialApp(appService, uploadService, fileListingService);
   }
 }
