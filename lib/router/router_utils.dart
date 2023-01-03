@@ -1,4 +1,18 @@
-enum Pages { home, upload, commonUpload, systemTools, fileList }
+enum Pages {
+  home,
+  upload,
+  commonUpload,
+  systemTools,
+  fileList,
+  settings,
+}
+
+enum SettingsSubRoute {
+  serverDetails,
+  folderConfiguration,
+  wakeOnLan,
+  appInfo,
+}
 
 extension AppPageExtension on Pages {
   String get toPath {
@@ -13,6 +27,8 @@ extension AppPageExtension on Pages {
         return "/systemTools";
       case Pages.fileList:
         return "/fileList";
+      case Pages.settings:
+        return "/settings";
       default:
         return "/";
     }
@@ -30,6 +46,8 @@ extension AppPageExtension on Pages {
         return "SYSTEM TOOLS";
       case Pages.fileList:
         return "FILE LIST";
+      case Pages.settings:
+        return "SETTINGS";
       default:
         return "HOME";
     }
@@ -38,17 +56,60 @@ extension AppPageExtension on Pages {
   String get toTitle {
     switch (this) {
       case Pages.home:
-        return "home";
+        return "Home";
       case Pages.upload:
-        return "upload";
+        return "Upload";
       case Pages.commonUpload:
-        return "common upload";
+        return "Common Upload";
       case Pages.systemTools:
-        return "system tools";
+        return "System Tools";
       case Pages.fileList:
-        return "file list";
+        return "File List";
+      case Pages.settings:
+        return "Settings";
       default:
-        return "home";
+        return "Home";
+    }
+  }
+}
+
+extension SettingSubRouteExtention on SettingsSubRoute {
+  String get toPath {
+    switch (this) {
+      case SettingsSubRoute.serverDetails:
+        return "serverDetails";
+      case SettingsSubRoute.folderConfiguration:
+        return "folderConfiguration";
+      case SettingsSubRoute.wakeOnLan:
+        return "wakeOnLan";
+      case SettingsSubRoute.appInfo:
+        return "appInfo";
+    }
+  }
+
+  String get toName {
+    switch (this) {
+      case SettingsSubRoute.serverDetails:
+        return "SERVER DETAILS";
+      case SettingsSubRoute.folderConfiguration:
+        return "FOLDER CONFIGURATION";
+      case SettingsSubRoute.wakeOnLan:
+        return "WAKE ON LAN";
+      case SettingsSubRoute.appInfo:
+        return "APP INFO";
+    }
+  }
+
+  String get toTitle {
+    switch (this) {
+      case SettingsSubRoute.serverDetails:
+        return "Server Details";
+      case SettingsSubRoute.folderConfiguration:
+        return "Folder Configuration";
+      case SettingsSubRoute.wakeOnLan:
+        return "Wake On LAN";
+      case SettingsSubRoute.appInfo:
+        return "App Info";
     }
   }
 }
