@@ -15,5 +15,7 @@ void goToPage(int index, BuildContext context) {
       return GoRouter.of(context).go(Pages.systemTools.toPath);
     case 2:
       return GoRouter.of(context).go(Pages.fileList.toPath);
+    case 3:
+      return GoRouter.of(context).go(Pages.settings.toPath);
   }
 }

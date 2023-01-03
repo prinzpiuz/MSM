@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 // Project imports:
 import 'package:msm/common_utils.dart';
 import 'package:msm/constants/colors.dart';
-import 'package:msm/constants/font_sizes.dart';
+import 'package:msm/constants/constants.dart';
 import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/file_listing/fab.dart';

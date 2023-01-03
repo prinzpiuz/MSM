@@ -7,6 +7,7 @@ class CommonColors {
   static const commonBlackColor = Colors.black;
   static const commonWhiteColor = Colors.white;
   static const commonGreyColor = Color.fromRGBO(63, 63, 63, 1);
+  static const commonLinkColor = Color.fromRGBO(88, 166, 255, 1);
 }
 
 ///Text Form Field

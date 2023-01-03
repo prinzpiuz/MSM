@@ -9,6 +9,11 @@ import 'package:msm/providers/app_provider.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/file_listing/file_listing.dart';
 import 'package:msm/views/home/home.dart';
+import 'package:msm/views/settings/app_info.dart';
+import 'package:msm/views/settings/folder_configuration.dart';
+import 'package:msm/views/settings/server_details.dart';
+import 'package:msm/views/settings/settings.dart';
+import 'package:msm/views/settings/wol_details.dart';
 import 'package:msm/views/system_tools/system_tools.dart';
 import 'package:msm/views/upload_pages/common_upload_interface.dart';
 import 'package:msm/views/upload_pages/upload_menu.dart';
@@ -47,7 +52,33 @@ class AppRouter {
         path: Pages.fileList.toPath,
         name: Pages.fileList.toName,
         builder: (context, state) => const FileListing(),
-      )
+      ),
+      GoRoute(
+          path: Pages.settings.toPath,
+          name: Pages.settings.toName,
+          builder: (context, state) => const Settings(),
+          routes: [
+            GoRoute(
+              path: SettingsSubRoute.serverDetails.toPath,
+              name: SettingsSubRoute.serverDetails.toName,
+              builder: (context, state) => const ServerDetails(),
+            ),
+            GoRoute(
+              path: SettingsSubRoute.folderConfiguration.toPath,
+              name: SettingsSubRoute.folderConfiguration.toName,
+              builder: (context, state) => const FolderConfiguration(),
+            ),
+            GoRoute(
+              path: SettingsSubRoute.wakeOnLan.toPath,
+              name: SettingsSubRoute.wakeOnLan.toName,
+              builder: (context, state) => const WOLDetails(),
+            ),
+            GoRoute(
+              path: SettingsSubRoute.appInfo.toPath,
+              name: SettingsSubRoute.appInfo.toName,
+              builder: (context, state) => const AppInfo(),
+            ),
+          ])
     ],
     // errorBuilder: (context, state) => ErrorPage(error: state.error.toString()),
     redirect: (state) {

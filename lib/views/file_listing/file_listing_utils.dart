@@ -7,7 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // Project imports:
 import 'package:msm/constants/colors.dart';
-import 'package:msm/constants/font_sizes.dart';
+import 'package:msm/constants/constants.dart';
 import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/views/ui_components/textfield/textfield.dart';
 
@@ -70,7 +70,7 @@ String generateSubtitle(fileItem) {
   String size = fileItem["size"];
   String extention = fileItem["extention"];
   String date = fileItem["date"];
-  return "$size, $extention, $date";
+  return "$size, $extention, $date  Movies";
 }
 
 enum FileCategory {
