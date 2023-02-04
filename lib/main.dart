@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/widgets.dart';
+import 'package:msm/models/storage.dart';
 
 // Package imports:
 import 'package:permission_handler/permission_handler.dart';
@@ -28,6 +29,7 @@ class _MSMState extends State<MSM> {
 
   @override
   void initState() {
+    Storage();
     appService = AppService();
     uploadService = UploadState();
     fileListingService = FileListingState();

@@ -124,3 +124,25 @@ Widget commonTile(
 }
 
 EdgeInsetsGeometry get commonListViewTopPadding => EdgeInsets.only(top: 10.h);
+
+Widget commonSwitch(
+    {required String text,
+    required bool value,
+    required Function(bool)? onChange}) {
+  return Padding(
+    padding: EdgeInsets.only(left: 18.w, right: 18.w),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        AppText.singleLineText(text,
+            style: AppTextStyles.medium(CommonColors.commonBlackColor,
+                AppFontSizes.systemToolsTittleFontSize.sp)),
+        Switch(
+          value: value,
+          thumbColor: const MaterialStatePropertyAll<Color>(Colors.black),
+          onChanged: onChange,
+        )
+      ],
+    ),
+  );
+}
