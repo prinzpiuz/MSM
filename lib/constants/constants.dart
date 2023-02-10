@@ -29,4 +29,9 @@ class AppConstants {
   static const license = "License";
   static const licenseUrl =
       "https://github.com/prinzpiuz/MSM/blob/refactored/LICENSE";
+  static const alphaAndSpecialChars = r'/^[ A-Za-z_@./#&+-]*$/.';
+  static const upperLower = "[a-zA-Z]";
+  static const ipFormat = "[0-9.]";
+  static const numberOnly = "[0-9]";
+  static const macFormat = "[A-Z0-9:]";
 }

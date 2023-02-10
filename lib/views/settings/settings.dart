@@ -40,10 +40,10 @@ Widget settingsMenu(BuildContext context) {
                 context.goNamed(SettingsSubRoute.folderConfiguration.toName);
               }),
           commonTile(
-              icon: FontAwesomeIcons.networkWired,
-              title: 'Wake On LAN',
+              icon: FontAwesomeIcons.gears,
+              title: 'Server Functions',
               onTap: () {
-                context.goNamed(SettingsSubRoute.wakeOnLan.toName);
+                context.goNamed(SettingsSubRoute.serverFunctions.toName);
               }),
           commonTile(
               icon: FontAwesomeIcons.circleInfo,

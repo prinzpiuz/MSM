@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,11 +17,12 @@ class AppTextField {
         decoration: AppTextFieldDecoratoion.simpleTextFieldDecoration());
   }
 
-  static Padding commonTextFeild(
+  static Widget commonTextFeild(
       {required FormFieldSetter onsaved,
       required TextInputType keyboardType,
       required String labelText,
       required String hintText,
+      List<TextInputFormatter>? inputFormatters,
       FormFieldValidator<String>? validator,
       IconData? iconData,
       int? maxLength,
@@ -37,6 +39,8 @@ class AppTextField {
           initialValue: initialValue,
           obscureText: obscureText,
           obscuringCharacter: "*",
+          inputFormatters: inputFormatters,
+          style: const TextStyle(color: CommonColors.commonBlackColor),
           decoration: InputDecoration(
             contentPadding: EdgeInsets.all(20.h),
             labelText: labelText,

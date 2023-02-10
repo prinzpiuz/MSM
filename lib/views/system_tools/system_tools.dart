@@ -9,8 +9,8 @@ import 'package:msm/common_utils.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/router/router_utils.dart';
 
-class Sytemtools extends StatelessWidget {
-  const Sytemtools({super.key});
+class SystemTools extends StatelessWidget {
+  const SystemTools({super.key});
 
   @override
   Widget build(BuildContext context) {

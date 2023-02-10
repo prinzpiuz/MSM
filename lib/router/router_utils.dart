@@ -10,7 +10,7 @@ enum Pages {
 enum SettingsSubRoute {
   serverDetails,
   folderConfiguration,
-  wakeOnLan,
+  serverFunctions,
   appInfo,
 }
 
@@ -80,8 +80,8 @@ extension SettingSubRouteExtention on SettingsSubRoute {
         return "serverDetails";
       case SettingsSubRoute.folderConfiguration:
         return "folderConfiguration";
-      case SettingsSubRoute.wakeOnLan:
-        return "wakeOnLan";
+      case SettingsSubRoute.serverFunctions:
+        return "serverFunctions";
       case SettingsSubRoute.appInfo:
         return "appInfo";
     }
@@ -93,8 +93,8 @@ extension SettingSubRouteExtention on SettingsSubRoute {
         return "SERVER DETAILS";
       case SettingsSubRoute.folderConfiguration:
         return "FOLDER CONFIGURATION";
-      case SettingsSubRoute.wakeOnLan:
-        return "WAKE ON LAN";
+      case SettingsSubRoute.serverFunctions:
+        return "SERVER FUNCTIONS";
       case SettingsSubRoute.appInfo:
         return "APP INFO";
     }
@@ -106,10 +106,10 @@ extension SettingSubRouteExtention on SettingsSubRoute {
         return "Server Details";
       case SettingsSubRoute.folderConfiguration:
         return "Folder Configuration";
-      case SettingsSubRoute.wakeOnLan:
-        return "Wake On LAN";
       case SettingsSubRoute.appInfo:
         return "App Info";
+      case SettingsSubRoute.serverFunctions:
+        return "Server Functions";
     }
   }
 }

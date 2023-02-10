@@ -8,6 +8,9 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 // Project imports:
 import 'package:msm/constants/constants.dart';
+import 'package:msm/models/server_details.dart';
+import 'package:msm/models/server_functions.dart';
+import 'package:msm/models/storage.dart';
 
 Widget saveButton({required void Function()? onPressed}) {
   return Padding(
@@ -20,6 +23,20 @@ Widget saveButton({required void Function()? onPressed}) {
       onPressed: onPressed,
     ),
   );
+}
+
+void saveServerDetails(GlobalKey<FormState> formKey, ServerData serverData) {
+  if (formKey.currentState!.validate()) {
+    formKey.currentState!.save();
+    Storage().saveObject(StorageKeys.serverData.key, serverData);
+    //TODO implement toast messages
+  }
+}
+
+void saveServerFunctions(ServerFunctionsData serverFunctionsData) {
+  print(serverFunctionsData);
+  Storage().saveObject(StorageKeys.serverFunctions.key, serverFunctionsData);
+  //TODO implement toast messages
 }
 
 Future<PackageInfo> get appInfo async {
