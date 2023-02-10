@@ -1,10 +1,14 @@
-// Package imports:
+// Dart imports:
 import 'dart:convert';
 
-import 'package:msm/models/server_details.dart';
+// Package imports:
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum StorageKeys { firstTime, serverData }
+// Project imports:
+import 'package:msm/models/server_details.dart';
+import 'package:msm/models/server_functions.dart';
+
+enum StorageKeys { firstTime, serverData, serverFunctions }
 
 extension StorageKeysExtension on StorageKeys {
   String get key {
@@ -13,6 +17,8 @@ extension StorageKeysExtension on StorageKeys {
         return "firsttime";
       case StorageKeys.serverData:
         return "serverData";
+      case StorageKeys.serverFunctions:
+        return "serverFunctions";
     }
   }
 }
@@ -30,7 +36,7 @@ class Storage {
   void clearAll() => _prefs?.clear();
 
   Map<String, dynamic>? _getJson(String key) {
-    final String? jsonString = _prefs!.getString(key);
+    final String? jsonString = _prefs?.getString(key);
     if (jsonString != null) {
       Map<String, dynamic> stringToJson = jsonDecode(jsonString);
       return stringToJson;
@@ -49,6 +55,14 @@ class Storage {
       return ServerData.fromJson(data);
     }
     return ServerData();
+  }
+
+  ServerFunctionsData get getServerFunctions {
+    Map<String, dynamic>? data = _getJson(StorageKeys.serverFunctions.key);
+    if (data != null) {
+      return ServerFunctionsData.fromJson(data);
+    }
+    return ServerFunctionsData();
   }
 
   Future<bool> getFirstTimeInstall() async =>

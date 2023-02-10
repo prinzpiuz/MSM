@@ -6,12 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:msm/common_utils.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
+import 'package:msm/models/server_details.dart';
 import 'package:msm/models/storage.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/settings/settings_utils.dart';
 import 'package:msm/views/ui_components/textfield/input_formatters.dart';
 import 'package:msm/views/ui_components/textfield/textfield.dart';
-import 'package:msm/models/server_details.dart';
 import 'package:msm/views/ui_components/textfield/validators.dart';
 
 class ServerDetails extends StatefulWidget {

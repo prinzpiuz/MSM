@@ -12,7 +12,7 @@ import 'package:msm/views/home/home.dart';
 import 'package:msm/views/settings/app_info.dart';
 import 'package:msm/views/settings/folder_configuration.dart';
 import 'package:msm/views/settings/server_details.dart';
-import 'package:msm/views/settings/server_functions.dart';
+import 'package:msm/views/settings/server_functions_view.dart';
 import 'package:msm/views/settings/settings.dart';
 import 'package:msm/views/system_tools/system_tools.dart';
 import 'package:msm/views/upload_pages/common_upload_interface.dart';

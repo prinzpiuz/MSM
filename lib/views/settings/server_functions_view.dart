@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 // Project imports:
 import 'package:msm/common_utils.dart';
 import 'package:msm/constants/colors.dart';
+import 'package:msm/models/server_functions.dart';
+import 'package:msm/models/storage.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/settings/settings_utils.dart';
+import 'package:msm/views/ui_components/switch/switch.dart';
 
 class ServerFunctions extends StatefulWidget {
   const ServerFunctions({super.key});
@@ -17,35 +20,33 @@ class ServerFunctions extends StatefulWidget {
 class _ServerFunctionsState extends State<ServerFunctions> {
   @override
   Widget build(BuildContext context) {
-    return wolDetailsForm(context);
+    ServerFunctionsData serverFunctionsData = Storage().getServerFunctions;
+    return functions(context, serverFunctionsData);
   }
 }
 
-Widget wolDetailsForm(BuildContext context) {
+Widget functions(
+    BuildContext context, ServerFunctionsData serverFunctionsData) {
   return Scaffold(
       appBar: commonAppBar(
           backroute: Pages.settings.toPath,
           context: context,
           text: SettingsSubRoute.serverFunctions.toTitle),
       backgroundColor: CommonColors.commonWhiteColor,
-      floatingActionButton: saveButton(onPressed: () => {}),
+      floatingActionButton:
+          saveButton(onPressed: () => saveServerFunctions(serverFunctionsData)),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Column(
         children: [
-          commonSwitch(
-            value: false,
+          CommonSwitch(
             text: 'Wake On Lan',
-            onChange: (bool data) {
-              print(data);
-            },
+            value: serverFunctionsData.wakeOnLan,
+            onChanged: (value) => {serverFunctionsData.wakeOnLan = value},
           ),
-          commonSwitch(
-            value: true,
-            text: 'AutoUpdate Server',
-            onChange: (bool data) {
-              print(data);
-            },
-          )
+          CommonSwitch(
+              text: 'AutoUpdate Server',
+              value: serverFunctionsData.autoUpdate,
+              onChanged: (value) => serverFunctionsData.autoUpdate = value),
         ],
       ));
 }
