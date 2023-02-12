@@ -1,6 +1,3 @@
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:go_router/go_router.dart';
 
@@ -10,8 +7,8 @@ import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/file_listing/file_listing.dart';
 import 'package:msm/views/home/home.dart';
 import 'package:msm/views/settings/app_info.dart';
-import 'package:msm/views/settings/folder_configuration.dart';
-import 'package:msm/views/settings/server_details.dart';
+import 'package:msm/views/settings/folder_configuration_view.dart';
+import 'package:msm/views/settings/server_details_view.dart';
 import 'package:msm/views/settings/server_functions_view.dart';
 import 'package:msm/views/settings/settings.dart';
 import 'package:msm/views/system_tools/system_tools.dart';
@@ -66,7 +63,7 @@ class AppRouter {
             GoRoute(
               path: SettingsSubRoute.folderConfiguration.toPath,
               name: SettingsSubRoute.folderConfiguration.toName,
-              builder: (context, state) => const FolderConfiguration(),
+              builder: (context, state) => const FolderConfigurationForm(),
             ),
             GoRoute(
               path: SettingsSubRoute.serverFunctions.toPath,
