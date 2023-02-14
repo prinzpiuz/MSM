@@ -113,7 +113,7 @@ Widget commonTile(
           color: CommonColors.commonBlackColor,
           size: AppFontSizes.systemToolsIcon.sp),
       title: AppText.singleLineText(title,
-          style: AppTextStyles.medium(CommonColors.commonBlackColor,
+          style: AppTextStyles.regular(CommonColors.commonBlackColor,
               AppFontSizes.systemToolsTittleFontSize.sp)),
       subtitle: AppText.singleLineText(subtitle ?? "",
           style: AppTextStyles.regular(CommonColors.commonBlackColor,

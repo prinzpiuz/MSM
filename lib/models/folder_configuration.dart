@@ -14,6 +14,10 @@ class FolderConfiguration {
     customFolders.add(path);
   }
 
+  void removeExtraFolder(int index) {
+    customFolders.removeAt(index);
+  }
+
   FolderConfiguration.fromJson(Map<String, dynamic> json)
       : movies = json['movies'],
         tv = json['tv'],
