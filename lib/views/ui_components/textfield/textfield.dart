@@ -18,22 +18,26 @@ class AppTextField {
   }
 
   static Widget commonTextFeild(
-      {required FormFieldSetter onsaved,
-      required TextInputType keyboardType,
+      {required TextInputType keyboardType,
       required String labelText,
       required String hintText,
+      FormFieldSetter? onsaved,
+      FormFieldSetter? onChanged,
       List<TextInputFormatter>? inputFormatters,
       FormFieldValidator<String>? validator,
       IconData? iconData,
       int? maxLength,
       String? errorText,
       String? initialValue,
-      bool obscureText = false}) {
+      bool obscureText = false,
+      bool suffix = false,
+      void Function()? onSuffixIconPressed}) {
     return Padding(
       padding: EdgeInsets.only(top: 20.h, left: 18.w, right: 18.w),
       child: TextFormField(
           validator: validator,
           onSaved: onsaved,
+          onChanged: onChanged,
           keyboardType: keyboardType,
           maxLength: maxLength,
           initialValue: initialValue,
@@ -42,6 +46,12 @@ class AppTextField {
           inputFormatters: inputFormatters,
           style: const TextStyle(color: CommonColors.commonBlackColor),
           decoration: InputDecoration(
+            suffix: suffix
+                ? InkWell(
+                    onTap: onSuffixIconPressed,
+                    child: Icon(Icons.clear, size: 14.sp),
+                  )
+                : null,
             contentPadding: EdgeInsets.all(20.h),
             labelText: labelText,
             hintText: hintText,

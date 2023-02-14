@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/widgets.dart';
+import 'package:msm/providers/folder_configuration_provider.dart';
 
 // Package imports:
 import 'package:permission_handler/permission_handler.dart';
@@ -26,6 +27,7 @@ class _MSMState extends State<MSM> {
   late AppService appService;
   late UploadState uploadService;
   late FileListingState fileListingService;
+  late FolderConfigState folderConfigState;
 
   @override
   void initState() {
@@ -33,6 +35,7 @@ class _MSMState extends State<MSM> {
     appService = AppService();
     uploadService = UploadState();
     fileListingService = FileListingState();
+    folderConfigState = FolderConfigState();
     requestPermissions();
     super.initState();
   }
@@ -43,6 +46,7 @@ class _MSMState extends State<MSM> {
 
   @override
   Widget build(BuildContext context) {
-    return materialApp(appService, uploadService, fileListingService);
+    return materialApp(
+        appService, uploadService, fileListingService, folderConfigState);
   }
 }

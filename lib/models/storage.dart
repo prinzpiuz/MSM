@@ -2,13 +2,19 @@
 import 'dart:convert';
 
 // Package imports:
+import 'package:msm/models/folder_configuration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:msm/models/server_details.dart';
 import 'package:msm/models/server_functions.dart';
 
-enum StorageKeys { firstTime, serverData, serverFunctions }
+enum StorageKeys {
+  firstTime,
+  serverData,
+  serverFunctions,
+  folderConfigurations
+}
 
 extension StorageKeysExtension on StorageKeys {
   String get key {
@@ -19,6 +25,8 @@ extension StorageKeysExtension on StorageKeys {
         return "serverData";
       case StorageKeys.serverFunctions:
         return "serverFunctions";
+      case StorageKeys.folderConfigurations:
+        return "folderConfigurations";
     }
   }
 }
@@ -63,6 +71,14 @@ class Storage {
       return ServerFunctionsData.fromJson(data);
     }
     return ServerFunctionsData();
+  }
+
+  FolderConfiguration get getFolderConfigurations {
+    Map<String, dynamic>? data = _getJson(StorageKeys.folderConfigurations.key);
+    if (data != null) {
+      return FolderConfiguration.fromJson(data);
+    }
+    return FolderConfiguration();
   }
 
   Future<bool> getFirstTimeInstall() async =>

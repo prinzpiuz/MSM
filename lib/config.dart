@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:msm/providers/folder_configuration_provider.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
@@ -18,13 +19,15 @@ bool get appENV {
 }
 
 MultiProvider materialApp(AppService appService, UploadState uploadService,
-    FileListingState fileListingService) {
+    FileListingState fileListingService, FolderConfigState folderConfigState) {
   return MultiProvider(
     providers: [
       ChangeNotifierProvider<AppService>(create: (_) => appService),
       ChangeNotifierProvider<UploadState>(create: (_) => uploadService),
       ChangeNotifierProvider<FileListingState>(
           create: (_) => fileListingService),
+      ChangeNotifierProvider<FolderConfigState>(
+          create: (_) => folderConfigState),
       Provider<AppRouter>(create: (_) => AppRouter(appService)),
     ],
     child: Builder(
