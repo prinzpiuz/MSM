@@ -11,7 +11,9 @@ class FolderConfiguration {
       this.customFolders = const []});
 
   void addExtraFolder(String path) {
-    customFolders.add(path);
+    if (!customFolders.contains(path)) {
+      customFolders.add(path);
+    }
   }
 
   void removeExtraFolder(int index) {
