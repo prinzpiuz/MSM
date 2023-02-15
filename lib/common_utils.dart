@@ -10,8 +10,8 @@ import 'package:go_router/go_router.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
 import 'package:msm/providers/upload_provider.dart';
-import 'package:msm/views/ui_components/text/text.dart';
-import 'package:msm/views/ui_components/text/textstyles.dart';
+import 'package:msm/ui_components/text/text.dart';
+import 'package:msm/ui_components/text/textstyles.dart';
 
 WillPopScope handleBackButton(
     {String? backRoute,
@@ -146,4 +146,12 @@ Widget commonSwitch(
       ],
     ),
   );
+}
+
+void hideKeyboard(BuildContext ctx) {
+  try {
+    FocusManager.instance.primaryFocus?.unfocus();
+  } catch (e) {
+    //
+  }
 }

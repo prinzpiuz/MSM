@@ -20,7 +20,10 @@ class SystemTools extends StatelessWidget {
 
 Widget systemToolsMenu(BuildContext context) {
   return Scaffold(
-      appBar: commonAppBar(backroute: Pages.home.toPath, context: context),
+      appBar: commonAppBar(
+          text: Pages.systemTools.toTitle,
+          backroute: Pages.home.toPath,
+          context: context),
       backgroundColor: CommonColors.commonWhiteColor,
       body: ListView(
         padding: commonListViewTopPadding,

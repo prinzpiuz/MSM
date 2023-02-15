@@ -8,7 +8,7 @@ import 'package:msm/models/server_functions.dart';
 import 'package:msm/models/storage.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/settings/settings_utils.dart';
-import 'package:msm/views/ui_components/switch/switch.dart';
+import 'package:msm/ui_components/switch/switch.dart';
 
 class ServerFunctions extends StatefulWidget {
   const ServerFunctions({super.key});

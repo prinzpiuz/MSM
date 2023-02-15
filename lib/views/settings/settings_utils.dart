@@ -7,10 +7,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/models/folder_configuration.dart';
 import 'package:msm/providers/folder_configuration_provider.dart';
-import 'package:msm/views/ui_components/text/text.dart';
-import 'package:msm/views/ui_components/text/textstyles.dart';
-import 'package:msm/views/ui_components/textfield/textfield.dart';
-import 'package:msm/views/ui_components/textfield/validators.dart';
+import 'package:msm/ui_components/text/text.dart';
+import 'package:msm/ui_components/text/textstyles.dart';
+import 'package:msm/ui_components/textfield/textfield.dart';
+import 'package:msm/ui_components/textfield/validators.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 // Project imports:

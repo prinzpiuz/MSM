@@ -14,8 +14,8 @@ import 'package:msm/constants/colors.dart';
 import 'package:msm/models/file_manager.dart';
 import 'package:msm/providers/upload_provider.dart';
 import 'package:msm/router/router_utils.dart';
-import 'package:msm/views/ui_components/text/text.dart';
-import 'package:msm/views/ui_components/text/textstyles.dart';
+import 'package:msm/ui_components/text/text.dart';
+import 'package:msm/ui_components/text/textstyles.dart';
 
 enum UploadCatogories { movies, tvShows, books, pictures }
 

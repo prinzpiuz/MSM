@@ -10,9 +10,9 @@ import 'package:msm/models/server_details.dart';
 import 'package:msm/models/storage.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/settings/settings_utils.dart';
-import 'package:msm/views/ui_components/textfield/input_formatters.dart';
-import 'package:msm/views/ui_components/textfield/textfield.dart';
-import 'package:msm/views/ui_components/textfield/validators.dart';
+import 'package:msm/ui_components/textfield/input_formatters.dart';
+import 'package:msm/ui_components/textfield/textfield.dart';
+import 'package:msm/ui_components/textfield/validators.dart';
 
 class ServerDetails extends StatefulWidget {
   const ServerDetails({super.key});
@@ -39,7 +39,8 @@ Widget serverDetailsForm(BuildContext context) {
       backgroundColor: CommonColors.commonWhiteColor,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: saveButton(
-        onPressed: () => saveServerDetails(formKey, serverData),
+        onPressed: () =>
+            {hideKeyboard(context), saveServerDetails(formKey, serverData)},
       ),
       body: SingleChildScrollView(
         child: Form(

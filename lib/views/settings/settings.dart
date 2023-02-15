@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
@@ -30,24 +29,28 @@ Widget settingsMenu(BuildContext context) {
           commonTile(
               icon: FontAwesomeIcons.computer,
               title: 'Server Details',
+              subtitle: 'Details Regarding Server',
               onTap: () {
                 context.goNamed(SettingsSubRoute.serverDetails.toName);
               }),
           commonTile(
               icon: FontAwesomeIcons.folderClosed,
               title: 'Folder Configurations',
+              subtitle: 'Folder Locations In Server',
               onTap: () {
                 context.goNamed(SettingsSubRoute.folderConfiguration.toName);
               }),
           commonTile(
               icon: FontAwesomeIcons.gears,
               title: 'Server Functions',
+              subtitle: 'Extra Functions In Server',
               onTap: () {
                 context.goNamed(SettingsSubRoute.serverFunctions.toName);
               }),
           commonTile(
               icon: FontAwesomeIcons.circleInfo,
               title: 'App Info',
+              subtitle: 'Application Details',
               onTap: () {
                 context.goNamed(SettingsSubRoute.appInfo.toName);
               }),

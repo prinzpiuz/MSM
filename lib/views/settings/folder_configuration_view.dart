@@ -40,6 +40,7 @@ Widget folderConfigurationForm(BuildContext context) {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: saveButton(
         onPressed: () => {
+          hideKeyboard(context),
           Provider.of<FolderConfigState>(context, listen: false)
               .resetFolderCount(),
           if (formKey.currentState!.validate())
