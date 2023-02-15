@@ -7,10 +7,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/models/folder_configuration.dart';
 import 'package:msm/providers/folder_configuration_provider.dart';
-import 'package:msm/views/ui_components/text/text.dart';
-import 'package:msm/views/ui_components/text/textstyles.dart';
-import 'package:msm/views/ui_components/textfield/textfield.dart';
-import 'package:msm/views/ui_components/textfield/validators.dart';
+import 'package:msm/ui_components/text/text.dart';
+import 'package:msm/ui_components/text/textstyles.dart';
+import 'package:msm/ui_components/textfield/textfield.dart';
+import 'package:msm/ui_components/textfield/validators.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 // Project imports:
@@ -73,7 +73,7 @@ Widget addCustomPathButton({required void Function()? onPressed}) {
   );
 }
 
-List<Widget> getFoldersList(
+void getFoldersList(
     BuildContext context, FolderConfiguration folderConfiguration) {
   FolderConfigState folderConfigState = Provider.of<FolderConfigState>(context);
   List<Widget> folders = [
@@ -107,18 +107,22 @@ List<Widget> getFoldersList(
   if (folderConfiguration.customFolders.isNotEmpty) {
     for (int i = 0; i < folderConfiguration.customFolders.length; i++) {
       folders.add(AppTextField.commonTextFeild(
-        onsaved: (data) {},
         initialValue: folderConfiguration.customFolders[i],
         keyboardType: TextInputType.text,
         labelText: "Custom",
         hintText: "Custom Folder",
         suffix: true,
-        onSuffixIconPressed: () => {print("saved delete")},
+        onSuffixIconPressed: () => {
+          folderConfiguration.removeExtraFolder(i),
+          saveFolderConfigurations(folderConfiguration),
+          Provider.of<FolderConfigState>(context, listen: false)
+              .removeFromWidgetList(3 + i)
+        },
       ));
     }
   }
   if (folderConfigState.addNewPath) {
-    for (int i = 0; i < folderConfigState.foldersCount; i++) {
+    for (int j = 0; j < folderConfigState.foldersCount; j++) {
       folders.add(AppTextField.commonTextFeild(
         onsaved: (data) {
           folderConfiguration.addExtraFolder(data);
@@ -128,17 +132,22 @@ List<Widget> getFoldersList(
         labelText: "Custom Folder",
         hintText: "Path To Your Custom Folder",
         suffix: true,
-        onSuffixIconPressed: () => {print("saved delete")},
+        onSuffixIconPressed: () => {
+          Provider.of<FolderConfigState>(context, listen: false)
+              .removeFromWidgetList(
+                  3 + folderConfiguration.customFolders.length + j)
+        },
       ));
     }
 
-    Provider.of<FolderConfigState>(context).addNewPath = false;
+    folderConfigState.addNewPath = false;
   }
 
   folders.add(addCustomPathButton(onPressed: () {
-    Provider.of<FolderConfigState>(context, listen: false).setaddNewPath = true;
+    saveFolderConfigurations(folderConfiguration);
+    Provider.of<FolderConfigState>(context, listen: false).setAddNewPath = true;
     Provider.of<FolderConfigState>(context, listen: false)
         .incrementFolderCount();
   }));
-  return folders;
+  folderConfigState.pathTextFields = folders;
 }

@@ -9,7 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
 import 'package:msm/providers/file_listing_provider.dart';
-import 'package:msm/views/ui_components/textfield/textfield.dart';
+import 'package:msm/ui_components/textfield/textfield.dart';
 
 PreferredSizeWidget searchBar(
     //TODO may be look here for more implementation related helps https://pub.dev/packages/app_bar_with_search_switch/example

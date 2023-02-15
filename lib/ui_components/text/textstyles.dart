@@ -36,14 +36,6 @@ class AppTextStyles {
     return medium(TextFormColors.inputErrorTextColor, 11, height: 2);
   }
 
-  // static TextStyle buttonTextStyle() {
-  //   return bold(ButtonColors.buttonTextColor, 14);
-  // }
-
-  // static TextStyle secondaryButtonTextStyle() {
-  //   return bold(ButtonColors.secondaryButtonTextColor, 14);
-  // }
-
   static TextStyle extraBold(Color textColor, double fontSize,
       {double? letterSpacing, double? height}) {
     return GoogleFonts.openSans(

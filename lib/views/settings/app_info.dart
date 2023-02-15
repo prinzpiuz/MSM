@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -12,8 +13,8 @@ import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/settings/settings_utils.dart';
-import 'package:msm/views/ui_components/text/text.dart';
-import 'package:msm/views/ui_components/text/textstyles.dart';
+import 'package:msm/ui_components/text/text.dart';
+import 'package:msm/ui_components/text/textstyles.dart';
 
 class AppInfo extends StatelessWidget {
   const AppInfo({super.key});
@@ -55,7 +56,7 @@ Widget appDetails(BuildContext context) {
 
 List<Widget> dataWidget({required PackageInfo? data}) {
   return [
-    Image.asset(
+    SvgPicture.asset(
       AppConstants.appIconImageLocation,
       height: AppConstants.appInfoIconHeight.h,
       width: AppConstants.appInfoIconWidth.w,

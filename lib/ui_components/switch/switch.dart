@@ -7,8 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Project imports:
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
-import 'package:msm/views/ui_components/text/text.dart';
-import 'package:msm/views/ui_components/text/textstyles.dart';
+import 'package:msm/ui_components/text/text.dart';
+import 'package:msm/ui_components/text/textstyles.dart';
 
 class CommonSwitch extends StatefulWidget {
   final String text;

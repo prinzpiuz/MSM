@@ -29,7 +29,8 @@ class _FolderConfigurationFormState extends State<FolderConfigurationForm> {
 Widget folderConfigurationForm(BuildContext context) {
   final formKey = GlobalKey<FormState>();
   FolderConfiguration folderConfiguration = Storage().getFolderConfigurations;
-  List<Widget> folders = getFoldersList(context, folderConfiguration);
+  getFoldersList(context, folderConfiguration);
+  List<Widget> folders = Provider.of<FolderConfigState>(context).pathTextFields;
   return Scaffold(
       appBar: commonAppBar(
           backroute: Pages.settings.toPath,
@@ -39,6 +40,7 @@ Widget folderConfigurationForm(BuildContext context) {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: saveButton(
         onPressed: () => {
+          hideKeyboard(context),
           Provider.of<FolderConfigState>(context, listen: false)
               .resetFolderCount(),
           if (formKey.currentState!.validate())

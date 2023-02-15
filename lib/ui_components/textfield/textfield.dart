@@ -7,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
 import 'package:msm/constants/colors.dart';
-import 'package:msm/views/ui_components/textfield/textfield_decoration.dart';
+import 'package:msm/ui_components/textfield/textfield_decoration.dart';
 
 class AppTextField {
   static TextField simpleTextField(

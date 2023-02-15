@@ -14,8 +14,8 @@ import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/file_listing/fab.dart';
 import 'package:msm/views/file_listing/file_listing_utils.dart';
-import 'package:msm/views/ui_components/text/text.dart';
-import 'package:msm/views/ui_components/text/textstyles.dart';
+import 'package:msm/ui_components/text/text.dart';
+import 'package:msm/ui_components/text/textstyles.dart';
 
 //todo this is supposed to be removed when server file model will be created
 const List fileListItems = [
@@ -94,6 +94,7 @@ Widget fileList(BuildContext context, TextEditingController searchController,
         ? searchBar(
             searchController: searchController, listingState: listingState)
         : commonAppBar(
+            text: Pages.fileList.toTitle,
             backroute: Pages.home.toPath,
             actions: [
               actionIconButton(
