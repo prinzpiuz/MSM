@@ -1,4 +1,4 @@
-<p align="center"><a href="#"><img src="design/Icons_pngs/v0.4.0_launcher512px_bg_black.png" width="250"></a></p>
+<p align="center"><a href="#"><img src="assets/svgs/msm.svg" width="250"></a></p>
 <h2 align="center"><b>MSM</b></h2>
 <h4 align="center">All in one manager for your media server</h4>
 <!-- <p align="center"><a href="#"><img src="https://f-droid.org/wiki/images/0/06/F-Droid-button_get-it-on.png"></a></p> -->
