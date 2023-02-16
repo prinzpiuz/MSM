@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:msm/common_utils.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/models/folder_configuration.dart';
 import 'package:msm/providers/folder_configuration_provider.dart';
@@ -33,24 +34,34 @@ Widget saveButton({required void Function()? onPressed}) {
   );
 }
 
-void saveServerDetails(GlobalKey<FormState> formKey, ServerData serverData) {
+void saveServerDetails(
+    GlobalKey<FormState> formKey, ServerData serverData, BuildContext context) {
+  hideKeyboard(context);
   if (formKey.currentState!.validate()) {
     formKey.currentState!.save();
     Storage().saveObject(StorageKeys.serverData.key, serverData);
-    //TODO implement toast messages
+    showMessage(context: context, text: AppMessages.serverDetailSaved);
   }
 }
 
-void saveServerFunctions(ServerFunctionsData serverFunctionsData) {
-  print(serverFunctionsData);
+void saveServerFunctions(
+  ServerFunctionsData serverFunctionsData,
+  BuildContext context,
+) {
   Storage().saveObject(StorageKeys.serverFunctions.key, serverFunctionsData);
-  //TODO implement toast messages
+  showMessage(context: context, text: AppMessages.serverFunctionSaved);
 }
 
-void saveFolderConfigurations(FolderConfiguration folderConfiguration) {
-  Storage()
-      .saveObject(StorageKeys.folderConfigurations.key, folderConfiguration);
-  //TODO implement toast messages
+void saveFolderConfigurations(GlobalKey<FormState> formKey,
+    FolderConfiguration folderConfiguration, BuildContext context) {
+  hideKeyboard(context);
+  Provider.of<FolderConfigState>(context, listen: false).resetFolderCount();
+  if (formKey.currentState!.validate()) {
+    formKey.currentState!.save();
+    Storage()
+        .saveObject(StorageKeys.folderConfigurations.key, folderConfiguration);
+    showMessage(context: context, text: AppMessages.folderConfigurationSaved);
+  }
 }
 
 Future<PackageInfo> get appInfo async {
@@ -64,7 +75,7 @@ Widget addCustomPathButton({required void Function()? onPressed}) {
     child: OutlinedButton(
         style: ButtonStyle(
             shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0))),
+                borderRadius: BorderRadius.circular(30.0.r))),
             side: MaterialStateProperty.all(
                 const BorderSide(color: CommonColors.commonBlackColor))),
         onPressed: onPressed,
@@ -74,7 +85,10 @@ Widget addCustomPathButton({required void Function()? onPressed}) {
 }
 
 void getFoldersList(
-    BuildContext context, FolderConfiguration folderConfiguration) {
+  BuildContext context,
+  FolderConfiguration folderConfiguration,
+  GlobalKey<FormState> formKey,
+) {
   FolderConfigState folderConfigState = Provider.of<FolderConfigState>(context);
   List<Widget> folders = [
     AppTextField.commonTextFeild(
@@ -114,7 +128,7 @@ void getFoldersList(
         suffix: true,
         onSuffixIconPressed: () => {
           folderConfiguration.removeExtraFolder(i),
-          saveFolderConfigurations(folderConfiguration),
+          saveFolderConfigurations(formKey, folderConfiguration, context),
           Provider.of<FolderConfigState>(context, listen: false)
               .removeFromWidgetList(3 + i)
         },
@@ -144,7 +158,7 @@ void getFoldersList(
   }
 
   folders.add(addCustomPathButton(onPressed: () {
-    saveFolderConfigurations(folderConfiguration);
+    saveFolderConfigurations(formKey, folderConfiguration, context);
     Provider.of<FolderConfigState>(context, listen: false).setAddNewPath = true;
     Provider.of<FolderConfigState>(context, listen: false)
         .incrementFolderCount();

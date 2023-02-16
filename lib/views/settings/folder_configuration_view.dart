@@ -29,7 +29,7 @@ class _FolderConfigurationFormState extends State<FolderConfigurationForm> {
 Widget folderConfigurationForm(BuildContext context) {
   final formKey = GlobalKey<FormState>();
   FolderConfiguration folderConfiguration = Storage().getFolderConfigurations;
-  getFoldersList(context, folderConfiguration);
+  getFoldersList(context, folderConfiguration, formKey);
   List<Widget> folders = Provider.of<FolderConfigState>(context).pathTextFields;
   return Scaffold(
       appBar: commonAppBar(
@@ -39,16 +39,8 @@ Widget folderConfigurationForm(BuildContext context) {
       backgroundColor: CommonColors.commonWhiteColor,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: saveButton(
-        onPressed: () => {
-          hideKeyboard(context),
-          Provider.of<FolderConfigState>(context, listen: false)
-              .resetFolderCount(),
-          if (formKey.currentState!.validate())
-            {
-              formKey.currentState!.save(),
-              saveFolderConfigurations(folderConfiguration)
-            }
-        },
+        onPressed: () =>
+            saveFolderConfigurations(formKey, folderConfiguration, context),
       ),
       body: Form(
         key: formKey,

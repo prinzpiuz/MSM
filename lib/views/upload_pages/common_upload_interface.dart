@@ -130,8 +130,8 @@ Widget dataCard(FileOrDirectory data) {
   return Center(
     child: Card(
       elevation: 3,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12.r)),
       ),
       child: SizedBox(
         width: 300.w,
