@@ -155,3 +155,23 @@ void hideKeyboard(BuildContext ctx) {
     //
   }
 }
+
+void showMessage(
+    {required BuildContext context,
+    required String text,
+    int duration = 8}) async {
+  OverlayState overlayState = Overlay.of(context);
+  OverlayEntry overlayEntry = OverlayEntry(builder: (context) {
+    return Positioned(
+        bottom: 100.h,
+        left: 40.h,
+        right: 40.h,
+        child: DefaultTextStyle(
+          style: AppTextStyles.regular(CommonColors.commonBlackColor, 15.sp),
+          child: AppText.centerSingleLineText(text),
+        ));
+  });
+  overlayState.insert(overlayEntry);
+  await Future.delayed(Duration(seconds: duration));
+  overlayEntry.remove();
+}

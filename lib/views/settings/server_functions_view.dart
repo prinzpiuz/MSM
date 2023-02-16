@@ -33,8 +33,8 @@ Widget functions(
           context: context,
           text: SettingsSubRoute.serverFunctions.toTitle),
       backgroundColor: CommonColors.commonWhiteColor,
-      floatingActionButton:
-          saveButton(onPressed: () => saveServerFunctions(serverFunctionsData)),
+      floatingActionButton: saveButton(
+          onPressed: () => saveServerFunctions(serverFunctionsData, context)),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Column(
         children: [

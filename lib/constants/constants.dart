@@ -35,3 +35,9 @@ class AppConstants {
   static const numberOnly = "[0-9]";
   static const macFormat = "[A-Z0-9:]";
 }
+
+class AppMessages {
+  static const serverDetailSaved = "Saved Server Details";
+  static const folderConfigurationSaved = "Saved Folder Configurations";
+  static const serverFunctionSaved = "Saved Server Functions";
+}

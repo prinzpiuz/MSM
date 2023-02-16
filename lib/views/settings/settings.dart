@@ -21,7 +21,10 @@ class Settings extends StatelessWidget {
 
 Widget settingsMenu(BuildContext context) {
   return Scaffold(
-      appBar: commonAppBar(backroute: Pages.home.toPath, context: context),
+      appBar: commonAppBar(
+          text: Pages.settings.toTitle,
+          backroute: Pages.home.toPath,
+          context: context),
       backgroundColor: CommonColors.commonWhiteColor,
       body: ListView(
         padding: commonListViewTopPadding,

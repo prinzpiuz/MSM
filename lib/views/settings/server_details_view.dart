@@ -39,8 +39,7 @@ Widget serverDetailsForm(BuildContext context) {
       backgroundColor: CommonColors.commonWhiteColor,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: saveButton(
-        onPressed: () =>
-            {hideKeyboard(context), saveServerDetails(formKey, serverData)},
+        onPressed: () => saveServerDetails(formKey, serverData, context),
       ),
       body: SingleChildScrollView(
         child: Form(
