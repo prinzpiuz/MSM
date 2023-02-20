@@ -20,37 +20,40 @@ class HomePage extends StatelessWidget {
 }
 
 Widget home(BuildContext context) {
-  return Scaffold(
-      backgroundColor: CommonColors.commonWhiteColor,
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 18.h, bottom: 30.h),
-              child: menuGrid(context),
-            ),
-            serverDetails,
-          ],
-        ),
-      ));
+  return GestureDetector(
+    onHorizontalDragUpdate: (details) => notificationsPage(context, details),
+    child: Scaffold(
+        backgroundColor: CommonColors.commonWhiteColor,
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              menuGrid(context),
+              serverDetails,
+            ],
+          ),
+        )),
+  );
 }
 
 Widget menuGrid(BuildContext context) {
-  return GridView.count(
-    shrinkWrap: true,
-    padding: EdgeInsets.all(16.h),
-    crossAxisCount: 2,
-    children: List.generate(4, (index) {
-      return Container(
-        color: CommonColors.commonGreenColor,
-        margin: EdgeInsets.all(8.h),
-        child: OutlinedButton(
-            onPressed: () => goToPage(index, context),
-            child: Center(
-              child: HomeCommonWidgets.homeIconList[index],
-            )),
-      );
-    }),
+  return Padding(
+    padding: EdgeInsets.only(top: 18.h, bottom: 30.h),
+    child: GridView.count(
+      shrinkWrap: true,
+      padding: EdgeInsets.all(16.h),
+      crossAxisCount: 2,
+      children: List.generate(4, (index) {
+        return Container(
+          color: CommonColors.commonGreenColor,
+          margin: EdgeInsets.all(8.h),
+          child: OutlinedButton(
+              onPressed: () => goToPage(index, context),
+              child: Center(
+                child: HomeCommonWidgets.homeIconList[index],
+              )),
+        );
+      }),
+    ),
   );
 }
 

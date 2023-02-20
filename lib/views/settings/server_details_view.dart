@@ -7,7 +7,6 @@ import 'package:msm/common_utils.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
 import 'package:msm/models/server_details.dart';
-import 'package:msm/models/storage.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/settings/settings_utils.dart';
 import 'package:msm/ui_components/textfield/input_formatters.dart';
@@ -48,6 +47,7 @@ Widget serverDetailsForm(BuildContext context) {
             children: [
               nameField(serverData),
               hostField(serverData),
+              usernameField(serverData),
               passwordField(serverData),
               portField(serverData),
               macField(serverData)
@@ -69,6 +69,17 @@ Widget nameField(ServerData serverData) => AppTextField.commonTextFeild(
       keyboardType: TextInputType.text,
       labelText: "Server Name",
       hintText: "Name Of Your Server",
+    );
+
+Widget usernameField(ServerData serverData) => AppTextField.commonTextFeild(
+      onsaved: (data) {
+        serverData.username = data;
+      },
+      initialValue: serverData.username,
+      validator: validateServerName,
+      keyboardType: TextInputType.text,
+      labelText: "Username",
+      hintText: "User Name Of Server",
     );
 
 Widget hostField(ServerData serverData) => AppTextField.commonTextFeild(
