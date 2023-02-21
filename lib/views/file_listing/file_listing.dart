@@ -12,10 +12,10 @@ import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
 import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/router/router_utils.dart';
-import 'package:msm/views/file_listing/fab.dart';
-import 'package:msm/views/file_listing/file_listing_utils.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
+import 'package:msm/views/file_listing/fab.dart';
+import 'package:msm/views/file_listing/file_listing_utils.dart';
 
 //todo this is supposed to be removed when server file model will be created
 const List fileListItems = [

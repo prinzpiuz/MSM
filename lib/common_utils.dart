@@ -164,7 +164,7 @@ void hideKeyboard(BuildContext ctx) {
 void showMessage(
     {required BuildContext context,
     required String text,
-    int duration = 8}) async {
+    int duration = 3}) async {
   OverlayState overlayState = Overlay.of(context);
   OverlayEntry overlayEntry = OverlayEntry(builder: (context) {
     return Positioned(

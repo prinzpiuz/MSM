@@ -2,16 +2,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+// Package imports:
+import 'package:provider/provider.dart';
+
 // Project imports:
 import 'package:msm/common_utils.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
 import 'package:msm/models/server_details.dart';
+import 'package:msm/providers/app_provider.dart';
 import 'package:msm/router/router_utils.dart';
-import 'package:msm/views/settings/settings_utils.dart';
 import 'package:msm/ui_components/textfield/input_formatters.dart';
 import 'package:msm/ui_components/textfield/textfield.dart';
 import 'package:msm/ui_components/textfield/validators.dart';
+import 'package:msm/views/settings/settings_utils.dart';
 
 class ServerDetails extends StatefulWidget {
   const ServerDetails({super.key});
@@ -29,7 +33,8 @@ class _ServerDetailsState extends State<ServerDetails> {
 
 Widget serverDetailsForm(BuildContext context) {
   final formKey = GlobalKey<FormState>();
-  ServerData serverData = Storage().getServerData;
+  ServerData serverData =
+      Provider.of<AppService>(context).storage.getServerData;
   return Scaffold(
       appBar: commonAppBar(
           backroute: Pages.settings.toPath,

@@ -2,10 +2,10 @@
 import 'dart:convert';
 
 // Package imports:
-import 'package:msm/models/folder_configuration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
+import 'package:msm/models/folder_configuration.dart';
 import 'package:msm/models/server_details.dart';
 import 'package:msm/models/server_functions.dart';
 
@@ -32,19 +32,14 @@ extension StorageKeysExtension on StorageKeys {
 }
 
 class Storage {
-  SharedPreferences? _prefs;
-  static final Storage _instance = Storage._();
+  SharedPreferences prefs;
 
-  factory Storage() => _instance;
+  Storage({required this.prefs});
 
-  Storage._() {
-    SharedPreferences.getInstance().then((value) => _prefs = value);
-  }
-
-  void clearAll() => _prefs?.clear();
+  void clearAll() => prefs.clear();
 
   Map<String, dynamic>? _getJson(String key) {
-    final String? jsonString = _prefs?.getString(key);
+    final String? jsonString = prefs.getString(key);
     if (jsonString != null) {
       Map<String, dynamic> stringToJson = jsonDecode(jsonString);
       return stringToJson;
@@ -54,7 +49,7 @@ class Storage {
 
   void saveObject(String key, dynamic object) async {
     String objectToString = jsonEncode(object);
-    await _prefs!.setString(key, objectToString);
+    await prefs.setString(key, objectToString);
   }
 
   ServerData get getServerData {
@@ -82,7 +77,7 @@ class Storage {
   }
 
   Future<bool> getFirstTimeInstall() async =>
-      _prefs!.getBool(StorageKeys.firstTime.key) ?? true;
+      prefs.getBool(StorageKeys.firstTime.key) ?? true;
   void setFirstTimeInstall(bool value) async =>
-      _prefs!.setBool(StorageKeys.firstTime.key, value);
+      prefs.setBool(StorageKeys.firstTime.key, value);
 }
