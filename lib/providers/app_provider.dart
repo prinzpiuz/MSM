@@ -13,9 +13,8 @@ import 'package:msm/models/storage.dart';
 
 class AppService with ChangeNotifier {
   //TODO add server class also here for having the connection status
-  bool _connectionState = true;
+  bool _connectionState = false;
   bool _initialized = false;
-  bool _onboarding = false;
   Storage storage;
   Server server;
 
@@ -23,7 +22,6 @@ class AppService with ChangeNotifier {
 
   bool get loginState => _connectionState;
   bool get initialized => _initialized;
-  bool get onboarding => _onboarding;
 
   set setServer(Server server) {
     server = server;
@@ -48,18 +46,6 @@ class AppService with ChangeNotifier {
 
   set initialized(bool value) {
     _initialized = value;
-    notifyListeners();
-  }
-
-  set onboarding(bool value) {
-    storage.setFirstTimeInstall(value);
-    _onboarding = value;
-    notifyListeners();
-  }
-
-  Future<void> onAppStart() async {
-    _onboarding = await storage.getFirstTimeInstall();
-    _initialized = true;
     notifyListeners();
   }
 }

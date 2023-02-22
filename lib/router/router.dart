@@ -1,4 +1,7 @@
 // Package imports:
+import 'dart:convert';
+
+import 'package:dartssh2/dartssh2.dart';
 import 'package:go_router/go_router.dart';
 
 // Project imports:
@@ -78,12 +81,8 @@ class AppRouter {
             ),
           ])
     ],
-    redirect: (context, state) {
-      // print(Storage().getServerData.username);
-      // print(appService.server.serverData.username);
-      if (appService.server.serverData.detailsAvailable) {
-        print("connnect");
-      } else {
+    redirect: (context, state) async {
+      if (!appService.server.serverData.detailsAvailable) {
         return "${Pages.settings.toPath}/${SettingsSubRoute.serverDetails.toPath}";
       }
       return null;

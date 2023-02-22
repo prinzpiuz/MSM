@@ -7,8 +7,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Project imports:
 import 'package:msm/common_utils.dart';
 import 'package:msm/constants/colors.dart';
+import 'package:msm/constants/constants.dart';
+import 'package:msm/models/server.dart';
+import 'package:msm/providers/app_provider.dart';
+import 'package:msm/ui_components/text/text.dart';
+import 'package:msm/ui_components/text/textstyles.dart';
 import 'package:msm/views/home/home_common_widgets.dart';
 import 'package:msm/views/home/home_utils.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -28,7 +34,7 @@ Widget home(BuildContext context) {
           child: Column(
             children: <Widget>[
               menuGrid(context),
-              serverDetails,
+              serverDetailsBuilder(context),
             ],
           ),
         )),
@@ -49,7 +55,7 @@ Widget menuGrid(BuildContext context) {
           child: OutlinedButton(
               onPressed: () => goToPage(index, context),
               child: Center(
-                child: HomeCommonWidgets.homeIconList[index],
+                child: homeIconList[index],
               )),
         );
       }),
@@ -57,7 +63,23 @@ Widget menuGrid(BuildContext context) {
   );
 }
 
-Widget get serverDetails {
+Widget serverDetailsBuilder(BuildContext context) {
+  Server server = Provider.of<AppService>(context).server;
+  final Future basicDetails =
+      BasicDetails(serverData: server.serverData).getUser;
+  return FutureBuilder(
+      future: basicDetails,
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData) {
+          return serverdetails(snapshot.data);
+        } else {
+          return connectionState;
+        }
+      });
+}
+
+Widget serverdetails(dynamic data) {
   return Stack(children: <Widget>[
     SizedBox(
       width: 200.w,
@@ -78,7 +100,20 @@ Widget get serverDetails {
       top: 15.h,
       left: 10.w,
       right: 10.w,
-      child: HomeCommonWidgets.serverDetails(),
+      child: serverDetails(data),
     )
   ]);
 }
+
+Widget get connectionState => Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.all(20.h),
+          child: const CircularProgressIndicator(
+              color: CommonColors.commonGreenColor),
+        ),
+        AppText.centerSingleLineText(AppConstants.connecting,
+            style: AppTextStyles.regular(CommonColors.commonBlackColor,
+                AppFontSizes.connectingFontSize)),
+      ],
+    );

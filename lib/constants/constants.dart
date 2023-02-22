@@ -13,6 +13,7 @@ class AppFontSizes {
   static const appShortNameFontSize = 20.0;
   static const appLongNameFontSize = 15.0;
   static const appInfoLinkFontSize = 12.0;
+  static const connectingFontSize = 15.0;
 }
 
 class AppConstants {
@@ -34,6 +35,7 @@ class AppConstants {
   static const ipFormat = "[0-9.]";
   static const numberOnly = "[0-9]";
   static const macFormat = "[A-Z0-9:]";
+  static const connecting = "Connecting....";
 }
 
 class AppMessages {
