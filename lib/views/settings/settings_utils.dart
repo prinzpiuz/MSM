@@ -4,22 +4,23 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provider/provider.dart';
+
+// Project imports:
 import 'package:msm/common_utils.dart';
 import 'package:msm/constants/colors.dart';
+import 'package:msm/constants/constants.dart';
 import 'package:msm/models/folder_configuration.dart';
+import 'package:msm/models/server_details.dart';
+import 'package:msm/models/server_functions.dart';
+import 'package:msm/models/storage.dart';
+import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/folder_configuration_provider.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 import 'package:msm/ui_components/textfield/textfield.dart';
 import 'package:msm/ui_components/textfield/validators.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-
-// Project imports:
-import 'package:msm/constants/constants.dart';
-import 'package:msm/models/server_details.dart';
-import 'package:msm/models/server_functions.dart';
-import 'package:msm/models/storage.dart';
-import 'package:provider/provider.dart';
 
 Widget saveButton({required void Function()? onPressed}) {
   return Padding(
@@ -39,7 +40,11 @@ void saveServerDetails(
   hideKeyboard(context);
   if (formKey.currentState!.validate()) {
     formKey.currentState!.save();
-    Storage().saveObject(StorageKeys.serverData.key, serverData);
+    Provider.of<AppService>(context, listen: false)
+        .storage
+        .saveObject(StorageKeys.serverData.key, serverData);
+    Provider.of<AppService>(context, listen: false).updateServerDetails =
+        serverData;
     showMessage(context: context, text: AppMessages.serverDetailSaved);
   }
 }
@@ -48,7 +53,11 @@ void saveServerFunctions(
   ServerFunctionsData serverFunctionsData,
   BuildContext context,
 ) {
-  Storage().saveObject(StorageKeys.serverFunctions.key, serverFunctionsData);
+  Provider.of<AppService>(context, listen: false)
+      .storage
+      .saveObject(StorageKeys.serverFunctions.key, serverFunctionsData);
+  Provider.of<AppService>(context, listen: false).updateServerFunctions =
+      serverFunctionsData;
   showMessage(context: context, text: AppMessages.serverFunctionSaved);
 }
 
@@ -58,8 +67,11 @@ void saveFolderConfigurations(GlobalKey<FormState> formKey,
   Provider.of<FolderConfigState>(context, listen: false).resetFolderCount();
   if (formKey.currentState!.validate()) {
     formKey.currentState!.save();
-    Storage()
+    Provider.of<AppService>(context, listen: false)
+        .storage
         .saveObject(StorageKeys.folderConfigurations.key, folderConfiguration);
+    Provider.of<AppService>(context, listen: false).updateFolderConfigurations =
+        folderConfiguration;
     showMessage(context: context, text: AppMessages.folderConfigurationSaved);
   }
 }

@@ -4,22 +4,20 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:msm/providers/folder_configuration_provider.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/file_listing_provider.dart';
+import 'package:msm/providers/folder_configuration_provider.dart';
 import 'package:msm/providers/upload_provider.dart';
 import 'package:msm/router/router.dart';
 
-bool get appENV {
-  bool isProd = const bool.fromEnvironment('dart.vm.product');
-  return isProd;
-}
-
-MultiProvider materialApp(AppService appService, UploadState uploadService,
-    FileListingState fileListingService, FolderConfigState folderConfigState) {
+MultiProvider materialApp(
+    {required AppService appService,
+    required UploadState uploadService,
+    required FileListingState fileListingService,
+    required FolderConfigState folderConfigState}) {
   return MultiProvider(
     providers: [
       ChangeNotifierProvider<AppService>(create: (_) => appService),

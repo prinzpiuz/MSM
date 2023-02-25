@@ -1,15 +1,18 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
+import 'package:provider/provider.dart';
+
 // Project imports:
 import 'package:msm/common_utils.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/models/folder_configuration.dart';
 import 'package:msm/models/storage.dart';
+import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/folder_configuration_provider.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/settings/settings_utils.dart';
-import 'package:provider/provider.dart';
 
 class FolderConfigurationForm extends StatefulWidget {
   const FolderConfigurationForm({super.key});
@@ -28,7 +31,8 @@ class _FolderConfigurationFormState extends State<FolderConfigurationForm> {
 
 Widget folderConfigurationForm(BuildContext context) {
   final formKey = GlobalKey<FormState>();
-  FolderConfiguration folderConfiguration = Storage().getFolderConfigurations;
+  FolderConfiguration folderConfiguration =
+      Provider.of<AppService>(context).storage.getFolderConfigurations;
   getFoldersList(context, folderConfiguration, formKey);
   List<Widget> folders = Provider.of<FolderConfigState>(context).pathTextFields;
   return Scaffold(

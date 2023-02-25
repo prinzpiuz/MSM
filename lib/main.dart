@@ -1,15 +1,9 @@
 // Flutter imports:
 import 'package:flutter/widgets.dart';
-import 'package:msm/providers/folder_configuration_provider.dart';
-
-// Package imports:
-import 'package:permission_handler/permission_handler.dart';
 
 // Project imports:
-import 'package:msm/models/storage.dart';
-import 'package:msm/providers/app_provider.dart';
-import 'package:msm/providers/file_listing_provider.dart';
-import 'package:msm/providers/upload_provider.dart';
+import 'package:msm/initialization.dart';
+import 'package:msm/views/splash/splash.dart';
 import 'config.dart';
 
 void main() {
@@ -24,29 +18,26 @@ class MSM extends StatefulWidget {
 }
 
 class _MSMState extends State<MSM> {
-  late AppService appService;
-  late UploadState uploadService;
-  late FileListingState fileListingService;
-  late FolderConfigState folderConfigState;
-
-  @override
-  void initState() {
-    Storage();
-    appService = AppService();
-    uploadService = UploadState();
-    fileListingService = FileListingState();
-    folderConfigState = FolderConfigState();
-    requestPermissions();
-    super.initState();
-  }
-
-  void requestPermissions() async {
-    await [Permission.storage].request();
-  }
+  final Future _initApp = Init().initialize();
 
   @override
   Widget build(BuildContext context) {
-    return materialApp(
-        appService, uploadService, fileListingService, folderConfigState);
+    return FutureBuilder(
+      future: _initApp,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData) {
+          var data = snapshot.data as Map<String, dynamic>;
+          return materialApp(
+              appService: data["appService"],
+              uploadService: data["uploadService"],
+              fileListingService: data["fileListingService"],
+              folderConfigState: data["folderConfigState"]);
+        } else {
+          //TODO make splash screen neat
+          return const SplashScreen();
+        }
+      },
+    );
   }
 }

@@ -13,6 +13,11 @@ import 'package:msm/providers/upload_provider.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 
+bool get appENV {
+  bool isProd = const bool.fromEnvironment('dart.vm.product');
+  return isProd;
+}
+
 WillPopScope handleBackButton(
     {String? backRoute,
     required Widget child,
@@ -159,7 +164,7 @@ void hideKeyboard(BuildContext ctx) {
 void showMessage(
     {required BuildContext context,
     required String text,
-    int duration = 8}) async {
+    int duration = 3}) async {
   OverlayState overlayState = Overlay.of(context);
   OverlayEntry overlayEntry = OverlayEntry(builder: (context) {
     return Positioned(

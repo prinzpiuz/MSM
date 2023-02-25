@@ -1,14 +1,17 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
+import 'package:provider/provider.dart';
+
 // Project imports:
 import 'package:msm/common_utils.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/models/server_functions.dart';
-import 'package:msm/models/storage.dart';
+import 'package:msm/providers/app_provider.dart';
 import 'package:msm/router/router_utils.dart';
-import 'package:msm/views/settings/settings_utils.dart';
 import 'package:msm/ui_components/switch/switch.dart';
+import 'package:msm/views/settings/settings_utils.dart';
 
 class ServerFunctions extends StatefulWidget {
   const ServerFunctions({super.key});
@@ -20,7 +23,8 @@ class ServerFunctions extends StatefulWidget {
 class _ServerFunctionsState extends State<ServerFunctions> {
   @override
   Widget build(BuildContext context) {
-    ServerFunctionsData serverFunctionsData = Storage().getServerFunctions;
+    ServerFunctionsData serverFunctionsData =
+        Provider.of<AppService>(context).storage.getServerFunctions;
     return functions(context, serverFunctionsData);
   }
 }

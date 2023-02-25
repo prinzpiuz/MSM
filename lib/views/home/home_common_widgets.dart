@@ -8,81 +8,70 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // Project imports:
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
+import 'package:msm/models/commands/basic_details.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 
-class HomeCommonWidgets {
-  static Widget homePageIcon(IconData icon,
-      {bool fontAwesome = false, Color color = Colors.white}) {
-    return fontAwesome
-        ? FaIcon(icon, size: AppFontSizes.homePageIconFontSize.h, color: color)
-        : Icon(icon, size: AppFontSizes.homePageIconFontSize.h, color: color);
-  }
+Widget homePageIcon(IconData icon,
+    {bool fontAwesome = false, Color color = Colors.white}) {
+  return fontAwesome
+      ? FaIcon(icon, size: AppFontSizes.homePageIconFontSize.h, color: color)
+      : Icon(icon, size: AppFontSizes.homePageIconFontSize.h, color: color);
+}
 
-  static List<Widget> homeIconList = [
-    //order matters
-    homePageIcon(Icons.cloud_upload_outlined),
-    homePageIcon(FontAwesomeIcons.screwdriverWrench, fontAwesome: true),
-    homePageIcon(Icons.folder_outlined),
-    homePageIcon(Icons.settings),
-  ];
+List<Widget> homeIconList = [
+  //order matters
+  homePageIcon(Icons.cloud_upload_outlined),
+  homePageIcon(FontAwesomeIcons.screwdriverWrench, fontAwesome: true),
+  homePageIcon(Icons.folder_outlined),
+  homePageIcon(Icons.settings),
+];
 
-  static Widget serverStats(IconData icon, String text) {
-    return Padding(
-      padding: EdgeInsets.only(right: 8.w),
-      child: Wrap(
-        spacing: 6.0, // gap between adjacent chips
-        children: <Widget>[
-          Icon(icon, size: 18.h, color: CommonColors.commonBlackColor),
-          AppText.singleLineText(text,
-              style: AppTextStyles.bold(CommonColors.commonBlackColor,
-                  AppFontSizes.serverStatFontSize.toDouble()))
+Widget serverStats(IconData icon, String text) {
+  return Padding(
+    padding: EdgeInsets.only(right: 8.w),
+    child: Wrap(
+      spacing: 6.0, // gap between adjacent chips
+      children: <Widget>[
+        Icon(icon, size: 18.h, color: CommonColors.commonBlackColor),
+        AppText.singleLineText(text,
+            style: AppTextStyles.bold(CommonColors.commonBlackColor,
+                AppFontSizes.serverStatFontSize.toDouble()))
+      ],
+    ),
+  );
+}
+
+Widget serverDetails(BasicDetails data) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          homePageIcon(Icons.cloud, color: CommonColors.commonGreenColor),
+          Padding(
+            padding: EdgeInsets.only(top: 8.h, bottom: 8.h),
+            child: AppText.centerSingleLineText(data.user,
+                style: AppTextStyles.bold(CommonColors.commonBlackColor,
+                    AppFontSizes.serverStatFontSize)),
+          )
         ],
       ),
-    );
-  }
-
-  static Widget serverDetails() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(bottom: 10.h),
-              child: IconButton(
-                  onPressed: () {
-                    debugPrint("Conecting");
-                  },
-                  icon: homePageIcon(Icons.cloud,
-                      color: CommonColors.commonGreenColor)),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 8.h, bottom: 8.h),
-              child: AppText.centerSingleLineText("prinzpiuz",
-                  style: AppTextStyles.bold(CommonColors.commonBlackColor,
-                      AppFontSizes.serverStatFontSize.toDouble())),
-            )
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            serverStats(Icons.sd_card_outlined, "300GB"),
-            serverStats(Icons.memory_outlined, "700MB")
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            serverStats(Icons.thermostat, "30°C"),
-            serverStats(Icons.alarm, "3 days")
-          ],
-        )
-      ],
-    );
-  }
-
-  HomeCommonWidgets._();
+      serverStats(
+          FontAwesomeIcons.microchip, "${data.ram.used}/${data.ram.size}"),
+      Padding(
+        padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+        child: serverStats(
+            Icons.sd_card_outlined, "${data.disk.used}/${data.disk.size}"),
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          serverStats(Icons.thermostat, data.tempreture),
+          serverStats(Icons.alarm, data.uptime)
+        ],
+      )
+    ],
+  );
 }

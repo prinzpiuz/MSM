@@ -12,9 +12,9 @@ import 'package:msm/common_utils.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
 import 'package:msm/router/router_utils.dart';
-import 'package:msm/views/settings/settings_utils.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
+import 'package:msm/views/settings/settings_utils.dart';
 
 class AppInfo extends StatelessWidget {
   const AppInfo({super.key});

@@ -1,7 +1,12 @@
+// Dart imports:
+import 'dart:convert';
+
 // Package imports:
+import 'package:dartssh2/dartssh2.dart';
 import 'package:go_router/go_router.dart';
 
 // Project imports:
+import 'package:msm/models/storage.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/file_listing/file_listing.dart';
@@ -77,44 +82,11 @@ class AppRouter {
             ),
           ])
     ],
-    // errorBuilder: (context, state) => ErrorPage(error: state.error.toString()),
-    // redirect: (state) {
-    // debugPrint(state.subloc);
-    //   final homeLocation = state.namedLocation(Pages.home.toName);
-    //   // final splashLocation = state.namedLocation(Pages.splash.toName);
-    //   // final onboardLocation = state.namedLocation(Pages.onBoarding.toName);
-    //   return homeLocation;
-    //TODO redirect logics
-
-    // final isLogedIn = appService.loginState;
-    // final isInitialized = appService.initialized;
-    // final isOnboarded = appService.onboarding;
-
-    // final isGoingToLogin = state.subloc == loginLocation;
-    // final isGoingToInit = state.subloc == splashLocation;
-    // final isGoingToOnboard = state.subloc == onboardLocation;
-
-    // // If not Initialized and not going to Initialized redirect to Splash
-    // if (!isInitialized && !isGoingToInit) {
-    //   return splashLocation;
-    //   // If not onboard and not going to onboard redirect to OnBoarding
-    // } else if (isInitialized && !isOnboarded && !isGoingToOnboard) {
-    //   return onboardLocation;
-    //   // If not logedin and not going to login redirect to Login
-    // } else if (isInitialized &&
-    //     isOnboarded &&
-    //     !isLogedIn &&
-    //     !isGoingToLogin) {
-    //   return loginLocation;
-    //   // If all the scenarios are cleared but still going to any of that screen redirect to Home
-    // } else if ((isLogedIn && isGoingToLogin) ||
-    //     (isInitialized && isGoingToInit) ||
-    //     (isOnboarded && isGoingToOnboard)) {
-    //   return homeLocation;
-    // } else {
-    //   // Else Don't do anything
-    // return null;
-    // }
-    // },
+    redirect: (context, state) async {
+      if (!appService.server.serverData.detailsAvailable) {
+        return "${Pages.settings.toPath}/${SettingsSubRoute.serverDetails.toPath}";
+      }
+      return null;
+    },
   );
 }
