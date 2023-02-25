@@ -8,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // Project imports:
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
+import 'package:msm/models/commands/basic_details.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 
@@ -41,42 +42,34 @@ Widget serverStats(IconData icon, String text) {
   );
 }
 
-Widget serverDetails(dynamic data) {
+Widget serverDetails(BasicDetails data) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Padding(
-            padding: EdgeInsets.only(bottom: 10.h),
-            child: IconButton(
-                onPressed: () {
-                  debugPrint("Conecting");
-                },
-                icon: homePageIcon(Icons.cloud,
-                    color: CommonColors.commonGreenColor)),
-          ),
+          homePageIcon(Icons.cloud, color: CommonColors.commonGreenColor),
           Padding(
             padding: EdgeInsets.only(top: 8.h, bottom: 8.h),
-            child: AppText.centerSingleLineText(data,
+            child: AppText.centerSingleLineText(data.user,
                 style: AppTextStyles.bold(CommonColors.commonBlackColor,
-                    AppFontSizes.serverStatFontSize.toDouble())),
+                    AppFontSizes.serverStatFontSize)),
           )
         ],
       ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          serverStats(Icons.sd_card_outlined, "300GB"),
-          serverStats(Icons.memory_outlined, "700MB")
-        ],
+      serverStats(
+          FontAwesomeIcons.microchip, "${data.ram.used}/${data.ram.size}"),
+      Padding(
+        padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+        child: serverStats(
+            Icons.sd_card_outlined, "${data.disk.used}/${data.disk.size}"),
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          serverStats(Icons.thermostat, "30°C"),
-          serverStats(Icons.alarm, "3 days")
+          serverStats(Icons.thermostat, data.tempreture),
+          serverStats(Icons.alarm, data.uptime)
         ],
       )
     ],

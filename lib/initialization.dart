@@ -1,11 +1,13 @@
-// Package imports:
+// Dart imports:
 import 'dart:convert';
 
+// Package imports:
 import 'package:dartssh2/dartssh2.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
+import 'package:msm/models/commands/command_executer.dart';
 import 'package:msm/models/server.dart';
 import 'package:msm/models/storage.dart';
 import 'package:msm/providers/app_provider.dart';
@@ -48,13 +50,16 @@ class Init {
 
   static void makeConnections(AppService appService) async {
     appService.initialized = true;
-    // if (appService.server.serverData.detailsAvailable) {
-    //   SSHClient? client = await appService.server.connect();
-    //   print("fkf");
-    //   print(client);
-    //   final uptime = await client!.run('uptime', stderr: false);
-    //   print(utf8.decode(uptime));
-    // }
+    if (appService.server.serverData.detailsAvailable) {
+      SSHClient? client = await appService.server.connect();
+      if (client != null) {
+        appService.commandExecuter = CommandExecuter(
+            serverData: appService.server.serverData,
+            folderConfiguration: appService.server.folderConfiguration,
+            serverFunctionsData: appService.server.serverFunctionsData,
+            client: client);
+      }
+    }
   }
 
   static void requestStoragePermissions() async {

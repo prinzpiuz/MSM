@@ -1,10 +1,8 @@
-// Dart imports:
-import 'dart:async';
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
 // Project imports:
+import 'package:msm/models/commands/command_executer.dart';
 import 'package:msm/models/folder_configuration.dart';
 import 'package:msm/models/server.dart';
 import 'package:msm/models/server_details.dart';
@@ -17,6 +15,7 @@ class AppService with ChangeNotifier {
   bool _initialized = false;
   Storage storage;
   Server server;
+  late CommandExecuter commandExecuter;
 
   AppService({required this.storage, required this.server});
 

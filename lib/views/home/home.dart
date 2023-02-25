@@ -3,18 +3,20 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 // Project imports:
 import 'package:msm/common_utils.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
+import 'package:msm/models/commands/basic_details.dart';
+import 'package:msm/models/commands/command_executer.dart';
 import 'package:msm/models/server.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 import 'package:msm/views/home/home_common_widgets.dart';
 import 'package:msm/views/home/home_utils.dart';
-import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -64,12 +66,14 @@ Widget menuGrid(BuildContext context) {
 }
 
 Widget serverDetailsBuilder(BuildContext context) {
-  Server server = Provider.of<AppService>(context).server;
-  final Future basicDetails =
-      BasicDetails(serverData: server.serverData).getUser;
+  //TODO need to handle the condition if server is not online
+  //TODO implement a Icon button to show not online as well as clicking on it will send WOL signal or refresh connection
+  CommandExecuter commandExecuter =
+      Provider.of<AppService>(context).commandExecuter;
+  final Future basicDetails = commandExecuter.basicDetails;
   return FutureBuilder(
       future: basicDetails,
-      builder: (BuildContext context, snapshot) {
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
           return serverdetails(snapshot.data);
@@ -79,13 +83,13 @@ Widget serverDetailsBuilder(BuildContext context) {
       });
 }
 
-Widget serverdetails(dynamic data) {
+Widget serverdetails(BasicDetails data) {
   return Stack(children: <Widget>[
     SizedBox(
-      width: 200.w,
-      height: 200.w,
+      width: 210.w,
+      height: 210.w,
       child: TweenAnimationBuilder(
-        tween: Tween<double>(begin: 0.0, end: .7),
+        tween: Tween<double>(begin: 0.0, end: data.disk.percentage),
         duration: const Duration(milliseconds: 3500),
         builder: (context, double value, _) => CircularProgressIndicator(
           strokeWidth: 15.sp,
