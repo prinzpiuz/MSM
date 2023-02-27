@@ -57,10 +57,10 @@ PreferredSizeWidget commonAppBar(
     leading: Padding(
       padding: appBarIconPadding,
       child: IconButton(
-        icon: Icon(
+        iconSize: appBarIconSIze,
+        icon: const Icon(
           Icons.arrow_back,
           color: CommonColors.commonBlackColor,
-          size: appBarIconSIze,
         ),
         onPressed: () => handleBack(context, uploadState, backroute),
       ),

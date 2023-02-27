@@ -11,7 +11,7 @@ import 'package:msm/models/commands/commands.dart';
 import 'package:msm/models/server.dart';
 
 class CommandExecuter extends Server {
-  late SSHClient client;
+  late SSHClient? client;
   CommandExecuter(
       {required super.serverData,
       required super.folderConfiguration,
@@ -24,7 +24,11 @@ class CommandExecuter extends Server {
 
   Future<BasicDetails> get basicDetails async {
     String command = CommandBuilder().andAll(Commands.basicDetailsGroup);
-    final basicDetails = _decodeOutput(await client.run(command));
-    return BasicDetails(BasicDetails.mapSource(basicDetails));
+    //TODO need to handle the condition of connection termination while running command
+    if (client != null) {
+      final basicDetails = _decodeOutput(await client!.run(command));
+      return BasicDetails(BasicDetails.mapSource(basicDetails));
+    }
+    return BasicDetails({});
   }
 }
