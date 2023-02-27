@@ -9,9 +9,9 @@ import 'package:provider/provider.dart';
 import 'package:msm/common_utils.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
+import 'package:msm/initialization.dart';
 import 'package:msm/models/commands/basic_details.dart';
 import 'package:msm/models/commands/command_executer.dart';
-import 'package:msm/models/server.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
@@ -68,48 +68,50 @@ Widget menuGrid(BuildContext context) {
 Widget serverDetailsBuilder(BuildContext context) {
   //TODO need to handle the condition if server is not online
   //TODO implement a Icon button to show not online as well as clicking on it will send WOL signal or refresh connection
-  CommandExecuter commandExecuter =
-      Provider.of<AppService>(context).commandExecuter;
-  final Future basicDetails = commandExecuter.basicDetails;
-  return FutureBuilder(
-      future: basicDetails,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData) {
-          return serverdetails(snapshot.data);
-        } else {
-          return connectionState;
-        }
-      });
+  final AppService appService = Provider.of<AppService>(context);
+  final bool connected = appService.connectionState;
+  if (connected) {
+    CommandExecuter commandExecuter = appService.commandExecuter;
+    final Future basicDetails = commandExecuter.basicDetails;
+    return FutureBuilder(
+        future: basicDetails,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData) {
+            return serverdetails(snapshot.data);
+          } else {
+            return fetchingData;
+          }
+        });
+  }
+  return serverNotConnected(appService);
 }
 
-Widget serverdetails(BasicDetails data) {
-  return Stack(children: <Widget>[
-    SizedBox(
-      width: 210.w,
-      height: 210.w,
-      child: TweenAnimationBuilder(
-        tween: Tween<double>(begin: 0.0, end: data.disk.percentage),
-        duration: const Duration(milliseconds: 3500),
-        builder: (context, double value, _) => CircularProgressIndicator(
-          strokeWidth: 15.sp,
-          color: CommonColors.commonGreenColor,
-          backgroundColor: CommonColors.diskUsageBackgroundColor,
-          value: value,
-          semanticsLabel: 'System Disk Usage Data',
+Widget serverdetails(BasicDetails data) => Stack(children: <Widget>[
+      SizedBox(
+        width: 210.w,
+        height: 210.w,
+        child: TweenAnimationBuilder(
+          tween: Tween<double>(begin: 0.0, end: data.disk.percentage),
+          duration: const Duration(milliseconds: 3500),
+          builder: (context, double value, _) => CircularProgressIndicator(
+            strokeWidth: 15.sp,
+            color: CommonColors.commonGreenColor,
+            backgroundColor: CommonColors.diskUsageBackgroundColor,
+            value: value,
+            semanticsLabel: 'System Disk Usage Data',
+          ),
         ),
       ),
-    ),
-    Positioned(
-      top: 15.h,
-      left: 10.w,
-      right: 10.w,
-      child: serverDetails(data),
-    )
-  ]);
-}
+      Positioned(
+        top: 15.h,
+        left: 10.w,
+        right: 10.w,
+        child: serverDetails(data),
+      )
+    ]);
 
-Widget get connectionState => Column(
+Widget get fetchingData => Column(
       children: [
         Padding(
           padding: EdgeInsets.all(20.h),
@@ -121,3 +123,22 @@ Widget get connectionState => Column(
                 AppFontSizes.connectingFontSize)),
       ],
     );
+
+Widget serverNotConnected(AppService appService) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      IconButton(
+          iconSize: AppFontSizes.notConnectedIconSize.sp,
+          onPressed: () => Init.makeConnections(appService),
+          icon: const Icon(
+            Icons.cloud_off,
+            color: CommonColors.commonGreyColor,
+            // size: 90.sp,
+          )),
+      AppText.singleLineText(appService.server.state!.message,
+          style: AppTextStyles.regular(CommonColors.commonBlackColor,
+              AppFontSizes.notConnectedFontSize.sp))
+    ],
+  );
+}

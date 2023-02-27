@@ -14,6 +14,8 @@ class AppFontSizes {
   static const appLongNameFontSize = 15.0;
   static const appInfoLinkFontSize = 12.0;
   static const connectingFontSize = 15.0;
+  static const notConnectedIconSize = 90.0;
+  static const notConnectedFontSize = 15.0;
 }
 
 class AppConstants {
@@ -36,6 +38,10 @@ class AppConstants {
   static const numberOnly = "[0-9]";
   static const macFormat = "[A-Z0-9:]";
   static const connecting = "Connecting....";
+  static const notConnected = "Not Connected";
+  static const notAvailable = "Not Available";
+  static const connected = "Connected";
+  static const disconnected = "Disconnected";
 }
 
 class AppMessages {

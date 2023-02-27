@@ -19,7 +19,7 @@ class AppService with ChangeNotifier {
 
   AppService({required this.storage, required this.server});
 
-  bool get loginState => _connectionState;
+  bool get connectionState => _connectionState;
   bool get initialized => _initialized;
 
   set setServer(Server server) {

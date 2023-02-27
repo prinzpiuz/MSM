@@ -1,6 +1,3 @@
-// Dart imports:
-import 'dart:convert';
-
 // Package imports:
 import 'package:dartssh2/dartssh2.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -22,7 +19,7 @@ class Init {
   late FolderConfigState folderConfigState;
 
   Future<Map<String, dynamic>> initialize() async {
-    Storage storage = await getUserPreferences();
+    Storage storage = await _getUserPreferences();
     AppService appService = AppService(
         server: Server(
             serverData: storage.getServerData,
@@ -32,7 +29,13 @@ class Init {
     UploadState uploadService = UploadState();
     FileListingState fileListingService = FileListingState();
     FolderConfigState folderConfigState = FolderConfigState();
-    requestStoragePermissions();
+    _requestStoragePermissions();
+    appService.commandExecuter = CommandExecuter(
+      serverData: appService.server.serverData,
+      folderConfiguration: appService.server.folderConfiguration,
+      serverFunctionsData: appService.server.serverFunctionsData,
+      client: null,
+    );
     makeConnections(appService);
     return {
       "appService": appService,
@@ -42,7 +45,7 @@ class Init {
     };
   }
 
-  static Future<Storage> getUserPreferences() async {
+  static Future<Storage> _getUserPreferences() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     Storage storage = Storage(prefs: sharedPreferences);
     return storage;
@@ -50,19 +53,29 @@ class Init {
 
   static void makeConnections(AppService appService) async {
     appService.initialized = true;
+    appService.server.state = ServerState.connecting;
     if (appService.server.serverData.detailsAvailable) {
-      SSHClient? client = await appService.server.connect();
+      SSHClient? client = await appService.server.connect().timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          appService.connectionState = false;
+          return null;
+        },
+      );
       if (client != null) {
         appService.commandExecuter = CommandExecuter(
             serverData: appService.server.serverData,
             folderConfiguration: appService.server.folderConfiguration,
             serverFunctionsData: appService.server.serverFunctionsData,
             client: client);
+        appService.connectionState = true;
+        appService.server.state = ServerState.connected;
       }
     }
   }
 
-  static void requestStoragePermissions() async {
+  static void _requestStoragePermissions() async {
     await [Permission.storage].request();
+    // await [Permission.mediaLibrary].request();
   }
 }
