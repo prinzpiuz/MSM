@@ -135,3 +135,8 @@ Widget folderButton(BuildContext context,
     ],
   );
 }
+
+void addOrRemove(FileOrDirectory data, UploadState uploadState) {
+  uploadState.fileUpload.addOrRemove(data);
+  uploadState.fileAddOrRemove;
+}

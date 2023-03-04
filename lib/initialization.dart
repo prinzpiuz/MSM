@@ -1,5 +1,6 @@
 // Package imports:
 import 'package:dartssh2/dartssh2.dart';
+import 'package:msm/models/file_upload.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,7 +37,7 @@ class Init {
       serverFunctionsData: appService.server.serverFunctionsData,
       client: null,
     );
-    makeConnections(appService);
+    makeConnections(appService, uploadState: uploadService);
     return {
       "appService": appService,
       "uploadService": uploadService,
@@ -51,7 +52,8 @@ class Init {
     return storage;
   }
 
-  static void makeConnections(AppService appService) async {
+  static void makeConnections(AppService appService,
+      {UploadState? uploadState}) async {
     appService.initialized = true;
     appService.server.state = ServerState.connecting;
     if (appService.server.serverData.detailsAvailable) {
@@ -70,12 +72,15 @@ class Init {
             client: client);
         appService.connectionState = true;
         appService.server.state = ServerState.connected;
+        if (uploadState != null) {
+          uploadState.fileUpload = FileUpload(client);
+        }
       }
     }
   }
 
   static void _requestStoragePermissions() async {
     await [Permission.storage].request();
-    // await [Permission.mediaLibrary].request();
+    await [Permission.manageExternalStorage].request();
   }
 }

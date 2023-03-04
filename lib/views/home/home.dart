@@ -89,8 +89,8 @@ Widget serverDetailsBuilder(BuildContext context) {
 
 Widget serverdetails(BasicDetails data) => Stack(children: <Widget>[
       SizedBox(
-        width: 210.w,
-        height: 210.w,
+        width: 220.w,
+        height: 220.w,
         child: TweenAnimationBuilder(
           tween: Tween<double>(begin: 0.0, end: data.disk.percentage),
           duration: const Duration(milliseconds: 3500),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
@@ -34,6 +35,42 @@ class CommonUploadPageState extends State<CommonUploadPage> {
   }
 }
 
+Widget body(BuildContext context, UploadState uploadState) {
+  return FutureBuilder<List<FileOrDirectory>>(
+    future: FileManager.getAllFiles(uploadState),
+    builder:
+        (BuildContext context, AsyncSnapshot<List<FileOrDirectory>> snapshot) {
+      if (snapshot.connectionState == ConnectionState.done &&
+          snapshot.hasData) {
+        if (snapshot.data!.isEmpty) {
+          return Center(
+            child: AppText.centerText(
+                "No ${uploadState.getCategory.getTitle} Here",
+                style: AppTextStyles.bold(CommonColors.commonBlackColor,
+                    AppFontSizes.noDataFontSize.sp)),
+          );
+        } else {
+          return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (BuildContext context, int index) {
+                return TextButton(
+                  onPressed: () {
+                    goInside(snapshot.data![index], uploadState, context);
+                  },
+                  child: uploadItemCard(
+                      context, snapshot.data![index], uploadState),
+                );
+              });
+        }
+      } else if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');
+      } else {
+        return commonCircularProgressIndicator;
+      }
+    },
+  );
+}
+
 Widget commonUpload(BuildContext context, UploadState uploadState) {
   return Scaffold(
       appBar: appBar(context, uploadState),
@@ -41,11 +78,12 @@ Widget commonUpload(BuildContext context, UploadState uploadState) {
       body: body(context, uploadState));
 }
 
-Widget uploadItemCard(BuildContext context, FileOrDirectory data) {
+Widget uploadItemCard(
+    BuildContext context, FileOrDirectory data, UploadState uploadState) {
   return Padding(
     padding: EdgeInsets.only(top: 10.h),
     child: Stack(
-      children: [dataCard(data), cardButton(data)],
+      children: [dataCard(data), cardButton(data, uploadState)],
     ),
   );
 }
@@ -59,8 +97,15 @@ PreferredSizeWidget appBar(BuildContext context, UploadState uploadState) {
         Padding(
           padding: EdgeInsets.all(10.h),
           child: IconButton(
+              onPressed: () =>
+                  {uploadState.fileAddOrRemove, uploadState.fileUpload.clear()},
+              icon: trashIcon),
+        ),
+        Padding(
+          padding: EdgeInsets.all(10.h),
+          child: IconButton(
               // TODO consider the case of catogories of TV show uplaod and other uploads
-              onPressed: (() => bottomSheet(context)),
+              onPressed: (() => bottomSheet(context, inside: true)),
               icon: sendIcon),
         )
       ],
@@ -73,38 +118,11 @@ Widget get sendIcon => const Icon(
       size: AppFontSizes.appBarIconSize,
     );
 
-Widget body(BuildContext context, UploadState uploadState) {
-  return FutureBuilder<List<FileOrDirectory>>(
-    future: FileManager.getAllFiles(uploadState),
-    builder:
-        (BuildContext context, AsyncSnapshot<List<FileOrDirectory>> snapshot) {
-      if (snapshot.hasData) {
-        if (snapshot.data!.isEmpty) {
-          return Center(
-            child: AppText.centerText(
-                "No ${uploadState.getCategory.getTitle} Here",
-                style: AppTextStyles.bold(CommonColors.commonBlackColor,
-                    AppFontSizes.noDataFontSize.sp)),
-          );
-        } else {
-          return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (BuildContext context, int index) {
-                return TextButton(
-                    onPressed: () {
-                      goInside(snapshot.data![index], uploadState, context);
-                    },
-                    child: uploadItemCard(context, snapshot.data![index]));
-              });
-        }
-      } else if (snapshot.hasError) {
-        return Text('Error: ${snapshot.error}');
-      } else {
-        return commonCircularProgressIndicator;
-      }
-    },
-  );
-}
+Widget get trashIcon => const Icon(
+      FontAwesomeIcons.trashCan,
+      color: CommonColors.commonBlackColor,
+      size: AppFontSizes.appBarIconSize,
+    );
 
 Widget fileName(FileOrDirectory data) {
   return AppText.singleLineText(data.name,
@@ -148,7 +166,7 @@ Widget dataCard(FileOrDirectory data) {
   );
 }
 
-Widget cardButton(FileOrDirectory data) {
+Widget cardButton(FileOrDirectory data, UploadState uploadState) {
   return Positioned(
     bottom: 15.h,
     right: 50.w,
@@ -159,9 +177,11 @@ Widget cardButton(FileOrDirectory data) {
             decoration: const BoxDecoration(
                 shape: BoxShape.circle, color: CommonColors.commonGreenColor),
             child: IconButton(
-                onPressed: (() => debugPrint("added")),
+                onPressed: (() => addOrRemove(data, uploadState)),
                 icon: Icon(
-                  Icons.add,
+                  uploadState.fileUpload.fileAdded(data)
+                      ? Icons.remove
+                      : Icons.add,
                   color: CommonColors.commonWhiteColor,
                   size: 30.h,
                 )),

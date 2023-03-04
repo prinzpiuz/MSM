@@ -77,6 +77,7 @@ Widget get commonCircularProgressIndicator => const Center(
 void handleBack(
     BuildContext context, UploadState? uploadState, String backRoute) {
   if (uploadState != null) {
+    uploadState.fileUpload.clear();
     uploadState.popLastDirectory();
   }
   GoRouter.of(context).go(backRoute);

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 // Project imports:
 import 'package:msm/models/file_manager.dart';
+import 'package:msm/models/file_upload.dart';
 import 'package:msm/views/upload_pages/upload_page_utils.dart';
 
 class UploadState with ChangeNotifier {
@@ -15,6 +16,7 @@ class UploadState with ChangeNotifier {
   bool _recursive = false;
   final List<Directory> _nextFilesDirectory = [];
   final List<Directory> _directories = FileManager.defaultDirectories;
+  late FileUpload fileUpload;
 
   UploadState();
 
@@ -53,6 +55,10 @@ class UploadState with ChangeNotifier {
     } else {
       _recursive = false;
     }
+    notifyListeners();
+  }
+
+  void get fileAddOrRemove {
     notifyListeners();
   }
 }

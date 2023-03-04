@@ -18,6 +18,14 @@ abstract class FileOrDirectory {
   FileType get type => FileType.file;
   bool get isFile => type == FileType.file;
   int get fileCount => 0;
+
+  @override
+  bool operator ==(other) {
+    return hashCode == other.hashCode;
+  }
+
+  @override
+  int get hashCode => name.hashCode;
 }
 
 class FileObject extends FileOrDirectory {
@@ -150,8 +158,7 @@ class FileManager {
   static Future<List<FileOrDirectory>> getFiles(
       Directory directory, UploadState uploadState) async {
     List<FileOrDirectory> files = [];
-    if (await Permission.storage.request().isGranted &&
-        directory.existsSync()) {
+    if (directory.existsSync()) {
       final List<FileSystemEntity> fileEntities = directory.listSync().toList();
       final Iterable<File> filesIterable = fileEntities.whereType<File>().where(
           (file) => checkExtention(file, uploadState.getCategoryExtentions));

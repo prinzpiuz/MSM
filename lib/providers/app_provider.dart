@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Project imports:
 import 'package:msm/models/commands/command_executer.dart';
+import 'package:msm/models/file_upload.dart';
 import 'package:msm/models/folder_configuration.dart';
 import 'package:msm/models/server.dart';
 import 'package:msm/models/server_details.dart';
