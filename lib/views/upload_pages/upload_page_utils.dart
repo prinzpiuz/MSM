@@ -7,6 +7,9 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:msm/common_utils.dart';
+import 'package:msm/models/commands/command_executer.dart';
+import 'package:msm/providers/app_provider.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
@@ -17,7 +20,7 @@ import 'package:msm/router/router_utils.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 
-enum UploadCatogories { movies, tvShows, books, pictures }
+enum UploadCatogories { movies, tvShows, books, custom }
 
 extension UploadCategoriesExtention on UploadCatogories {
   String get getTitle {
@@ -28,8 +31,8 @@ extension UploadCategoriesExtention on UploadCatogories {
         return "TV Shows";
       case UploadCatogories.books:
         return "Books";
-      case UploadCatogories.pictures:
-        return "Pictures";
+      case UploadCatogories.custom:
+        return "Custom";
       default:
         return "";
     }
@@ -54,10 +57,10 @@ void goToPage(UploadCatogories catogories, BuildContext context) {
       uploadState.setCategoryExtentions = FileManager.allowedDocumentExtentions;
       uploadState.setCurrentListing = UploadCatogories.books.getTitle;
       break;
-    case UploadCatogories.pictures:
-      uploadState.setCategory = UploadCatogories.pictures;
+    case UploadCatogories.custom:
+      uploadState.setCategory = UploadCatogories.custom;
       uploadState.setCategoryExtentions = FileManager.allowedPictureExtentions;
-      uploadState.setCurrentListing = UploadCatogories.pictures.getTitle;
+      uploadState.setCurrentListing = UploadCatogories.custom.getTitle;
       break;
   }
   return GoRouter.of(context).go(Pages.commonUpload.toPath);
@@ -80,37 +83,18 @@ String getBackPage(UploadState uploadState) {
   }
 }
 
-Future<void> bottomSheet(BuildContext context, {bool inside = false}) {
+Future<void> bottomSheet(BuildContext context, UploadState uploadState,
+    {bool inside = false}) {
   return showModalBottomSheet<void>(
     context: context,
     builder: (BuildContext context) {
-      return Container(
-        height: 300.h,
-        color: CommonColors.commonWhiteColor,
-        child: GridView.count(
-          padding: EdgeInsets.all(15.h),
-          crossAxisCount: 4,
-          children: <Widget>[
-            if (inside) folderButton(context, inside: inside),
-            folderButton(context, newFolder: true),
-            folderButton(context),
-            folderButton(context),
-            folderButton(context),
-            folderButton(context),
-            folderButton(context),
-            folderButton(context),
-            folderButton(context),
-            folderButton(context),
-            folderButton(context),
-          ],
-        ),
-      );
+      return sendMenu(context, uploadState, inside: inside);
     },
   );
 }
 
-Widget folderButton(BuildContext context,
-    {bool newFolder = false, bool inside = false}) {
+Widget folderButton(BuildContext context, UploadState uploadState,
+    {String name = '', bool newFolder = false, bool inside = false}) {
   return Column(
     mainAxisSize: MainAxisSize.min,
     children: <Widget>[
@@ -124,13 +108,13 @@ Widget folderButton(BuildContext context,
           : IconButton(
               icon: Icon(newFolder ? Icons.create_new_folder : Icons.folder),
               onPressed: () {
-                bottomSheet(context, inside: true);
+                bottomSheet(context, uploadState, inside: true);
               }),
       inside
           ? AppText.centerText("Save Here",
               style:
                   AppTextStyles.extraBold(CommonColors.commonGreenColor, 8.sp))
-          : AppText.singleLineText(newFolder ? "New" : "Movie name",
+          : AppText.singleLineText(newFolder ? "New" : name,
               style: AppTextStyles.bold(CommonColors.commonBlackColor, 8.sp)),
     ],
   );
@@ -139,4 +123,55 @@ Widget folderButton(BuildContext context,
 void addOrRemove(FileOrDirectory data, UploadState uploadState) {
   uploadState.fileUpload.addOrRemove(data);
   uploadState.fileAddOrRemove;
+}
+
+List<Widget> getFolders(BuildContext context, UploadState uploadState,
+    List<FileOrDirectory>? folders) {
+  List<Widget> outFolders = [];
+  if (folders != null && folders.isNotEmpty) {
+    for (FileOrDirectory folder in folders) {
+      outFolders.add(folderButton(context, uploadState, name: folder.name));
+    }
+  }
+
+  return outFolders;
+}
+
+Widget sendMenu(BuildContext context, UploadState uploadState,
+    {bool inside = false}) {
+  final AppService appService = Provider.of<AppService>(context);
+  final bool connected = appService.connectionState;
+  if (connected) {
+    CommandExecuter commandExecuter = appService.commandExecuter;
+    final Future<List<FileOrDirectory>>? directoryData =
+        commandExecuter.listRemoteDirectory(uploadState.getCategory);
+    //TODO handle the case if not folder config data available
+    return FutureBuilder<List<FileOrDirectory>>(
+      future: directoryData,
+      builder: (BuildContext context,
+          AsyncSnapshot<List<FileOrDirectory>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData) {
+          List<Widget> children;
+          bool newFolder = uploadState.getCategory == UploadCatogories.tvShows;
+          children = <Widget>[
+            if (inside) folderButton(context, uploadState, inside: inside),
+            folderButton(context, uploadState, newFolder: newFolder),
+            ...getFolders(context, uploadState, snapshot.data)
+          ];
+          return Container(
+              height: 300.h,
+              color: CommonColors.commonWhiteColor,
+              child: GridView.count(
+                  padding: EdgeInsets.all(15.h),
+                  crossAxisCount: 4,
+                  children: children));
+        } else {
+          return commonCircularProgressIndicator;
+        }
+      },
+    );
+  } else {
+    return serverNotConnected(appService);
+  }
 }

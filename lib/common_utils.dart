@@ -9,6 +9,8 @@ import 'package:go_router/go_router.dart';
 // Project imports:
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
+import 'package:msm/initialization.dart';
+import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/upload_provider.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
@@ -180,4 +182,23 @@ void showMessage(
   overlayState.insert(overlayEntry);
   await Future.delayed(Duration(seconds: duration));
   overlayEntry.remove();
+}
+
+Widget serverNotConnected(AppService appService) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      IconButton(
+          iconSize: AppFontSizes.notConnectedIconSize.sp,
+          onPressed: () => Init.makeConnections(appService),
+          icon: const Icon(
+            Icons.cloud_off,
+            color: CommonColors.commonGreyColor,
+            // size: 90.sp,
+          )),
+      AppText.singleLineText(appService.server.state.message,
+          style: AppTextStyles.regular(CommonColors.commonBlackColor,
+              AppFontSizes.notConnectedFontSize.sp))
+    ],
+  );
 }

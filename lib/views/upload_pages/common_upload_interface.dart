@@ -104,8 +104,8 @@ PreferredSizeWidget appBar(BuildContext context, UploadState uploadState) {
         Padding(
           padding: EdgeInsets.all(10.h),
           child: IconButton(
-              // TODO consider the case of catogories of TV show uplaod and other uploads
-              onPressed: (() => bottomSheet(context, inside: true)),
+              onPressed: (() =>
+                  bottomSheet(context, uploadState, inside: true)),
               icon: sendIcon),
         )
       ],

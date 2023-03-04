@@ -114,31 +114,10 @@ Widget serverdetails(BasicDetails data) => Stack(children: <Widget>[
 Widget get fetchingData => Column(
       children: [
         Padding(
-          padding: EdgeInsets.all(20.h),
-          child: const CircularProgressIndicator(
-              color: CommonColors.commonGreenColor),
-        ),
+            padding: EdgeInsets.all(20.h),
+            child: commonCircularProgressIndicator),
         AppText.centerSingleLineText(AppConstants.connecting,
             style: AppTextStyles.regular(CommonColors.commonBlackColor,
                 AppFontSizes.connectingFontSize)),
       ],
     );
-
-Widget serverNotConnected(AppService appService) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      IconButton(
-          iconSize: AppFontSizes.notConnectedIconSize.sp,
-          onPressed: () => Init.makeConnections(appService),
-          icon: const Icon(
-            Icons.cloud_off,
-            color: CommonColors.commonGreyColor,
-            // size: 90.sp,
-          )),
-      AppText.singleLineText(appService.server.state!.message,
-          style: AppTextStyles.regular(CommonColors.commonBlackColor,
-              AppFontSizes.notConnectedFontSize.sp))
-    ],
-  );
-}

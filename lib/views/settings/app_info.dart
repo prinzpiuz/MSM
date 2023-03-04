@@ -109,9 +109,7 @@ List<Widget> get loadingWidget => [
       SizedBox(
         width: 60.w,
         height: 60.h,
-        child: const CircularProgressIndicator(
-          color: CommonColors.commonGreenColor,
-        ),
+        child: commonCircularProgressIndicator,
       ),
     ];
 

@@ -90,13 +90,14 @@ List<StaggeredGridTile> tiles(BuildContext context) {
           onPressed: () => goToPage(UploadCatogories.books, context),
           iconSize: AppFontSizes.smallTileIconSize.h),
     ),
-    StaggeredGridTile.count(
-      crossAxisCellCount: 1,
-      mainAxisCellCount: 1,
-      child: menuBox(
-          icon: FontAwesomeIcons.image,
-          onPressed: () => goToPage(UploadCatogories.pictures, context),
-          iconSize: AppFontSizes.smallTileIconSize.h),
-    )
+    //TODO handle the case of custom folders
+    // StaggeredGridTile.count(
+    //   crossAxisCellCount: 1,
+    //   mainAxisCellCount: 1,
+    //   child: menuBox(
+    //       icon: FontAwesomeIcons.image,
+    //       onPressed: () => goToPage(UploadCatogories.custom, context),
+    //       iconSize: AppFontSizes.smallTileIconSize.h),
+    // )
   ];
 }

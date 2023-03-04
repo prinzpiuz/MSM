@@ -3,7 +3,6 @@ import 'dart:io';
 
 // Package imports:
 import 'package:filesize/filesize.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 // Project imports:
 import 'package:msm/providers/upload_provider.dart';
