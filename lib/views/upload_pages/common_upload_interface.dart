@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 // Project imports:
 import 'package:msm/common_utils.dart';
+import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
 import 'package:msm/models/file_manager.dart';
@@ -97,15 +98,23 @@ PreferredSizeWidget appBar(BuildContext context, UploadState uploadState) {
         Padding(
           padding: EdgeInsets.all(10.h),
           child: IconButton(
-              onPressed: () =>
-                  {uploadState.fileAddOrRemove, uploadState.fileUpload.clear()},
+              onPressed: () {
+                uploadState.fileAddOrRemove;
+                uploadState.fileUpload.clear;
+              },
               icon: trashIcon),
         ),
         Padding(
           padding: EdgeInsets.all(10.h),
           child: IconButton(
-              onPressed: (() =>
-                  bottomSheet(context, uploadState, inside: true)),
+              onPressed: (() {
+                if (uploadState.fileUpload.uploadData.isNotEmpty) {
+                  uploadState.commonClear;
+                  bottomSheet(context, uploadState, saveHere: true);
+                } else {
+                  showMessage(context: context, text: AppMessages.selectFiles);
+                }
+              }),
               icon: sendIcon),
         )
       ],

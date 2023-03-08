@@ -1,11 +1,11 @@
 // Package imports:
 import 'package:dartssh2/dartssh2.dart';
-import 'package:msm/models/file_upload.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:msm/models/commands/command_executer.dart';
+import 'package:msm/models/file_upload.dart';
 import 'package:msm/models/server.dart';
 import 'package:msm/models/storage.dart';
 import 'package:msm/providers/app_provider.dart';

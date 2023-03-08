@@ -190,4 +190,8 @@ class FileManager {
 
     return allFiles;
   }
+
+  static String pathBuilder(List<String> path) {
+    return path.join("/");
+  }
 }

@@ -7,18 +7,22 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:msm/common_utils.dart';
-import 'package:msm/models/commands/command_executer.dart';
-import 'package:msm/providers/app_provider.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
+import 'package:msm/common_utils.dart';
+import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
+import 'package:msm/constants/constants.dart';
+import 'package:msm/models/commands/command_executer.dart';
 import 'package:msm/models/file_manager.dart';
+import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/upload_provider.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
+import 'package:msm/ui_components/textfield/textfield.dart';
+import 'package:msm/ui_components/textfield/validators.dart';
 
 enum UploadCatogories { movies, tvShows, books, custom }
 
@@ -84,21 +88,53 @@ String getBackPage(UploadState uploadState) {
 }
 
 Future<void> bottomSheet(BuildContext context, UploadState uploadState,
-    {bool inside = false}) {
+    {bool saveHere = false, String? insidePath}) {
   return showModalBottomSheet<void>(
     context: context,
     builder: (BuildContext context) {
-      return sendMenu(context, uploadState, inside: inside);
+      return sendMenu(context, uploadState,
+          saveHere: saveHere, insidePath: insidePath);
     },
   );
 }
 
+void getInsideFolder(
+    BuildContext context, UploadState uploadState, String name) {
+  Navigator.of(context).pop();
+  uploadState.addRemoteDirectoru(name);
+  bottomSheet(context, uploadState,
+      saveHere: true,
+      insidePath: FileManager.pathBuilder(uploadState.traversedDirectories));
+}
+
+Widget newFolderNameField(Key key, UploadState uploadState) {
+  return Form(
+    key: key,
+    child: AppTextField.commonTextFeild(
+      onsaved: (data) {
+        uploadState.newFolderName = data;
+        uploadState.addNewFolderName(data);
+      },
+      validator: valueNeeded,
+      keyboardType: TextInputType.text,
+      labelText: "New Folder Name",
+      hintText: "Name Of New Folder You Want To Create",
+    ),
+  );
+}
+
+void validateFolderName(GlobalKey<FormState> formKey) {
+  if (formKey.currentState!.validate()) {
+    formKey.currentState!.save();
+  }
+}
+
 Widget folderButton(BuildContext context, UploadState uploadState,
-    {String name = '', bool newFolder = false, bool inside = false}) {
+    {String name = '', bool newFolder = false, bool saveHere = false}) {
   return Column(
     mainAxisSize: MainAxisSize.min,
     children: <Widget>[
-      inside
+      saveHere
           ? IconButton(
               icon: const Icon(
                 Icons.save_alt,
@@ -108,9 +144,28 @@ Widget folderButton(BuildContext context, UploadState uploadState,
           : IconButton(
               icon: Icon(newFolder ? Icons.create_new_folder : Icons.folder),
               onPressed: () {
-                bottomSheet(context, uploadState, inside: true);
+                if (name.isNotEmpty) {
+                  getInsideFolder(context, uploadState, name);
+                }
+                if (newFolder) {
+                  uploadState.empty = true;
+                  final newFolderNameFormKey = GlobalKey<FormState>();
+                  dailogBox(
+                    context: context,
+                    title: "Enter New Folder Name",
+                    content:
+                        newFolderNameField(newFolderNameFormKey, uploadState),
+                    okOnPressed: () {
+                      hideKeyboard(context);
+                      validateFolderName(newFolderNameFormKey);
+                      if (uploadState.newFolderName.isNotEmpty) {
+                        Navigator.pop(context, "OK");
+                      }
+                    },
+                  );
+                }
               }),
-      inside
+      saveHere
           ? AppText.centerText("Save Here",
               style:
                   AppTextStyles.extraBold(CommonColors.commonGreenColor, 8.sp))
@@ -125,7 +180,7 @@ void addOrRemove(FileOrDirectory data, UploadState uploadState) {
   uploadState.fileAddOrRemove;
 }
 
-List<Widget> getFolders(BuildContext context, UploadState uploadState,
+List<Widget> getServerFolders(BuildContext context, UploadState uploadState,
     List<FileOrDirectory>? folders) {
   List<Widget> outFolders = [];
   if (folders != null && folders.isNotEmpty) {
@@ -137,35 +192,81 @@ List<Widget> getFolders(BuildContext context, UploadState uploadState,
   return outFolders;
 }
 
+List<Widget> generateFolders(BuildContext context, UploadState uploadState,
+    List<FileOrDirectory>? data, bool saveHere) {
+  List<Widget> children;
+  bool newFolder = uploadState.getCategory == UploadCatogories.tvShows;
+  children = <Widget>[
+    if (saveHere) folderButton(context, uploadState, saveHere: saveHere),
+    if (newFolder) folderButton(context, uploadState, newFolder: newFolder),
+    ...getServerFolders(context, uploadState, data)
+  ];
+  return children;
+}
+
+Widget foldersGrid(BuildContext context, UploadState uploadState,
+    List<FileOrDirectory>? data, bool saveHere) {
+  return Container(
+      height: 300.h,
+      color: CommonColors.commonWhiteColor,
+      child: GridView.count(
+          padding: EdgeInsets.all(15.h),
+          crossAxisCount: 4,
+          children: generateFolders(context, uploadState, data, saveHere)));
+}
+
+Widget bottomSheetContent(BuildContext context, UploadState uploadState,
+    AppService appService, List<FileOrDirectory>? data, bool saveHere) {
+  return Column(
+    children: [
+      breadCrumbs(uploadState, appService),
+      foldersGrid(context, uploadState, data, saveHere),
+    ],
+  );
+}
+
+Widget breadCrumbs(UploadState uploadState, AppService appService) {
+  String breadCrumbString = appService.server.folderConfiguration
+          .pathToDirectory(uploadState.getCategory) ??
+      uploadState.getCategory.getTitle;
+  if (uploadState.traversedDirectories.isNotEmpty) {
+    for (String folderName in uploadState.traversedDirectories) {
+      breadCrumbString += "/$folderName";
+    }
+  }
+  if (uploadState.newFoldersToCreate.isNotEmpty) {
+    for (String folderName in uploadState.newFoldersToCreate) {
+      breadCrumbString += "/$folderName";
+    }
+  }
+  return Padding(
+    padding: EdgeInsets.only(top: 18.h),
+    child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: AppText.singleLineText(breadCrumbString!,
+            style: AppTextStyles.bold(CommonColors.commonBlackColor,
+                AppFontSizes.breadCrumbFontSize.sp))),
+  );
+}
+
 Widget sendMenu(BuildContext context, UploadState uploadState,
-    {bool inside = false}) {
+    {bool saveHere = false, String? insidePath}) {
   final AppService appService = Provider.of<AppService>(context);
   final bool connected = appService.connectionState;
   if (connected) {
     CommandExecuter commandExecuter = appService.commandExecuter;
-    final Future<List<FileOrDirectory>>? directoryData =
-        commandExecuter.listRemoteDirectory(uploadState.getCategory);
+    final Future<List<FileOrDirectory>?>? directoryData =
+        commandExecuter.listRemoteDirectory(uploadState.getCategory, insidePath,
+            empty: uploadState.empty);
     //TODO handle the case if not folder config data available
-    return FutureBuilder<List<FileOrDirectory>>(
+    return FutureBuilder<List<FileOrDirectory>?>(
       future: directoryData,
       builder: (BuildContext context,
-          AsyncSnapshot<List<FileOrDirectory>> snapshot) {
+          AsyncSnapshot<List<FileOrDirectory>?> snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
-          List<Widget> children;
-          bool newFolder = uploadState.getCategory == UploadCatogories.tvShows;
-          children = <Widget>[
-            if (inside) folderButton(context, uploadState, inside: inside),
-            folderButton(context, uploadState, newFolder: newFolder),
-            ...getFolders(context, uploadState, snapshot.data)
-          ];
-          return Container(
-              height: 300.h,
-              color: CommonColors.commonWhiteColor,
-              child: GridView.count(
-                  padding: EdgeInsets.all(15.h),
-                  crossAxisCount: 4,
-                  children: children));
+          return bottomSheetContent(
+              context, uploadState, appService, snapshot.data, saveHere);
         } else {
           return commonCircularProgressIndicator;
         }

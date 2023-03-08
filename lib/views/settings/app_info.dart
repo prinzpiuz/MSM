@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
 import 'package:msm/common_utils.dart';
+import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
 import 'package:msm/router/router_utils.dart';
@@ -58,8 +59,8 @@ List<Widget> dataWidget({required PackageInfo? data}) {
   return [
     SvgPicture.asset(
       AppConstants.appIconImageLocation,
-      height: AppConstants.appInfoIconHeight.h,
-      width: AppConstants.appInfoIconWidth.w,
+      height: AppFontSizes.appInfoIconHeight.h,
+      width: AppFontSizes.appInfoIconWidth.w,
     ),
     AppText.centerSingleLineText(data!.appName.toUpperCase(),
         style: AppTextStyles.medium(CommonColors.commonBlackColor,

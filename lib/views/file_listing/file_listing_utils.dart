@@ -17,7 +17,7 @@ PreferredSizeWidget searchBar(
     required FileListingState listingState}) {
   return AppBar(
     title: AppTextField.simpleTextField(controller: searchController),
-    elevation: AppConstants.appBarElevation,
+    elevation: AppFontSizes.appBarElevation,
     backgroundColor: CommonColors.commonWhiteColor,
     leading: Padding(
       padding: EdgeInsets.only(left: 10.w, bottom: 10.h, top: 10.h),

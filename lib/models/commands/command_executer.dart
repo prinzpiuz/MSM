@@ -26,34 +26,52 @@ class CommandExecuter extends Server {
   }
 
   Future<BasicDetails> get basicDetails async {
-    String command = CommandBuilder().andAll(Commands.basicDetailsGroup);
-    //TODO need to handle the condition of connection termination while running command
-    if (client != null) {
-      final basicDetails = _decodeOutput(await client!.run(command));
-      return BasicDetails(BasicDetails.mapSource(basicDetails));
+    try {
+      String command = CommandBuilder().andAll(Commands.basicDetailsGroup);
+      //TODO need to handle the condition of connection termination while running command
+      if (client != null) {
+        final basicDetails = _decodeOutput(await client!.run(command));
+        return BasicDetails(BasicDetails.mapSource(basicDetails));
+      }
+      return BasicDetails({});
+    } catch (_) {
+      return BasicDetails({});
     }
-    return BasicDetails({});
   }
 
-  Future<List<FileOrDirectory>>? listRemoteDirectory(
-      UploadCatogories catogories) async {
+  Future<List<FileOrDirectory>?>? listRemoteDirectory(
+      UploadCatogories catogories, String? insidPath,
+      {bool empty = false}) async {
     List<FileOrDirectory> direcories = [];
-    final directory = super.folderConfiguration.pathToDirectory(catogories);
-    if (directory != null && client != null) {
-      final sftp = await client!.sftp();
-      final items = await sftp.listdir(directory);
-      for (final item in items) {
-        if (item.attr.isDirectory &&
-            (item.filename != "." || item.filename != "..")) {
-          direcories.add(DirectoryObject(
-              Directory("$directory/${item.filename}"),
-              item.filename,
-              FileType.directory,
-              0, //intentionally put to zero because it does'nt matter at the moment
-              directory));
+    if (empty) {
+      return direcories;
+    } else {
+      try {
+        String? directory =
+            super.folderConfiguration.pathToDirectory(catogories);
+        if (directory != null && client != null) {
+          if (insidPath != null) {
+            directory = "$directory/$insidPath";
+          }
+          final sftp = await client!.sftp();
+          final items = await sftp.listdir(directory);
+          sftp.close();
+          for (final item in items) {
+            if (item.attr.isDirectory &&
+                (item.filename != "." && item.filename != "..")) {
+              direcories.add(DirectoryObject(
+                  Directory("$directory/${item.filename}"),
+                  item.filename,
+                  FileType.directory,
+                  0, //intentionally put to zero because it does'nt matter at the moment
+                  directory));
+            }
+          }
         }
+        return direcories;
+      } catch (_) {
+        return null;
       }
     }
-    return direcories;
   }
 }

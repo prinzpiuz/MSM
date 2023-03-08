@@ -1,4 +1,7 @@
+// Package imports:
 import 'package:dartssh2/dartssh2.dart';
+
+// Project imports:
 import 'package:msm/models/file_manager.dart';
 
 class FileUpload {
@@ -6,7 +9,7 @@ class FileUpload {
   List<FileOrDirectory> uploadData = [];
   FileUpload(SSHClient client);
 
-  void clear() => uploadData.clear();
+  void get clear => uploadData.clear();
 
   void addOrRemove(FileOrDirectory data) {
     if (uploadData.contains(data)) {
