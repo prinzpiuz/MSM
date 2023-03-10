@@ -3,7 +3,6 @@ import 'dart:io';
 
 // Package imports:
 import 'package:filesize/filesize.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 // Project imports:
 import 'package:msm/providers/upload_provider.dart';
@@ -18,6 +17,15 @@ abstract class FileOrDirectory {
   FileType get type => FileType.file;
   bool get isFile => type == FileType.file;
   int get fileCount => 0;
+  String get fullPath => '';
+
+  @override
+  bool operator ==(other) {
+    return hashCode == other.hashCode;
+  }
+
+  @override
+  int get hashCode => name.hashCode;
 }
 
 class FileObject extends FileOrDirectory {
@@ -27,9 +35,10 @@ class FileObject extends FileOrDirectory {
   final String _extention;
   final String _location;
   final FileType _type;
+  final String _fullPath;
 
   FileObject(this.file, this._name, this._size, this._extention, this._location,
-      this._type);
+      this._type, this._fullPath);
 
   @override
   String get name => _name;
@@ -45,6 +54,9 @@ class FileObject extends FileOrDirectory {
 
   @override
   String get size => filesize(_size);
+
+  @override
+  String get fullPath => _fullPath;
 }
 
 class DirectoryObject extends FileOrDirectory {
@@ -150,8 +162,7 @@ class FileManager {
   static Future<List<FileOrDirectory>> getFiles(
       Directory directory, UploadState uploadState) async {
     List<FileOrDirectory> files = [];
-    if (await Permission.storage.request().isGranted &&
-        directory.existsSync()) {
+    if (directory.existsSync()) {
       final List<FileSystemEntity> fileEntities = directory.listSync().toList();
       final Iterable<File> filesIterable = fileEntities.whereType<File>().where(
           (file) => checkExtention(file, uploadState.getCategoryExtentions));
@@ -162,8 +173,14 @@ class FileManager {
             FileType.directory, directoryIterables.length, directory.path));
       }
       for (File file in filesIterable) {
-        files.add(FileObject(file, getFileName(file), getFileSize(file),
-            getExtention(file), getFileLocation(directory), FileType.file));
+        files.add(FileObject(
+            file,
+            getFileName(file),
+            getFileSize(file),
+            getExtention(file),
+            getFileLocation(directory),
+            FileType.file,
+            "${directory.path}/${getFileName(file)}"));
       }
     }
     return files;
@@ -183,5 +200,12 @@ class FileManager {
     }
 
     return allFiles;
+  }
+
+  static String pathBuilder(List<String> path) {
+    if (path.isNotEmpty) {
+      return path.join("/");
+    }
+    return "";
   }
 }

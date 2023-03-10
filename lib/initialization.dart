@@ -36,7 +36,7 @@ class Init {
       serverFunctionsData: appService.server.serverFunctionsData,
       client: null,
     );
-    makeConnections(appService);
+    makeConnections(appService, uploadState: uploadService);
     return {
       "appService": appService,
       "uploadService": uploadService,
@@ -51,7 +51,8 @@ class Init {
     return storage;
   }
 
-  static void makeConnections(AppService appService) async {
+  static void makeConnections(AppService appService,
+      {UploadState? uploadState}) async {
     appService.initialized = true;
     appService.server.state = ServerState.connecting;
     if (appService.server.serverData.detailsAvailable) {
@@ -76,6 +77,6 @@ class Init {
 
   static void _requestStoragePermissions() async {
     await [Permission.storage].request();
-    // await [Permission.mediaLibrary].request();
+    await [Permission.manageExternalStorage].request();
   }
 }

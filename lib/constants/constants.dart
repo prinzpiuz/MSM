@@ -16,12 +16,15 @@ class AppFontSizes {
   static const connectingFontSize = 15.0;
   static const notConnectedIconSize = 90.0;
   static const notConnectedFontSize = 15.0;
-}
-
-class AppConstants {
   static const appBarElevation = 1.0;
   static const appInfoIconHeight = 100.0;
   static const appInfoIconWidth = 100.0;
+  static const dialogBoxactionFontSixe = 13.0;
+  static const dialogBoxTitleFontSize = 15.0;
+  static const breadCrumbFontSize = 13.0;
+}
+
+class AppConstants {
   static const appIconImageLocation = "assets/svgs/msm.svg";
   static const appShortName = "MSM";
   static const appFullName = "Media Server Manager";
@@ -48,4 +51,8 @@ class AppMessages {
   static const serverDetailSaved = "Saved Server Details";
   static const folderConfigurationSaved = "Saved Folder Configurations";
   static const serverFunctionSaved = "Saved Server Functions";
+  static const selectFiles = "Select Files";
+  static const connectionLost = "Connection Lost";
+  static const uploadStarted = "Upload Started";
+  static const errorOccured = "Error While Uploading";
 }

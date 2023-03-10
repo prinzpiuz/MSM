@@ -94,8 +94,8 @@ class BasicDetails {
 
   static String _parseUptime(Map<String, List<String>> source) {
     List<String> uptimeSource = source[Identifiers.uptime]!;
-    List<String> uptime = uptimeSource[2].split(" ");
-    return "${uptime[2]} ${uptime[3].replaceAll(",", "")}";
+    List<String> uptime = uptimeSource[0].split(" ");
+    return "${uptime[1]} ${uptime[2].replaceAll(",", "")}";
   }
 
   static String _parseTemperature(Map<String, List<String>> source) {

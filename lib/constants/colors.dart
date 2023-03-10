@@ -19,8 +19,3 @@ class TextFormColors {
   static const passwordIconColor = Colors.black;
   static const fillColor = Colors.white;
 }
-
-///Button
-class ButtonColors {
-  ButtonColors._();
-}

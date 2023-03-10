@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 // Project imports:
 import 'package:msm/models/file_manager.dart';
+import 'package:msm/models/file_upload.dart';
 import 'package:msm/views/upload_pages/upload_page_utils.dart';
 
 class UploadState with ChangeNotifier {
@@ -13,8 +14,13 @@ class UploadState with ChangeNotifier {
   List<String> _categoryExtentions = FileManager.allowedMovieExtentions;
   String _currentListing = UploadCatogories.movies.getTitle;
   bool _recursive = false;
+  String newFolderName = "";
+  bool empty = false;
   final List<Directory> _nextFilesDirectory = [];
   final List<Directory> _directories = FileManager.defaultDirectories;
+  final FileUploadData fileUploadData = FileUploadData();
+  final List<String> _trackRemoteDirectory = [];
+  final List<String> _newFolders = [];
 
   UploadState();
 
@@ -24,6 +30,8 @@ class UploadState with ChangeNotifier {
   String get getCurrentListing => _currentListing;
   bool get getRecursive => _recursive;
   List<Directory> get getNextFilesDirectory => _nextFilesDirectory;
+  List<String> get traversedDirectories => _trackRemoteDirectory;
+  List<String> get newFoldersToCreate => _newFolders;
 
   set setCategory(UploadCatogories currentCategory) {
     _category = currentCategory;
@@ -47,6 +55,22 @@ class UploadState with ChangeNotifier {
     _nextFilesDirectory.add(nextDirectory);
   }
 
+  void addRemoteDirectoru(String directory) {
+    if (directory.isNotEmpty) {
+      _trackRemoteDirectory.add(directory);
+    }
+  }
+
+  void addNewFolderName(String name) {
+    if (name.isNotEmpty) {
+      _newFolders.add(name);
+    }
+  }
+
+  void get clearNewFolder => _newFolders.clear();
+
+  void get clearPaths => _trackRemoteDirectory.clear();
+
   popLastDirectory() {
     if (_nextFilesDirectory.isNotEmpty) {
       _nextFilesDirectory.removeLast();
@@ -54,5 +78,21 @@ class UploadState with ChangeNotifier {
       _recursive = false;
     }
     notifyListeners();
+  }
+
+  void get fileAddOrRemove {
+    notifyListeners();
+  }
+
+  void get commonClear {
+    clearPaths;
+    empty = false;
+    clearNewFolder;
+  }
+
+  void get commonCalls {
+    commonClear;
+    fileUploadData.clear;
+    popLastDirectory();
   }
 }

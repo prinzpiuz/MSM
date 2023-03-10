@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 // Project imports:
 import 'package:msm/common_utils.dart';
+import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
 import 'package:msm/initialization.dart';
@@ -89,8 +90,8 @@ Widget serverDetailsBuilder(BuildContext context) {
 
 Widget serverdetails(BasicDetails data) => Stack(children: <Widget>[
       SizedBox(
-        width: 210.w,
-        height: 210.w,
+        width: 220.w,
+        height: 220.w,
         child: TweenAnimationBuilder(
           tween: Tween<double>(begin: 0.0, end: data.disk.percentage),
           duration: const Duration(milliseconds: 3500),
@@ -114,31 +115,10 @@ Widget serverdetails(BasicDetails data) => Stack(children: <Widget>[
 Widget get fetchingData => Column(
       children: [
         Padding(
-          padding: EdgeInsets.all(20.h),
-          child: const CircularProgressIndicator(
-              color: CommonColors.commonGreenColor),
-        ),
+            padding: EdgeInsets.all(20.h),
+            child: commonCircularProgressIndicator),
         AppText.centerSingleLineText(AppConstants.connecting,
             style: AppTextStyles.regular(CommonColors.commonBlackColor,
                 AppFontSizes.connectingFontSize)),
       ],
     );
-
-Widget serverNotConnected(AppService appService) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      IconButton(
-          iconSize: AppFontSizes.notConnectedIconSize.sp,
-          onPressed: () => Init.makeConnections(appService),
-          icon: const Icon(
-            Icons.cloud_off,
-            color: CommonColors.commonGreyColor,
-            // size: 90.sp,
-          )),
-      AppText.singleLineText(appService.server.state!.message,
-          style: AppTextStyles.regular(CommonColors.commonBlackColor,
-              AppFontSizes.notConnectedFontSize.sp))
-    ],
-  );
-}

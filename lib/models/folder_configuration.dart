@@ -1,3 +1,6 @@
+// Project imports:
+import 'package:msm/views/upload_pages/upload_page_utils.dart';
+
 class FolderConfiguration {
   String? movies;
   String? tv;
@@ -18,6 +21,20 @@ class FolderConfiguration {
 
   void removeExtraFolder(int index) {
     customFolders.removeAt(index);
+  }
+
+  String? pathToDirectory(UploadCatogories catogories) {
+    //TODO implement a logic to get the correct path to custom folders
+    switch (catogories) {
+      case UploadCatogories.movies:
+        return movies;
+      case UploadCatogories.tvShows:
+        return tv;
+      case UploadCatogories.books:
+        return books;
+      case UploadCatogories.custom:
+        return "custom";
+    }
   }
 
   FolderConfiguration.fromJson(Map<String, dynamic> json)
