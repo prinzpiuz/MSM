@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:msm/models/commands/command_executer.dart';
-import 'package:msm/models/file_upload.dart';
 import 'package:msm/models/server.dart';
 import 'package:msm/models/storage.dart';
 import 'package:msm/providers/app_provider.dart';
@@ -72,9 +71,6 @@ class Init {
             client: client);
         appService.connectionState = true;
         appService.server.state = ServerState.connected;
-        if (uploadState != null) {
-          uploadState.fileUpload = FileUpload(client);
-        }
       }
     }
   }

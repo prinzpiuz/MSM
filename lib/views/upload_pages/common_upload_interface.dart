@@ -100,7 +100,7 @@ PreferredSizeWidget appBar(BuildContext context, UploadState uploadState) {
           child: IconButton(
               onPressed: () {
                 uploadState.fileAddOrRemove;
-                uploadState.fileUpload.clear;
+                uploadState.fileUploadData.clear;
               },
               icon: trashIcon),
         ),
@@ -108,7 +108,7 @@ PreferredSizeWidget appBar(BuildContext context, UploadState uploadState) {
           padding: EdgeInsets.all(10.h),
           child: IconButton(
               onPressed: (() {
-                if (uploadState.fileUpload.uploadData.isNotEmpty) {
+                if (uploadState.fileUploadData.uploadData.isNotEmpty) {
                   uploadState.commonClear;
                   bottomSheet(context, uploadState, saveHere: true);
                 } else {
@@ -188,7 +188,7 @@ Widget cardButton(FileOrDirectory data, UploadState uploadState) {
             child: IconButton(
                 onPressed: (() => addOrRemove(data, uploadState)),
                 icon: Icon(
-                  uploadState.fileUpload.fileAdded(data)
+                  uploadState.fileUploadData.fileAdded(data)
                       ? Icons.remove
                       : Icons.add,
                   color: CommonColors.commonWhiteColor,

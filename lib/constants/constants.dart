@@ -52,4 +52,7 @@ class AppMessages {
   static const folderConfigurationSaved = "Saved Folder Configurations";
   static const serverFunctionSaved = "Saved Server Functions";
   static const selectFiles = "Select Files";
+  static const connectionLost = "Connection Lost";
+  static const uploadStarted = "Upload Started";
+  static const errorOccured = "Error While Uploading";
 }

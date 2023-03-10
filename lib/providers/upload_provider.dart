@@ -18,7 +18,7 @@ class UploadState with ChangeNotifier {
   bool empty = false;
   final List<Directory> _nextFilesDirectory = [];
   final List<Directory> _directories = FileManager.defaultDirectories;
-  late FileUpload fileUpload;
+  final FileUploadData fileUploadData = FileUploadData();
   final List<String> _trackRemoteDirectory = [];
   final List<String> _newFolders = [];
 
@@ -92,7 +92,7 @@ class UploadState with ChangeNotifier {
 
   void get commonCalls {
     commonClear;
-    fileUpload.clear;
+    fileUploadData.clear;
     popLastDirectory();
   }
 }

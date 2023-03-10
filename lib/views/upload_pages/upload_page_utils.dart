@@ -107,6 +107,23 @@ void getInsideFolder(
       insidePath: FileManager.pathBuilder(uploadState.traversedDirectories));
 }
 
+void createNewFolder(BuildContext context, UploadState uploadState) {
+  uploadState.empty = true;
+  final newFolderNameFormKey = GlobalKey<FormState>();
+  dailogBox(
+    context: context,
+    title: "Enter New Folder Name",
+    content: newFolderNameField(newFolderNameFormKey, uploadState),
+    okOnPressed: () {
+      hideKeyboard(context);
+      validateFolderName(newFolderNameFormKey);
+      if (uploadState.newFolderName.isNotEmpty) {
+        Navigator.pop(context, "OK");
+      }
+    },
+  );
+}
+
 Widget newFolderNameField(Key key, UploadState uploadState) {
   return Form(
     key: key,
@@ -129,8 +146,36 @@ void validateFolderName(GlobalKey<FormState> formKey) {
   }
 }
 
+void uploadFiles(BuildContext context, UploadState uploadState) async {
+  final AppService appService = Provider.of<AppService>(context, listen: false);
+  final bool connected = appService.connectionState;
+  if (connected) {
+    CommandExecuter commandExecuter = appService.commandExecuter;
+    commandExecuter
+        .upload(
+            category: uploadState.getCategory,
+            fileUploadData: uploadState.fileUploadData,
+            newFolders: uploadState.newFoldersToCreate,
+            insidPath:
+                FileManager.pathBuilder(uploadState.traversedDirectories))
+        .then((uploaded) {
+      if (uploaded) {
+        uploadState.fileUploadData.clear;
+        uploadState.fileAddOrRemove;
+      } else {
+        showMessage(
+            context: context, text: AppMessages.errorOccured, duration: 5);
+      }
+    });
+    showMessage(context: context, text: AppMessages.uploadStarted, duration: 5);
+    Navigator.pop(context);
+  } else {
+    showMessage(context: context, text: AppMessages.connectionLost);
+  }
+}
+
 Widget folderButton(BuildContext context, UploadState uploadState,
-    {String name = '', bool newFolder = false, bool saveHere = false}) {
+    {String name = '', bool newFolder = true, bool saveHere = false}) {
   return Column(
     mainAxisSize: MainAxisSize.min,
     children: <Widget>[
@@ -140,7 +185,7 @@ Widget folderButton(BuildContext context, UploadState uploadState,
                 Icons.save_alt,
                 color: CommonColors.commonGreenColor,
               ),
-              onPressed: () {})
+              onPressed: () => uploadFiles(context, uploadState))
           : IconButton(
               icon: Icon(newFolder ? Icons.create_new_folder : Icons.folder),
               onPressed: () {
@@ -148,21 +193,7 @@ Widget folderButton(BuildContext context, UploadState uploadState,
                   getInsideFolder(context, uploadState, name);
                 }
                 if (newFolder) {
-                  uploadState.empty = true;
-                  final newFolderNameFormKey = GlobalKey<FormState>();
-                  dailogBox(
-                    context: context,
-                    title: "Enter New Folder Name",
-                    content:
-                        newFolderNameField(newFolderNameFormKey, uploadState),
-                    okOnPressed: () {
-                      hideKeyboard(context);
-                      validateFolderName(newFolderNameFormKey);
-                      if (uploadState.newFolderName.isNotEmpty) {
-                        Navigator.pop(context, "OK");
-                      }
-                    },
-                  );
+                  createNewFolder(context, uploadState);
                 }
               }),
       saveHere
@@ -176,7 +207,7 @@ Widget folderButton(BuildContext context, UploadState uploadState,
 }
 
 void addOrRemove(FileOrDirectory data, UploadState uploadState) {
-  uploadState.fileUpload.addOrRemove(data);
+  uploadState.fileUploadData.addOrRemove(data);
   uploadState.fileAddOrRemove;
 }
 
@@ -185,7 +216,8 @@ List<Widget> getServerFolders(BuildContext context, UploadState uploadState,
   List<Widget> outFolders = [];
   if (folders != null && folders.isNotEmpty) {
     for (FileOrDirectory folder in folders) {
-      outFolders.add(folderButton(context, uploadState, name: folder.name));
+      outFolders.add(folderButton(context, uploadState,
+          name: folder.name, newFolder: false));
     }
   }
 
@@ -195,10 +227,9 @@ List<Widget> getServerFolders(BuildContext context, UploadState uploadState,
 List<Widget> generateFolders(BuildContext context, UploadState uploadState,
     List<FileOrDirectory>? data, bool saveHere) {
   List<Widget> children;
-  bool newFolder = uploadState.getCategory == UploadCatogories.tvShows;
   children = <Widget>[
     if (saveHere) folderButton(context, uploadState, saveHere: saveHere),
-    if (newFolder) folderButton(context, uploadState, newFolder: newFolder),
+    folderButton(context, uploadState),
     ...getServerFolders(context, uploadState, data)
   ];
   return children;
@@ -231,19 +262,19 @@ Widget breadCrumbs(UploadState uploadState, AppService appService) {
       uploadState.getCategory.getTitle;
   if (uploadState.traversedDirectories.isNotEmpty) {
     for (String folderName in uploadState.traversedDirectories) {
-      breadCrumbString += "/$folderName";
+      breadCrumbString += " > $folderName";
     }
   }
   if (uploadState.newFoldersToCreate.isNotEmpty) {
     for (String folderName in uploadState.newFoldersToCreate) {
-      breadCrumbString += "/$folderName";
+      breadCrumbString += " > $folderName";
     }
   }
   return Padding(
     padding: EdgeInsets.only(top: 18.h),
     child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: AppText.singleLineText(breadCrumbString!,
+        child: AppText.singleLineText(breadCrumbString,
             style: AppTextStyles.bold(CommonColors.commonBlackColor,
                 AppFontSizes.breadCrumbFontSize.sp))),
   );

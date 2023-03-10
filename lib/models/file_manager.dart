@@ -17,6 +17,7 @@ abstract class FileOrDirectory {
   FileType get type => FileType.file;
   bool get isFile => type == FileType.file;
   int get fileCount => 0;
+  String get fullPath => '';
 
   @override
   bool operator ==(other) {
@@ -34,9 +35,10 @@ class FileObject extends FileOrDirectory {
   final String _extention;
   final String _location;
   final FileType _type;
+  final String _fullPath;
 
   FileObject(this.file, this._name, this._size, this._extention, this._location,
-      this._type);
+      this._type, this._fullPath);
 
   @override
   String get name => _name;
@@ -52,6 +54,9 @@ class FileObject extends FileOrDirectory {
 
   @override
   String get size => filesize(_size);
+
+  @override
+  String get fullPath => _fullPath;
 }
 
 class DirectoryObject extends FileOrDirectory {
@@ -168,8 +173,14 @@ class FileManager {
             FileType.directory, directoryIterables.length, directory.path));
       }
       for (File file in filesIterable) {
-        files.add(FileObject(file, getFileName(file), getFileSize(file),
-            getExtention(file), getFileLocation(directory), FileType.file));
+        files.add(FileObject(
+            file,
+            getFileName(file),
+            getFileSize(file),
+            getExtention(file),
+            getFileLocation(directory),
+            FileType.file,
+            "${directory.path}/${getFileName(file)}"));
       }
     }
     return files;
@@ -192,6 +203,9 @@ class FileManager {
   }
 
   static String pathBuilder(List<String> path) {
-    return path.join("/");
+    if (path.isNotEmpty) {
+      return path.join("/");
+    }
+    return "";
   }
 }
