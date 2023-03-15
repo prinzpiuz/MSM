@@ -15,5 +15,13 @@ class FileUploadData {
     }
   }
 
+  List<String> get localFilesPaths {
+    List<String> paths = [];
+    for (FileOrDirectory file in uploadData) {
+      paths.add(file.fullPath);
+    }
+    return paths;
+  }
+
   bool fileAdded(FileOrDirectory data) => uploadData.contains(data);
 }

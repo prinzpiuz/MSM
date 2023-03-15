@@ -33,7 +33,7 @@ dependencies:
   shared_preferences: ^2.0.18
   path_provider: ^2.0.11
   dartssh2: ^2.7.2+3
-  workmanager: ^0.5.0
+  workmanager: ^0.5.1
   permission_handler: ^10.2.0
   filesize: ^2.0.1
   flutter_screenutil: ^5.7.0
@@ -45,6 +45,7 @@ dependencies:
   package_info_plus: ^3.0.2
   url_launcher: ^6.1.10
   flutter_svg: ^2.0.1
+  flutter_local_notifications: ^13.0.0
 
 dev_dependencies:
   flutter_test:

@@ -18,7 +18,7 @@ class Init {
   late FileListingState fileListingService;
   late FolderConfigState folderConfigState;
 
-  Future<Map<String, dynamic>> initialize() async {
+  Future<Map<String, dynamic>> initialize({bool background = false}) async {
     Storage storage = await _getUserPreferences();
     AppService appService = AppService(
         server: Server(
@@ -29,7 +29,9 @@ class Init {
     UploadState uploadService = UploadState();
     FileListingState fileListingService = FileListingState();
     FolderConfigState folderConfigState = FolderConfigState();
-    _requestStoragePermissions();
+    if (!background) {
+      _requestStoragePermissions();
+    }
     appService.commandExecuter = CommandExecuter(
       serverData: appService.server.serverData,
       folderConfiguration: appService.server.folderConfiguration,
