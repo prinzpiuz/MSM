@@ -56,3 +56,9 @@ class AppMessages {
   static const uploadStarted = "Upload Started";
   static const errorOccured = "Error While Uploading";
 }
+
+class BackgroundTaskUniqueNames {
+  static const upload = "upload";
+  static const update = "update";
+  static const cleanServer = "cleanServer";
+}

@@ -14,6 +14,7 @@ import 'package:msm/common_utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
+import 'package:msm/models/background_tasks.dart';
 import 'package:msm/models/commands/command_executer.dart';
 import 'package:msm/models/file_manager.dart';
 import 'package:msm/providers/app_provider.dart';
@@ -150,24 +151,16 @@ void uploadFiles(BuildContext context, UploadState uploadState) async {
   final AppService appService = Provider.of<AppService>(context, listen: false);
   final bool connected = appService.connectionState;
   if (connected) {
-    CommandExecuter commandExecuter = appService.commandExecuter;
-    commandExecuter
-        .upload(
-            category: uploadState.getCategory,
-            fileUploadData: uploadState.fileUploadData,
-            newFolders: uploadState.newFoldersToCreate,
-            insidPath:
-                FileManager.pathBuilder(uploadState.traversedDirectories))
-        .then((uploaded) {
-      if (uploaded) {
-        uploadState.fileUploadData.clear;
-        uploadState.fileAddOrRemove;
-      } else {
-        showMessage(
-            context: context, text: AppMessages.errorOccured, duration: 5);
-      }
+    BackgroundTasks().uploadTask(data: {
+      "directory": appService.server.folderConfiguration
+          .pathToDirectory(uploadState.getCategory),
+      "fileUploadData": uploadState.fileUploadData.localFilesPaths,
+      "newFolders": uploadState.newFoldersToCreate,
+      "insidPath": FileManager.pathBuilder(uploadState.traversedDirectories)
     });
     showMessage(context: context, text: AppMessages.uploadStarted, duration: 5);
+    uploadState.fileUploadData.clear;
+    uploadState.fileAddOrRemove;
     Navigator.pop(context);
   } else {
     showMessage(context: context, text: AppMessages.connectionLost);

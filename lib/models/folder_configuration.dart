@@ -2,6 +2,7 @@
 import 'package:msm/views/upload_pages/upload_page_utils.dart';
 
 class FolderConfiguration {
+  //TODO need to check folders exist before saving
   String? movies;
   String? tv;
   String? books;

@@ -10,7 +10,6 @@ import 'package:dartssh2/dartssh2.dart';
 import 'package:msm/models/commands/basic_details.dart';
 import 'package:msm/models/commands/commands.dart';
 import 'package:msm/models/file_manager.dart';
-import 'package:msm/models/file_upload.dart';
 import 'package:msm/models/server.dart';
 import 'package:msm/views/upload_pages/upload_page_utils.dart';
 
@@ -75,73 +74,73 @@ class CommandExecuter extends Server {
     }
   }
 
-  void loopAndSend(
-      {required List<FileOrDirectory> uploadData,
+  Future<void> loopAndSend(
+      {required List<String> filePaths,
       required String directory,
-      required SftpClient sftp}) {
-    for (FileOrDirectory file in uploadData) {
-      _sendFile(directory: directory, file: file, sftp: sftp);
+      required SftpClient sftp}) async {
+    for (String filePath in filePaths) {
+      await _sendFile(directory: directory, filePath: filePath, sftp: sftp);
     }
   }
 
-  void _sendFile(
+  Future<void> _sendFile(
       {required String directory,
-      required FileOrDirectory file,
+      required String filePath,
       required SftpClient sftp}) async {
-    final String remotePath = "$directory/${file.name}";
-    final remoteFile = await sftp.open(remotePath,
-        mode: SftpFileOpenMode.create | SftpFileOpenMode.write);
-    final localPath = file.fullPath;
-    await remoteFile.write(
-      File(localPath).openRead().cast(),
-      onProgress: (total) => print(total),
-    );
+    try {
+      final String remotePath =
+          "$directory/${filePath.split('/').last.toString()}";
+      final remoteFile = await sftp.open(remotePath,
+          mode: SftpFileOpenMode.create | SftpFileOpenMode.write);
+      await remoteFile.write(
+        File(filePath).openRead().cast(),
+        onProgress: (total) => print(total),
+      );
+    } catch (_) {}
   }
 
   Future<String> _createFolders(
       {required SftpClient sftp,
       required String directory,
       required List<String> newFolders}) async {
-    for (String folder in newFolders) {
-      directory += "/$folder";
-      await sftp.mkdir(directory);
+    try {
+      for (String folder in newFolders) {
+        directory += "/$folder";
+        await sftp.mkdir(directory);
+      }
+      return directory;
+    } catch (_) {
+      return "Error Occured While Creating Folders";
     }
-    return directory;
   }
 
-  Future<bool> upload(
+  Future<void> upload(
       {List<String> newFolders = const [],
       String insidPath = "",
-      required UploadCatogories category,
-      required FileUploadData fileUploadData}) async {
+      required String directory,
+      required List<String> filePaths}) async {
     try {
-      String? directory = super.folderConfiguration.pathToDirectory(category);
-      if (insidPath.isNotEmpty) {
-        directory = "$directory/$insidPath";
+      if (client != null && filePaths.isNotEmpty) {
+        await client!.sftp().then((value) async {
+          if (insidPath.isNotEmpty) {
+            directory = "$directory/$insidPath";
+          }
+          final sftp = value;
+          if (newFolders.isEmpty) {
+            await loopAndSend(
+                filePaths: filePaths, directory: directory, sftp: sftp);
+          } else {
+            await _createFolders(
+                    sftp: sftp, directory: directory, newFolders: newFolders)
+                .then((createdDirectoryPath) async {
+              await loopAndSend(
+                  filePaths: filePaths,
+                  directory: createdDirectoryPath,
+                  sftp: sftp);
+            });
+          }
+        });
       }
-      if (client != null &&
-          directory != null &&
-          fileUploadData.uploadData.isNotEmpty) {
-        final sftp = await client!.sftp();
-        if (newFolders.isEmpty) {
-          loopAndSend(
-              uploadData: fileUploadData.uploadData,
-              directory: directory,
-              sftp: sftp);
-        } else {
-          await _createFolders(
-                  sftp: sftp, directory: directory, newFolders: newFolders)
-              .then((createdDirectoryPath) => {
-                    loopAndSend(
-                        uploadData: fileUploadData.uploadData,
-                        directory: createdDirectoryPath,
-                        sftp: sftp)
-                  });
-        }
-      }
-      return true;
-    } catch (_) {
-      return false;
-    }
+    } catch (_) {}
   }
 }
