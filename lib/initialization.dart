@@ -1,5 +1,6 @@
 // Package imports:
 import 'package:dartssh2/dartssh2.dart';
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,6 +40,7 @@ class Init {
       client: null,
     );
     makeConnections(appService, uploadState: uploadService);
+    _setAppOrientation();
     return {
       "appService": appService,
       "uploadService": uploadService,
@@ -84,5 +86,12 @@ class Init {
       Permission.accessNotificationPolicy,
       Permission.notification
     ].request();
+  }
+
+  static void _setAppOrientation() async {
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
   }
 }
