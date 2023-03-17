@@ -134,3 +134,7 @@ Future<dynamic> dailogBox({
     ),
   );
 }
+
+String fileNameFromPath(String path) {
+  return path.split('/').last.toString();
+}

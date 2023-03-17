@@ -6,7 +6,10 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:msm/models/folder_configuration.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
@@ -44,7 +47,8 @@ extension UploadCategoriesExtention on UploadCatogories {
   }
 }
 
-void goToPage(UploadCatogories catogories, BuildContext context) {
+void goToPage(UploadCatogories catogories, BuildContext context,
+    {String path = ""}) {
   UploadState uploadState = Provider.of<UploadState>(context, listen: false);
   switch (catogories) {
     case UploadCatogories.movies:
@@ -64,8 +68,12 @@ void goToPage(UploadCatogories catogories, BuildContext context) {
       break;
     case UploadCatogories.custom:
       uploadState.setCategory = UploadCatogories.custom;
-      uploadState.setCategoryExtentions = FileManager.allowedPictureExtentions;
-      uploadState.setCurrentListing = UploadCatogories.custom.getTitle;
+      uploadState.setCategoryExtentions = FileManager.allAllowedExtentions;
+      uploadState.toCustomFolder = true;
+      if (path.isNotEmpty) {
+        uploadState.customPath = path;
+        uploadState.setCurrentListing = fileNameFromPath(path);
+      }
       break;
   }
   return GoRouter.of(context).go(Pages.commonUpload.toPath);
@@ -151,9 +159,13 @@ void uploadFiles(BuildContext context, UploadState uploadState) async {
   final AppService appService = Provider.of<AppService>(context, listen: false);
   final bool connected = appService.connectionState;
   if (connected) {
+    String? directory = appService.server.folderConfiguration
+        .pathToDirectory(uploadState.getCategory);
+    if (uploadState.toCustomFolder) {
+      directory = uploadState.customPath;
+    }
     BackgroundTasks().uploadTask(data: {
-      "directory": appService.server.folderConfiguration
-          .pathToDirectory(uploadState.getCategory),
+      "directory": directory,
       "fileUploadData": uploadState.fileUploadData.localFilesPaths,
       "newFolders": uploadState.newFoldersToCreate,
       "insidPath": FileManager.pathBuilder(uploadState.traversedDirectories)
@@ -250,9 +262,12 @@ Widget bottomSheetContent(BuildContext context, UploadState uploadState,
 }
 
 Widget breadCrumbs(UploadState uploadState, AppService appService) {
-  String breadCrumbString = appService.server.folderConfiguration
-          .pathToDirectory(uploadState.getCategory) ??
-      uploadState.getCategory.getTitle;
+  String? directory = appService.server.folderConfiguration
+      .pathToDirectory(uploadState.getCategory);
+  if (uploadState.toCustomFolder) {
+    directory = uploadState.customPath;
+  }
+  String breadCrumbString = directory ?? uploadState.getCategory.getTitle;
   if (uploadState.traversedDirectories.isNotEmpty) {
     for (String folderName in uploadState.traversedDirectories) {
       breadCrumbString += " > $folderName";
@@ -281,7 +296,7 @@ Widget sendMenu(BuildContext context, UploadState uploadState,
     CommandExecuter commandExecuter = appService.commandExecuter;
     final Future<List<FileOrDirectory>?>? directoryData =
         commandExecuter.listRemoteDirectory(uploadState.getCategory, insidePath,
-            empty: uploadState.empty);
+            empty: uploadState.empty, customPath: uploadState.customPath);
     //TODO handle the case if not folder config data available
     return FutureBuilder<List<FileOrDirectory>?>(
       future: directoryData,
@@ -299,4 +314,70 @@ Widget sendMenu(BuildContext context, UploadState uploadState,
   } else {
     return serverNotConnected(appService);
   }
+}
+
+Widget menuBox(
+    {IconData? icon,
+    String? folderName,
+    required Function onPressed,
+    required double iconSize}) {
+  return Container(
+    color: CommonColors.commonGreenColor,
+    child: OutlinedButton(
+        onPressed: () => onPressed(),
+        child: Center(
+            child: icon != null
+                ? Icon(icon,
+                    color: CommonColors.commonWhiteColor, size: iconSize)
+                : AppText.centerText(folderName!.toUpperCase(),
+                    style: AppTextStyles.bold(
+                        CommonColors.commonWhiteColor, iconSize)))),
+  );
+}
+
+List<StaggeredGridTile> tiles(BuildContext context) {
+  List<StaggeredGridTile> allTiles = [
+    //default tiles
+    StaggeredGridTile.count(
+      crossAxisCellCount: 2,
+      mainAxisCellCount: 2,
+      child: menuBox(
+          icon: Icons.movie_filter_outlined,
+          onPressed: () => goToPage(UploadCatogories.movies, context),
+          iconSize: AppFontSizes.homePageIconFontSize.h),
+    ),
+    StaggeredGridTile.count(
+      crossAxisCellCount: 2,
+      mainAxisCellCount: 4,
+      child: menuBox(
+          icon: Icons.tv,
+          onPressed: () => goToPage(UploadCatogories.tvShows, context),
+          iconSize: AppFontSizes.homePageIconFontSize.h),
+    ),
+    StaggeredGridTile.count(
+      crossAxisCellCount: 2,
+      mainAxisCellCount: 2,
+      child: menuBox(
+          icon: FontAwesomeIcons.bookOpen,
+          onPressed: () => goToPage(UploadCatogories.books, context),
+          iconSize: AppFontSizes.homePageIconFontSize.h),
+    ),
+  ];
+  final AppService appService = Provider.of<AppService>(context);
+  final FolderConfiguration folderConfiguration =
+      appService.server.folderConfiguration;
+  if (folderConfiguration.customFolders.isNotEmpty) {
+    for (var customFolder in folderConfiguration.customFolders) {
+      allTiles.add(StaggeredGridTile.count(
+        crossAxisCellCount: 4,
+        mainAxisCellCount: 1,
+        child: menuBox(
+            folderName: fileNameFromPath(customFolder),
+            onPressed: () =>
+                goToPage(UploadCatogories.custom, context, path: customFolder),
+            iconSize: AppFontSizes.customFolderNameSize.h),
+      ));
+    }
+  }
+  return allTiles;
 }

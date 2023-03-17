@@ -16,6 +16,8 @@ class UploadState with ChangeNotifier {
   bool _recursive = false;
   String newFolderName = "";
   bool empty = false;
+  bool toCustomFolder = false;
+  String customPath = "";
   final List<Directory> _nextFilesDirectory = [];
   final List<Directory> _directories = FileManager.defaultDirectories;
   final FileUploadData fileUploadData = FileUploadData();

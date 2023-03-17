@@ -131,6 +131,13 @@ class FileManager {
     'svg',
     'raw'
   ];
+
+  static const List<String> allAllowedExtentions = [
+    ...allowedDocumentExtentions,
+    ...allowedMovieExtentions,
+    ...allowedPictureExtentions
+  ];
+
   static String getFileName(FileSystemEntity file) {
     return file.path.split('/').last.toString();
   }
