@@ -51,7 +51,7 @@ Widget serverDetails(BasicDetails data) {
         children: [
           homePageIcon(Icons.cloud, color: CommonColors.commonGreenColor),
           Padding(
-            padding: EdgeInsets.only(top: 8.h, bottom: 8.h),
+            padding: EdgeInsets.only(bottom: 8.h),
             child: AppText.centerSingleLineText(data.user,
                 style: AppTextStyles.bold(CommonColors.commonBlackColor,
                     AppFontSizes.serverStatFontSize)),

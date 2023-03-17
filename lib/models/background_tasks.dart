@@ -64,15 +64,23 @@ Constraints get constraints => Constraints(
 
 class BackgroundTasks {
   BackgroundTasks() {
-    Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+    //TODO flavor app to automatically select debug mode
+    Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
   }
 
   void uploadTask({data}) {
     Workmanager().registerOneOffTask(
-      Tasks.upload.uniqueName,
-      Tasks.upload.uniqueName,
-      inputData: data,
-      constraints: constraints,
-    );
+        Tasks.upload.uniqueName, Tasks.upload.uniqueName,
+        inputData: data,
+        constraints: constraints,
+        existingWorkPolicy: ExistingWorkPolicy.append,
+        backoffPolicy: BackoffPolicy.exponential,
+        backoffPolicyDelay: const Duration(seconds: 10));
+  }
+
+  static void get cancel => Workmanager().cancelAll();
+
+  static void set(String tag) {
+    Workmanager().cancelByTag(tag);
   }
 }

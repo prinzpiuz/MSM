@@ -69,9 +69,7 @@ List<PopupMenuEntry> buildPopupMenus(List menuListValues) {
 void hideKeyboard(BuildContext ctx) {
   try {
     FocusManager.instance.primaryFocus?.unfocus();
-  } catch (e) {
-    //
-  }
+  } catch (_) {}
 }
 
 void showMessage(
@@ -84,9 +82,17 @@ void showMessage(
         bottom: 100.h,
         left: 40.h,
         right: 40.h,
-        child: DefaultTextStyle(
-          style: AppTextStyles.regular(CommonColors.commonBlackColor, 15.sp),
-          child: AppText.centerSingleLineText(text),
+        child: Container(
+          height: 50.h,
+          width: 60.w,
+          color: CommonColors.commonWhiteColor,
+          child: Center(
+            child: DefaultTextStyle(
+              style:
+                  AppTextStyles.regular(CommonColors.commonBlackColor, 15.sp),
+              child: AppText.centerSingleLineText(text),
+            ),
+          ),
         ));
   });
   overlayState.insert(overlayEntry);
