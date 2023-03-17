@@ -78,7 +78,11 @@ class Init {
   }
 
   static void _requestStoragePermissions() async {
-    await [Permission.storage].request();
-    await [Permission.manageExternalStorage].request();
+    await [
+      Permission.storage,
+      Permission.manageExternalStorage,
+      Permission.accessNotificationPolicy,
+      Permission.notification
+    ].request();
   }
 }

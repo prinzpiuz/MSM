@@ -1,5 +1,6 @@
 enum Pages {
   home,
+  notifications,
   upload,
   commonUpload,
   systemTools,
@@ -19,6 +20,8 @@ extension AppPageExtension on Pages {
     switch (this) {
       case Pages.home:
         return "/";
+      case Pages.notifications:
+        return "/notifications";
       case Pages.upload:
         return "/upload";
       case Pages.commonUpload:
@@ -38,6 +41,8 @@ extension AppPageExtension on Pages {
     switch (this) {
       case Pages.home:
         return "HOME";
+      case Pages.notifications:
+        return "NOTIFICATIONS";
       case Pages.upload:
         return "UPLOAD";
       case Pages.commonUpload:
@@ -57,6 +62,8 @@ extension AppPageExtension on Pages {
     switch (this) {
       case Pages.home:
         return "Home";
+      case Pages.notifications:
+        return "Notifications";
       case Pages.upload:
         return "Upload";
       case Pages.commonUpload:

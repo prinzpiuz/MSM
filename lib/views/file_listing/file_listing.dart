@@ -84,7 +84,9 @@ class _FileListingState extends State<FileListing> {
   @override
   Widget build(BuildContext context) {
     FileListingState fileListState = Provider.of<FileListingState>(context);
-    return fileList(context, _searchController, fileListState);
+    return handleBackButton(
+        context: context,
+        child: fileList(context, _searchController, fileListState));
   }
 }
 

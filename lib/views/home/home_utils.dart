@@ -22,5 +22,7 @@ void goToPage(int index, BuildContext context) {
 
 void notificationsPage(BuildContext context, DragUpdateDetails details) {
   int sensitivity = 8;
-  if (details.delta.dx > sensitivity) {}
+  if (details.delta.dx > sensitivity) {
+    GoRouter.of(context).go(Pages.notifications.toPath);
+  }
 }

@@ -1,7 +1,7 @@
 class AppFontSizes {
   static const serverStatFontSize = 13.0;
   static const homePageIconFontSize = 60.0;
-  static const appBarIconSize = 25.0;
+  static const appBarIconSize = 28.0;
   static const smallTileIconSize = 30.0;
   static const titleBarFontSize = 15.0;
   static const noDataFontSize = 10.0;
@@ -53,8 +53,10 @@ class AppMessages {
   static const serverFunctionSaved = "Saved Server Functions";
   static const selectFiles = "Select Files";
   static const connectionLost = "Connection Lost";
-  static const uploadStarted = "Upload Started";
+  static const uploadStarted = "Upload Will Start In Background";
   static const errorOccured = "Error While Uploading";
+  static const clearingTasks = "All Background Tasks Cleared";
+  static const folderCreationError = "Error Occured While Creating Folders";
 }
 
 class BackgroundTaskUniqueNames {

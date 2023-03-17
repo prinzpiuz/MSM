@@ -16,7 +16,7 @@ import 'package:msm/ui_components/text/textstyles.dart';
 
 Widget serverNotConnected(AppService appService) {
   return Column(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     children: [
       IconButton(
           iconSize: AppFontSizes.notConnectedIconSize.sp,
@@ -96,7 +96,8 @@ PreferredSizeWidget commonAppBar(
     List<Widget>? actions,
     required String backroute}) {
   double appBarIconSIze = AppFontSizes.appBarIconSize.sp;
-  EdgeInsetsGeometry appBarIconPadding = EdgeInsets.all(10.h);
+  EdgeInsetsGeometry appBarIconPadding =
+      EdgeInsets.only(left: 10.w, right: 10.w);
   return AppBar(
     title: text != null
         ? AppText.singleLineText(text,

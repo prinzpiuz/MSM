@@ -6,6 +6,7 @@ import 'package:msm/providers/app_provider.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/file_listing/file_listing.dart';
 import 'package:msm/views/home/home.dart';
+import 'package:msm/views/notifications/notifications.dart';
 import 'package:msm/views/settings/app_info.dart';
 import 'package:msm/views/settings/folder_configuration_view.dart';
 import 'package:msm/views/settings/server_details_view.dart';
@@ -29,6 +30,11 @@ class AppRouter {
         path: Pages.home.toPath,
         name: Pages.home.toName,
         builder: (context, state) => const HomePage(),
+      ),
+      GoRoute(
+        path: Pages.notifications.toPath,
+        name: Pages.notifications.toName,
+        builder: (context, state) => const NotificationsPage(),
       ),
       GoRoute(
         path: Pages.upload.toPath,

@@ -8,7 +8,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
-import 'package:msm/common_utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';

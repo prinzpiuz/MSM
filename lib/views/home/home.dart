@@ -10,7 +10,6 @@ import 'package:msm/common_utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
-import 'package:msm/initialization.dart';
 import 'package:msm/models/commands/basic_details.dart';
 import 'package:msm/models/commands/command_executer.dart';
 import 'package:msm/providers/app_provider.dart';
@@ -90,8 +89,8 @@ Widget serverDetailsBuilder(BuildContext context) {
 
 Widget serverdetails(BasicDetails data) => Stack(children: <Widget>[
       SizedBox(
-        width: 220.w,
-        height: 220.w,
+        width: 225.w,
+        height: 225.w,
         child: TweenAnimationBuilder(
           tween: Tween<double>(begin: 0.0, end: data.disk.percentage),
           duration: const Duration(milliseconds: 3500),
