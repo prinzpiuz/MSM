@@ -1,13 +1,58 @@
 // Dart imports:
 import 'dart:io';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:filesize/filesize.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // Project imports:
+import 'package:msm/constants/colors.dart';
 import 'package:msm/providers/upload_provider.dart';
 
 enum FileType { file, directory }
+
+enum FileCategory {
+  movieOrTv,
+  book,
+  subtitle,
+  image,
+  unknown;
+
+  Icon get categoryIcon {
+    switch (this) {
+      case FileCategory.movieOrTv:
+        return leadingIcon(FontAwesomeIcons.film);
+      case FileCategory.book:
+        return leadingIcon(FontAwesomeIcons.bookOpenReader);
+      case FileCategory.subtitle:
+        return leadingIcon(FontAwesomeIcons.closedCaptioning);
+      case FileCategory.image:
+        return leadingIcon(FontAwesomeIcons.fileImage);
+      case FileCategory.unknown:
+        return leadingIcon(FontAwesomeIcons.question);
+    }
+  }
+
+  static FileCategory getCategoryFromExtention(String extention) {
+    if (FileManager.allowedMovieExtentions.contains(extention)) {
+      return movieOrTv;
+    } else if (FileManager.allowedDocumentExtentions.contains(extention)) {
+      return book;
+    } else if (FileManager.allowedPictureExtentions.contains(extention)) {
+      return image;
+    } else if (FileManager.allowedSubtitlesExtentions.contains(extention)) {
+      return subtitle;
+    }
+    return unknown;
+  }
+}
+
+Icon leadingIcon(IconData icon) {
+  return Icon(icon, color: CommonColors.commonBlackColor);
+}
 
 abstract class FileOrDirectory {
   String get name => '';
@@ -18,6 +63,9 @@ abstract class FileOrDirectory {
   bool get isFile => type == FileType.file;
   int get fileCount => 0;
   String get fullPath => '';
+  bool get remote => false;
+  FileCategory? category;
+  int get date => 0;
 
   @override
   bool operator ==(other) {
@@ -26,6 +74,14 @@ abstract class FileOrDirectory {
 
   @override
   int get hashCode => name.hashCode;
+
+  String get dateInFormat {
+    DateTime datetime = DateTime.fromMillisecondsSinceEpoch(date * 1000);
+    int day = datetime.day;
+    int month = datetime.month;
+    int year = datetime.year;
+    return "$day-$month-$year";
+  }
 }
 
 class FileObject extends FileOrDirectory {
@@ -36,9 +92,12 @@ class FileObject extends FileOrDirectory {
   final String _location;
   final FileType _type;
   final String _fullPath;
+  final bool _remoteFile;
+  final FileCategory? _category;
+  final int _date;
 
   FileObject(this.file, this._name, this._size, this._extention, this._location,
-      this._type, this._fullPath);
+      this._type, this._fullPath, this._remoteFile, this._category, this._date);
 
   @override
   String get name => _name;
@@ -57,17 +116,38 @@ class FileObject extends FileOrDirectory {
 
   @override
   String get fullPath => _fullPath;
+
+  @override
+  bool get remote => _remoteFile;
+
+  @override
+  FileCategory? get category => _category;
+
+  @override
+  int get date => _date;
 }
 
 class DirectoryObject extends FileOrDirectory {
   final Directory directory;
   final String _name;
+  final int _size;
   final FileType _type;
   final int _fileCount;
   final String _location;
+  final bool _remoteDirectory;
+  final FileCategory? _category;
+  final int _date;
 
   DirectoryObject(
-      this.directory, this._name, this._type, this._fileCount, this._location);
+      this.directory,
+      this._name,
+      this._size,
+      this._type,
+      this._fileCount,
+      this._location,
+      this._remoteDirectory,
+      this._category,
+      this._date);
 
   @override
   String get name => _name;
@@ -80,6 +160,18 @@ class DirectoryObject extends FileOrDirectory {
 
   @override
   String get location => _location;
+
+  @override
+  bool get remote => _remoteDirectory;
+
+  @override
+  FileCategory? get category => _category;
+
+  @override
+  String get size => filesize(_size);
+
+  @override
+  int get date => _date;
 }
 
 class FileManager {
@@ -107,9 +199,11 @@ class FileManager {
   static const List<String> allowedMovieExtentions = [
     'avi',
     'mkv',
-    'srt',
-    'mp4'
+    'mp4',
+    ...allowedSubtitlesExtentions
   ];
+
+  static const List<String> allowedSubtitlesExtentions = ["srt"];
 
   static const List<String> allowedDocumentExtentions = [
     'pdf',
@@ -176,8 +270,16 @@ class FileManager {
       final Iterable<Directory> directoryIterables =
           fileEntities.whereType<Directory>();
       for (Directory directory in directoryIterables) {
-        files.add(DirectoryObject(directory, getDirectoryName(directory),
-            FileType.directory, directoryIterables.length, directory.path));
+        files.add(DirectoryObject(
+            directory,
+            getDirectoryName(directory),
+            0, //does'nt matter folder size in files from phone storage
+            FileType.directory,
+            directoryIterables.length,
+            directory.path,
+            false,
+            null,
+            0)); //file category does'nt matter here
       }
       for (File file in filesIterable) {
         files.add(FileObject(
@@ -187,7 +289,12 @@ class FileManager {
             getExtention(file),
             getFileLocation(directory),
             FileType.file,
-            "${directory.path}/${getFileName(file)}"));
+            "${directory.path}/${getFileName(file)}",
+            false,
+            null,
+            file
+                .lastModifiedSync()
+                .millisecondsSinceEpoch)); //file category does'nt matter here
       }
     }
     return files;

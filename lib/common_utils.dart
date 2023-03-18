@@ -60,7 +60,8 @@ List<PopupMenuEntry> buildPopupMenus(List menuListValues) {
   for (var item in menuListValues) {
     menuList.add(PopupMenuItem(
       value: item,
-      child: Text(item.menuText),
+      child: AppText.text(item.menuText,
+          style: AppTextStyles.regular(CommonColors.commonBlackColor, 15.sp)),
     ));
   }
   return menuList;

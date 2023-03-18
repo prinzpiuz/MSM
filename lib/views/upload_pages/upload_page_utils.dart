@@ -9,7 +9,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:msm/models/folder_configuration.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
@@ -20,6 +19,7 @@ import 'package:msm/constants/constants.dart';
 import 'package:msm/models/background_tasks.dart';
 import 'package:msm/models/commands/command_executer.dart';
 import 'package:msm/models/file_manager.dart';
+import 'package:msm/models/folder_configuration.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/upload_provider.dart';
 import 'package:msm/router/router_utils.dart';

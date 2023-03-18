@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // Project imports:
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
+import 'package:msm/models/file_manager.dart';
 import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/ui_components/textfield/textfield.dart';
 
@@ -65,39 +65,10 @@ enum FileListPopMenu {
   }
 }
 
-//todo will need to change the type of this function to corresponding model while doing real implementation
-String generateSubtitle(fileItem) {
-  String size = fileItem["size"];
-  String extention = fileItem["extention"];
-  String date = fileItem["date"];
-  return "$size, $extention, $date  Movies";
-}
-
-enum FileCategory {
-  movie,
-  tv,
-  book,
-  subtitle,
-  image;
-
-  Icon get categoryIcon {
-    switch (this) {
-      case FileCategory.movie:
-        return leadingIcon(FontAwesomeIcons.film);
-      case FileCategory.tv:
-        return leadingIcon(FontAwesomeIcons.folder);
-      case FileCategory.book:
-        return leadingIcon(FontAwesomeIcons.bookOpenReader);
-      case FileCategory.subtitle:
-        return leadingIcon(FontAwesomeIcons.closedCaptioning);
-      case FileCategory.image:
-        return leadingIcon(FontAwesomeIcons.fileImage);
-      default:
-        return leadingIcon(FontAwesomeIcons.question);
-    }
-  }
-}
-
-Icon leadingIcon(IconData icon) {
-  return Icon(icon, color: CommonColors.commonBlackColor);
+String generateSubtitle(FileOrDirectory fileOrDirectory) {
+  String size = fileOrDirectory.size;
+  String extention = fileOrDirectory.extention.toUpperCase();
+  String date = fileOrDirectory.dateInFormat;
+  String location = fileOrDirectory.location;
+  return "$size, $extention, $date \n $location";
 }

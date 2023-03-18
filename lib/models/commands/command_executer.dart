@@ -66,9 +66,14 @@ class CommandExecuter extends Server {
               direcories.add(DirectoryObject(
                   Directory("$directory/${item.filename}"),
                   item.filename,
+                  item.attr.size ?? 0,
                   FileType.directory,
                   0, //intentionally put to zero because it does'nt matter at the moment
-                  directory));
+                  directory,
+                  true,
+                  null, //file category does'nt matter here
+                  item.attr.modifyTime ??
+                      0)); //file category does'nt matter here
             }
           }
         }
@@ -76,6 +81,67 @@ class CommandExecuter extends Server {
       } catch (_) {
         return null;
       }
+    }
+  }
+
+  Future<List<FileOrDirectory>?>? get listAllRemoteDirectories async {
+    List<FileOrDirectory> direcories = [];
+    try {
+      if (super.folderConfiguration.dataAvailable) {
+        List<dynamic> pathsToList = [
+          super.folderConfiguration.books,
+          super.folderConfiguration.movies,
+          super.folderConfiguration.books
+        ];
+        if (super.folderConfiguration.customFolders.isNotEmpty) {
+          pathsToList.addAll(super.folderConfiguration.customFolders);
+        }
+        if (client != null) {
+          final sftp = await client!.sftp();
+          for (var path in pathsToList) {
+            await sftp.listdir(path).then((items) {
+              for (final item in items) {
+                if (item.filename != "." && item.filename != "..") {
+                  if (item.attr.isDirectory) {
+                    direcories.add(DirectoryObject(
+                        Directory("$path/${item.filename}"),
+                        item.filename,
+                        item.attr.size ?? 0,
+                        FileType.directory,
+                        0, //intentionally put to zero because it does'nt matter at the moment
+                        path,
+                        true,
+                        FileCategory.getCategoryFromExtention(
+                            item.filename.split(".").last),
+                        item.attr.modifyTime ?? 0));
+                  } else {
+                    String filepath = "$path/${item.filename}";
+                    direcories.add(FileObject(
+                        File(filepath),
+                        item.filename,
+                        item.attr.size ?? 0,
+                        item.filename.split(".").last,
+                        path,
+                        FileType.file,
+                        filepath,
+                        true,
+                        FileCategory.getCategoryFromExtention(
+                            item.filename.split(".").last),
+                        item.attr.modifyTime ?? 0));
+                  }
+                }
+              }
+            });
+          }
+          sftp.close();
+          return direcories.toSet().toList(); //to remove duplicates
+        } else {
+          return null;
+        }
+      }
+      return direcories;
+    } catch (_) {
+      return null;
     }
   }
 

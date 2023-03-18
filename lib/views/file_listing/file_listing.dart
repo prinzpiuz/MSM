@@ -11,11 +11,14 @@ import 'package:msm/common_utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
+import 'package:msm/models/commands/command_executer.dart';
+import 'package:msm/models/file_manager.dart';
+import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/router/router_utils.dart';
+import 'package:msm/ui_components/floating_action_button/fab.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
-import 'package:msm/views/file_listing/fab.dart';
 import 'package:msm/views/file_listing/file_listing_utils.dart';
 
 //todo this is supposed to be removed when server file model will be created
@@ -24,7 +27,7 @@ const List fileListItems = [
     "name": "air force one",
     "size": "1GB",
     "date": "08-07-2022",
-    "category": FileCategory.movie,
+    "category": FileCategory.movieOrTv,
     "extention": "MKV"
   },
   {
@@ -38,7 +41,7 @@ const List fileListItems = [
     "name": "stranger things",
     "size": "32GB",
     "date": "07-12-2020",
-    "category": FileCategory.tv,
+    "category": FileCategory.movieOrTv,
     "extention": "MKV"
   },
   {
@@ -109,7 +112,7 @@ Widget fileList(BuildContext context, TextEditingController searchController,
           ),
     backgroundColor: CommonColors.commonWhiteColor,
     floatingActionButton: floatingActionButton(),
-    body: listings(),
+    body: listings(context),
   );
 }
 
@@ -146,19 +149,45 @@ Widget floatingActionButton() {
   );
 }
 
-Widget listings() {
-  return ListView.separated(
-      separatorBuilder: (context, index) => const Divider(
-            color: CommonColors.commonBlackColor,
-          ),
-      itemCount: fileListItems.length,
-      itemBuilder: (context, i) {
-        //todo while implementation of server file model finishes use that instead of passing all things ass arguments
-        return fileTile(
-            leading: fileListItems[i]["category"].categoryIcon,
-            title: fileListItems[i]["name"],
-            subtitle: generateSubtitle(fileListItems[i]));
-      });
+Widget listings(BuildContext context) {
+  final AppService appService = Provider.of<AppService>(context);
+  final bool connected = appService.connectionState;
+  CommandExecuter commandExecuter = appService.commandExecuter;
+  final Future<List<FileOrDirectory>?>? fileListFuture =
+      commandExecuter.listAllRemoteDirectories;
+  if (connected) {
+    return FutureBuilder<List<FileOrDirectory>?>(
+        future: fileListFuture,
+        builder: (context, AsyncSnapshot<List<FileOrDirectory>?> snapshot) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData &&
+              snapshot.data != null) {
+            if (snapshot.data!.isNotEmpty) {
+              return ListView.separated(
+                  separatorBuilder: (context, index) => const Divider(
+                        color: CommonColors.commonBlackColor,
+                      ),
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, i) {
+                    FileOrDirectory fileOrDirectory = snapshot.data![i];
+                    return fileTile(
+                        leading: fileOrDirectory.category!.categoryIcon,
+                        title: fileOrDirectory.name,
+                        subtitle: generateSubtitle(fileOrDirectory));
+                  });
+            }
+            return AppText.centerSingleLineText("No Files",
+                style:
+                    AppTextStyles.medium(CommonColors.commonBlackColor, 25.sp));
+          } else if (snapshot.hasError) {
+            return serverNotConnected(appService);
+          } else {
+            return commonCircularProgressIndicator;
+          }
+        });
+  } else {
+    return serverNotConnected(appService);
+  }
 }
 
 //todo need to pass server file opject
@@ -174,9 +203,10 @@ Widget fileTile(
     visualDensity: const VisualDensity(horizontal: -4.0, vertical: -2),
     horizontalTitleGap: 20,
     leading: leading,
-    title: AppText.singleLineText(title.toUpperCase(),
-        style: AppTextStyles.medium(CommonColors.commonBlackColor, 15.sp)),
-    subtitle: Text(subtitle),
+    title: AppText.singleLineText(title,
+        style: AppTextStyles.medium(CommonColors.commonBlackColor, 18.sp)),
+    subtitle: AppText.text(subtitle,
+        style: AppTextStyles.regular(CommonColors.commonBlackColor, 12.sp)),
     trailing: const Icon(
       Icons.more_vert,
       color: CommonColors.commonBlackColor,
