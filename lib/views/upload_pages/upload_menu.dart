@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // Project imports:
 import 'package:msm/common_utils.dart';
 import 'package:msm/constants/colors.dart';
-import 'package:msm/constants/constants.dart';
+
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/upload_pages/upload_page_utils.dart';
 
@@ -47,57 +46,4 @@ Widget uploadMenu(BuildContext context) {
           ),
         ),
       ));
-}
-
-Widget menuBox(
-    {required IconData icon,
-    required Function onPressed,
-    required double iconSize}) {
-  return Container(
-    color: CommonColors.commonGreenColor,
-    child: OutlinedButton(
-      onPressed: () => onPressed(),
-      child: Center(
-          child:
-              Icon(icon, color: CommonColors.commonWhiteColor, size: iconSize)),
-    ),
-  );
-}
-
-List<StaggeredGridTile> tiles(BuildContext context) {
-  return [
-    StaggeredGridTile.count(
-      crossAxisCellCount: 2,
-      mainAxisCellCount: 2,
-      child: menuBox(
-          icon: Icons.movie_filter_outlined,
-          onPressed: () => goToPage(UploadCatogories.movies, context),
-          iconSize: AppFontSizes.homePageIconFontSize.h),
-    ),
-    StaggeredGridTile.count(
-      crossAxisCellCount: 2,
-      mainAxisCellCount: 3,
-      child: menuBox(
-          icon: Icons.tv,
-          onPressed: () => goToPage(UploadCatogories.tvShows, context),
-          iconSize: AppFontSizes.homePageIconFontSize.h),
-    ),
-    StaggeredGridTile.count(
-      crossAxisCellCount: 1,
-      mainAxisCellCount: 1,
-      child: menuBox(
-          icon: FontAwesomeIcons.book,
-          onPressed: () => goToPage(UploadCatogories.books, context),
-          iconSize: AppFontSizes.smallTileIconSize.h),
-    ),
-    //TODO handle the case of custom folders
-    // StaggeredGridTile.count(
-    //   crossAxisCellCount: 1,
-    //   mainAxisCellCount: 1,
-    //   child: menuBox(
-    //       icon: FontAwesomeIcons.image,
-    //       onPressed: () => goToPage(UploadCatogories.custom, context),
-    //       iconSize: AppFontSizes.smallTileIconSize.h),
-    // )
-  ];
 }

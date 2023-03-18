@@ -43,13 +43,16 @@ class CommandExecuter extends Server {
 
   Future<List<FileOrDirectory>?>? listRemoteDirectory(
       UploadCatogories catogory, String? insidPath,
-      {bool empty = false}) async {
+      {bool empty = false, String customPath = ""}) async {
     List<FileOrDirectory> direcories = [];
     if (empty) {
       return direcories;
     } else {
       try {
         String? directory = super.folderConfiguration.pathToDirectory(catogory);
+        if (catogory == UploadCatogories.custom && customPath.isNotEmpty) {
+          directory = customPath;
+        }
         if (directory != null && client != null) {
           if (insidPath != null) {
             directory = "$directory/$insidPath";
