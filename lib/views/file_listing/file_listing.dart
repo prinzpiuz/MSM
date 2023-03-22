@@ -21,45 +21,6 @@ import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 import 'package:msm/views/file_listing/file_listing_utils.dart';
 
-//todo this is supposed to be removed when server file model will be created
-const List fileListItems = [
-  {
-    "name": "air force one",
-    "size": "1GB",
-    "date": "08-07-2022",
-    "category": FileCategory.movieOrTv,
-    "extention": "MKV"
-  },
-  {
-    "name": "aliens",
-    "size": "32kb",
-    "date": "08-06-2022",
-    "category": FileCategory.subtitle,
-    "extention": "SRT"
-  },
-  {
-    "name": "stranger things",
-    "size": "32GB",
-    "date": "07-12-2020",
-    "category": FileCategory.movieOrTv,
-    "extention": "MKV"
-  },
-  {
-    "name": "sapiens",
-    "size": "30MB",
-    "date": "08-07-2022",
-    "category": FileCategory.book,
-    "extention": "EPUB"
-  },
-  {
-    "name": "Image00231",
-    "size": "1GB",
-    "date": "08-07-2022",
-    "category": FileCategory.image,
-    "extention": "JPEG"
-  }
-];
-
 //todo fileinfo option in individual list menu
 
 class FileListing extends StatefulWidget {
@@ -101,7 +62,7 @@ Widget fileList(BuildContext context, TextEditingController searchController,
             searchController: searchController, listingState: listingState)
         : commonAppBar(
             text: Pages.fileList.toTitle,
-            backroute: Pages.home.toPath,
+            backroute: listingState.firstPage ? Pages.home.toPath : "",
             actions: [
               actionIconButton(
                   icon: Icons.search,
@@ -109,10 +70,10 @@ Widget fileList(BuildContext context, TextEditingController searchController,
               commonPopUpMenu(FileListPopMenu.values)
             ],
             context: context,
-          ),
+            fileListState: listingState),
     backgroundColor: CommonColors.commonWhiteColor,
     floatingActionButton: floatingActionButton(),
-    body: listings(context),
+    body: listings(context, listingState),
   );
 }
 
@@ -149,12 +110,12 @@ Widget floatingActionButton() {
   );
 }
 
-Widget listings(BuildContext context) {
+Widget listings(BuildContext context, FileListingState listingState) {
   final AppService appService = Provider.of<AppService>(context);
   final bool connected = appService.connectionState;
   CommandExecuter commandExecuter = appService.commandExecuter;
   final Future<List<FileOrDirectory>?>? fileListFuture =
-      commandExecuter.listAllRemoteDirectories;
+      commandExecuter.listAllRemoteDirectories(path: listingState.nextPage);
   if (connected) {
     return FutureBuilder<List<FileOrDirectory>?>(
         future: fileListFuture,
@@ -171,14 +132,15 @@ Widget listings(BuildContext context) {
                   itemBuilder: (context, i) {
                     FileOrDirectory fileOrDirectory = snapshot.data![i];
                     return fileTile(
-                        leading: fileOrDirectory.category!.categoryIcon,
-                        title: fileOrDirectory.name,
-                        subtitle: generateSubtitle(fileOrDirectory));
+                        fileOrDirectory: fileOrDirectory,
+                        listingState: listingState);
                   });
             }
-            return AppText.centerSingleLineText("No Files",
-                style:
-                    AppTextStyles.medium(CommonColors.commonBlackColor, 25.sp));
+            return Center(
+              child: AppText.centerSingleLineText("No Files",
+                  style: AppTextStyles.medium(CommonColors.commonBlackColor,
+                      AppFontSizes.noFilesFontSize.sp)),
+            );
           } else if (snapshot.hasError) {
             return serverNotConnected(appService);
           } else {
@@ -190,22 +152,28 @@ Widget listings(BuildContext context) {
   }
 }
 
-//todo need to pass server file opject
 Widget fileTile(
-    {required Widget leading,
-    required String title,
-    required String subtitle}) {
+    {required FileOrDirectory fileOrDirectory,
+    required FileListingState listingState}) {
   return ListTile(
     onLongPress: (() {
       print("need to implement");
     }),
+    onTap: () {
+      if (!fileOrDirectory.isFile) {
+        listingState.addPath = listingState.setNextPage =
+            "${fileOrDirectory.location}/${fileOrDirectory.name}";
+      }
+    },
     dense: true,
     visualDensity: const VisualDensity(horizontal: -4.0, vertical: -2),
     horizontalTitleGap: 20,
-    leading: leading,
-    title: AppText.singleLineText(title,
+    leading: fileOrDirectory.isFile
+        ? fileOrDirectory.category!.categoryIcon
+        : leadingIcon(FontAwesomeIcons.folder),
+    title: AppText.singleLineText(fileOrDirectory.name,
         style: AppTextStyles.medium(CommonColors.commonBlackColor, 18.sp)),
-    subtitle: AppText.text(subtitle,
+    subtitle: AppText.text(generateSubtitle(fileOrDirectory),
         style: AppTextStyles.regular(CommonColors.commonBlackColor, 12.sp)),
     trailing: const Icon(
       Icons.more_vert,

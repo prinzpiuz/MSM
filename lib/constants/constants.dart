@@ -23,6 +23,7 @@ class AppFontSizes {
   static const dialogBoxTitleFontSize = 15.0;
   static const breadCrumbFontSize = 13.0;
   static const customFolderNameSize = 20.0;
+  static const noFilesFontSize = 30.0;
 }
 
 class AppConstants {
