@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:dartssh2/dartssh2.dart';
 import 'package:workmanager/workmanager.dart';
 
 // Project imports:
@@ -20,8 +21,10 @@ void callbackDispatcher() {
             List<String>? newFolders = (inputData['newFolders'] as List)
                 .map((item) => item as String)
                 .toList();
-            await appservice.server.connect().then((value) async {
-              appservice.commandExecuter.client = value;
+            await appservice.server.connect().then((client) async {
+              final SftpClient sftpClient = await client!.sftp();
+              appservice.commandExecuter.client = client;
+              appservice.commandExecuter.sftp = sftpClient;
               await appservice.commandExecuter.upload(
                   directory: inputData["directory"],
                   filePaths: fileUploadData,

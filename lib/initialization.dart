@@ -22,6 +22,10 @@ class Init {
   late FolderConfigState folderConfigState;
 
   Future<Map<String, dynamic>> initialize({bool background = false}) async {
+    if (!background) {
+      _requestStoragePermissions();
+      _setAppOrientation();
+    }
     Storage storage = await _getUserPreferences();
     AppService appService = AppService(
         server: Server(
@@ -32,17 +36,13 @@ class Init {
     UploadState uploadService = UploadState();
     FileListingState fileListingService = FileListingState();
     FolderConfigState folderConfigState = FolderConfigState();
-    if (!background) {
-      _requestStoragePermissions();
-    }
     appService.commandExecuter = CommandExecuter(
-      serverData: appService.server.serverData,
-      folderConfiguration: appService.server.folderConfiguration,
-      serverFunctionsData: appService.server.serverFunctionsData,
-      client: null,
-    );
-    makeConnections(appService, uploadState: uploadService);
-    _setAppOrientation();
+        serverData: appService.server.serverData,
+        folderConfiguration: appService.server.folderConfiguration,
+        serverFunctionsData: appService.server.serverFunctionsData,
+        client: null,
+        sftp: null);
+    await makeConnections(appService, uploadState: uploadService);
     return {
       "appService": appService,
       "uploadService": uploadService,
@@ -57,7 +57,7 @@ class Init {
     return storage;
   }
 
-  static void makeConnections(AppService appService,
+  static Future<void> makeConnections(AppService appService,
       {UploadState? uploadState}) async {
     appService.initialized = true;
     appService.server.state = ServerState.connecting;
@@ -70,11 +70,13 @@ class Init {
         },
       );
       if (client != null) {
+        final SftpClient sftpClient = await client.sftp();
         appService.commandExecuter = CommandExecuter(
             serverData: appService.server.serverData,
             folderConfiguration: appService.server.folderConfiguration,
             serverFunctionsData: appService.server.serverFunctionsData,
-            client: client);
+            client: client,
+            sftp: sftpClient);
         appService.connectionState = true;
         appService.server.state = ServerState.connected;
       }

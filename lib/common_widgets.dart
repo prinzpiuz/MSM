@@ -123,3 +123,7 @@ PreferredSizeWidget commonAppBar(
     actions: actions,
   );
 }
+
+Widget get commonDivider => const Divider(
+      color: CommonColors.commonBlackColor,
+    );

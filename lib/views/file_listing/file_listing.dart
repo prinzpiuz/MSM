@@ -124,17 +124,10 @@ Widget listings(BuildContext context, FileListingState listingState) {
               snapshot.hasData &&
               snapshot.data != null) {
             if (snapshot.data!.isNotEmpty) {
-              return ListView.separated(
-                  separatorBuilder: (context, index) => const Divider(
-                        color: CommonColors.commonBlackColor,
-                      ),
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, i) {
-                    FileOrDirectory fileOrDirectory = snapshot.data![i];
-                    return fileTile(
-                        fileOrDirectory: fileOrDirectory,
-                        listingState: listingState);
-                  });
+              List<FileOrDirectory>? fileOrDirectoryList = snapshot.data!;
+              return fileListView(
+                  fileOrDirectoryList: fileOrDirectoryList,
+                  listingState: listingState);
             }
             return Center(
               child: AppText.centerSingleLineText("No Files",
@@ -152,6 +145,19 @@ Widget listings(BuildContext context, FileListingState listingState) {
   }
 }
 
+Widget fileListView(
+    {required List<FileOrDirectory>? fileOrDirectoryList,
+    required FileListingState listingState}) {
+  return ListView.separated(
+      separatorBuilder: (context, index) => commonDivider,
+      itemCount: fileOrDirectoryList!.length,
+      itemBuilder: (context, i) {
+        return fileTile(
+            fileOrDirectory: fileOrDirectoryList[i],
+            listingState: listingState);
+      });
+}
+
 Widget fileTile(
     {required FileOrDirectory fileOrDirectory,
     required FileListingState listingState}) {
@@ -161,6 +167,7 @@ Widget fileTile(
     }),
     onTap: () {
       if (!fileOrDirectory.isFile) {
+        // listingState.backMode = false;
         listingState.addPath = listingState.setNextPage =
             "${fileOrDirectory.location}/${fileOrDirectory.name}";
       }

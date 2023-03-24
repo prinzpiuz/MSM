@@ -17,11 +17,13 @@ import 'package:msm/views/upload_pages/upload_page_utils.dart';
 
 class CommandExecuter extends Server {
   late SSHClient? client;
+  late SftpClient? sftp;
   CommandExecuter(
       {required super.serverData,
       required super.folderConfiguration,
       required super.serverFunctionsData,
-      required this.client});
+      required this.client,
+      required this.sftp});
 
   String _decodeOutput(Uint8List output) {
     return utf8.decode(output);
@@ -53,13 +55,11 @@ class CommandExecuter extends Server {
         if (catogory == UploadCatogories.custom && customPath.isNotEmpty) {
           directory = customPath;
         }
-        if (directory != null && client != null) {
+        if (directory != null && sftp != null) {
           if (insidPath != null) {
             directory = "$directory/$insidPath";
           }
-          final sftp = await client!.sftp();
-          final items = await sftp.listdir(directory);
-          sftp.close();
+          final items = await sftp!.listdir(directory);
           for (final item in items) {
             if (item.attr.isDirectory &&
                 (item.filename != "." && item.filename != "..")) {
@@ -105,10 +105,9 @@ class CommandExecuter extends Server {
           pathsToList.addAll(super.folderConfiguration.customFolders);
         }
       }
-      if (client != null) {
-        final sftp = await client!.sftp();
+      if (sftp != null) {
         for (var path in pathsToList) {
-          await sftp.listdir(path).then((items) {
+          await sftp!.listdir(path).then((items) {
             for (final item in items) {
               if (item.filename != "." && item.filename != "..") {
                 if (item.attr.isDirectory) {
@@ -142,7 +141,6 @@ class CommandExecuter extends Server {
             }
           });
         }
-        sftp.close();
         return direcories.toSet().toList(); //to remove duplicates
       } else {
         return null;
@@ -155,26 +153,21 @@ class CommandExecuter extends Server {
   Future<void> loopAndSend(
       {required List<String> filePaths,
       required String directory,
-      required SftpClient sftp,
       required Notifications notification}) async {
     for (String filePath in filePaths) {
       await _sendFile(
-          directory: directory,
-          filePath: filePath,
-          sftp: sftp,
-          notification: notification);
+          directory: directory, filePath: filePath, notification: notification);
     }
   }
 
   Future<void> _sendFile(
       {required String directory,
       required String filePath,
-      required SftpClient sftp,
       required Notifications notification}) async {
     try {
       final String fileName = filePath.split('/').last.toString();
       final String remotePath = "$directory/$fileName";
-      final remoteFile = await sftp.open(remotePath,
+      final remoteFile = await sftp!.open(remotePath,
           mode: SftpFileOpenMode.create | SftpFileOpenMode.write);
       await remoteFile.write(
         File(filePath).openRead().cast(),
@@ -193,14 +186,13 @@ class CommandExecuter extends Server {
   }
 
   Future<String> _createFolders(
-      {required SftpClient sftp,
-      required String directory,
+      {required String directory,
       required List<String> newFolders,
       required Notifications notification}) async {
     try {
       for (String folder in newFolders) {
         directory += "/$folder";
-        await sftp.mkdir(directory);
+        await sftp!.mkdir(directory);
       }
       return directory;
     } catch (_) {
@@ -216,33 +208,27 @@ class CommandExecuter extends Server {
       required List<String> filePaths}) async {
     final Notifications notifications = Notifications();
     try {
-      if (client != null && filePaths.isNotEmpty) {
-        await client!.sftp().then((value) async {
-          if (insidPath.isNotEmpty) {
-            directory = "$directory/$insidPath";
-          }
-          final sftp = value;
-          if (newFolders.isEmpty) {
+      if (sftp != null && filePaths.isNotEmpty) {
+        if (insidPath.isNotEmpty) {
+          directory = "$directory/$insidPath";
+        }
+        if (newFolders.isEmpty) {
+          await loopAndSend(
+              filePaths: filePaths,
+              directory: directory,
+              notification: notifications);
+        } else {
+          await _createFolders(
+                  directory: directory,
+                  newFolders: newFolders,
+                  notification: notifications)
+              .then((createdDirectoryPath) async {
             await loopAndSend(
                 filePaths: filePaths,
-                directory: directory,
-                sftp: sftp,
+                directory: createdDirectoryPath,
                 notification: notifications);
-          } else {
-            await _createFolders(
-                    sftp: sftp,
-                    directory: directory,
-                    newFolders: newFolders,
-                    notification: notifications)
-                .then((createdDirectoryPath) async {
-              await loopAndSend(
-                  filePaths: filePaths,
-                  directory: createdDirectoryPath,
-                  sftp: sftp,
-                  notification: notifications);
-            });
-          }
-        });
+          });
+        }
       } else {
         notifications.uploadError(
             error:
