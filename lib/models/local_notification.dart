@@ -11,32 +11,22 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
 }
 
 class Notifications {
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  Notifications({required this.flutterLocalNotificationsPlugin});
 
-  Notifications() {
-    _intialize(flutterLocalNotificationsPlugin);
-  }
-
-  Future<void> _intialize(
-      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('msm');
-    const InitializationSettings initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid);
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: _onDidReceiveNotificationResponse,
-      onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
-    );
-  }
-
-  void _onDidReceiveNotificationResponse(
+  static void onDidReceiveNotificationResponse(
       NotificationResponse notificationResponse) async {
     final String? payload = notificationResponse.payload;
     if (notificationResponse.payload != null) {
       debugPrint('notification payload: $payload');
     }
+  }
+
+  String _uploadStatus(int total, int progress) {
+    if (total == progress) {
+      return "Completed";
+    }
+    return "Started";
   }
 
   Future<void> uploadNotification(
@@ -63,7 +53,7 @@ class Notifications {
         NotificationDetails(android: androidNotificationDetails);
     await flutterLocalNotificationsPlugin.show(
         name.hashCode,
-        'Upload Started For $name',
+        'Upload ${_uploadStatus(fileSize, progress)} For $name',
         'Saving to $location \n ${filesize(progress)}/${filesize(fileSize)}',
         notificationDetails);
   }

@@ -1,8 +1,12 @@
 // Flutter imports:
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:dartssh2/dartssh2.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:msm/models/background_tasks.dart';
+import 'package:msm/models/local_notification.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,6 +18,7 @@ import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/providers/folder_configuration_provider.dart';
 import 'package:msm/providers/upload_provider.dart';
+import 'package:workmanager/workmanager.dart';
 
 class Init {
   late AppService appService;
@@ -26,6 +31,8 @@ class Init {
       _requestStoragePermissions();
       _setAppOrientation();
     }
+    WidgetsFlutterBinding.ensureInitialized();
+    Workmanager().initialize(backGroundTaskDispatcher, isInDebugMode: false);
     Storage storage = await _getUserPreferences();
     AppService appService = AppService(
         server: Server(
@@ -41,7 +48,8 @@ class Init {
         folderConfiguration: appService.server.folderConfiguration,
         serverFunctionsData: appService.server.serverFunctionsData,
         client: null,
-        sftp: null);
+        sftp: null,
+        notifications: null);
     await makeConnections(appService, uploadState: uploadService);
     return {
       "appService": appService,
@@ -71,12 +79,16 @@ class Init {
       );
       if (client != null) {
         final SftpClient sftpClient = await client.sftp();
+        Notifications notifications = Notifications(
+            flutterLocalNotificationsPlugin: await notificationIntialize());
+        appService.notifications = notifications;
         appService.commandExecuter = CommandExecuter(
             serverData: appService.server.serverData,
             folderConfiguration: appService.server.folderConfiguration,
             serverFunctionsData: appService.server.serverFunctionsData,
             client: client,
-            sftp: sftpClient);
+            sftp: sftpClient,
+            notifications: notifications);
         appService.connectionState = true;
         appService.server.state = ServerState.connected;
       }
@@ -97,5 +109,21 @@ class Init {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+  }
+
+  static Future<FlutterLocalNotificationsPlugin> notificationIntialize() async {
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('msm');
+    const InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse:
+          Notifications.onDidReceiveNotificationResponse,
+      onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+    );
+    return flutterLocalNotificationsPlugin;
   }
 }

@@ -5,9 +5,11 @@ import 'dart:typed_data';
 
 // Package imports:
 import 'package:dartssh2/dartssh2.dart';
+import 'package:filesize/filesize.dart';
 
 // Project imports:
 import 'package:msm/constants/constants.dart';
+import 'package:msm/models/background_tasks.dart';
 import 'package:msm/models/commands/basic_details.dart';
 import 'package:msm/models/commands/commands.dart';
 import 'package:msm/models/file_manager.dart';
@@ -18,12 +20,14 @@ import 'package:msm/views/upload_pages/upload_page_utils.dart';
 class CommandExecuter extends Server {
   late SSHClient? client;
   late SftpClient? sftp;
+  late Notifications? notifications;
   CommandExecuter(
       {required super.serverData,
       required super.folderConfiguration,
       required super.serverFunctionsData,
       required this.client,
-      required this.sftp});
+      required this.sftp,
+      required this.notifications});
 
   String _decodeOutput(Uint8List output) {
     return utf8.decode(output);
@@ -150,45 +154,54 @@ class CommandExecuter extends Server {
     }
   }
 
-  Future<void> loopAndSend(
-      {required List<String> filePaths,
-      required String directory,
-      required Notifications notification}) async {
+  void loopAndSend(
+      {required List<String> filePaths, required String directory}) {
     for (String filePath in filePaths) {
-      await _sendFile(
-          directory: directory, filePath: filePath, notification: notification);
+      sendFile(directory: directory, filePath: filePath);
     }
   }
 
-  Future<void> _sendFile(
-      {required String directory,
-      required String filePath,
-      required Notifications notification}) async {
+  Future<void> sendFile(
+      {required String directory, required String filePath}) async {
     try {
-      final String fileName = filePath.split('/').last.toString();
-      final String remotePath = "$directory/$fileName";
-      final remoteFile = await sftp!.open(remotePath,
-          mode: SftpFileOpenMode.create | SftpFileOpenMode.write);
-      await remoteFile.write(
-        File(filePath).openRead().cast(),
-        onProgress: (total) async {
-          await notification.uploadNotification(
-              id: fileName.hashCode.toString(),
-              name: fileName,
+      if (sftp != null) {
+        final int totalFileSize = File(filePath).lengthSync();
+        final String fileName = filePath.split('/').last.toString();
+        final String remotePath = "$directory/$fileName";
+        final remoteFile = await sftp!.open(remotePath,
+            mode: SftpFileOpenMode.create | SftpFileOpenMode.write);
+        await remoteFile.write(
+          File(filePath).openRead().cast(),
+          onProgress: (progress) => notify(
+              fileName: fileName,
               location: directory,
-              progress: total,
-              fileSize: File(filePath).lengthSync());
-        },
-      );
+              fileSize: totalFileSize,
+              progress: progress),
+        );
+      } else {
+        notifications!.uploadError(error: AppMessages.serverNotAvailable);
+      }
     } catch (_) {
-      notification.uploadError(error: _.toString());
+      notifications!.uploadError(error: _.toString());
     }
+  }
+
+  Future<void> notify(
+      {required String fileName,
+      required String location,
+      required int fileSize,
+      required int progress}) async {
+    print(progress);
+    await notifications!.uploadNotification(
+        id: fileName.hashCode.toString(),
+        name: fileName,
+        location: location,
+        progress: progress,
+        fileSize: fileSize);
   }
 
   Future<String> _createFolders(
-      {required String directory,
-      required List<String> newFolders,
-      required Notifications notification}) async {
+      {required String directory, required List<String> newFolders}) async {
     try {
       for (String folder in newFolders) {
         directory += "/$folder";
@@ -196,7 +209,7 @@ class CommandExecuter extends Server {
       }
       return directory;
     } catch (_) {
-      notification.uploadError(error: AppMessages.folderCreationError);
+      notifications!.uploadError(error: AppMessages.folderCreationError);
       return AppMessages.folderCreationError;
     }
   }
@@ -206,36 +219,20 @@ class CommandExecuter extends Server {
       String insidPath = "",
       required String directory,
       required List<String> filePaths}) async {
-    final Notifications notifications = Notifications();
-    try {
-      if (sftp != null && filePaths.isNotEmpty) {
-        if (insidPath.isNotEmpty) {
-          directory = "$directory/$insidPath";
-        }
-        if (newFolders.isEmpty) {
-          await loopAndSend(
-              filePaths: filePaths,
-              directory: directory,
-              notification: notifications);
-        } else {
-          await _createFolders(
-                  directory: directory,
-                  newFolders: newFolders,
-                  notification: notifications)
-              .then((createdDirectoryPath) async {
-            await loopAndSend(
-                filePaths: filePaths,
-                directory: createdDirectoryPath,
-                notification: notifications);
-          });
-        }
-      } else {
-        notifications.uploadError(
-            error:
-                client == null ? "Server Not Available" : "Files Not Selected");
+    if (filePaths.isNotEmpty) {
+      if (insidPath.isNotEmpty) {
+        directory = "$directory/$insidPath";
       }
-    } catch (_) {
-      notifications.uploadError(error: _.toString());
+      if (newFolders.isEmpty) {
+        loopAndSend(filePaths: filePaths, directory: directory);
+      } else {
+        await _createFolders(directory: directory, newFolders: newFolders)
+            .then((createdDirectoryPath) {
+          loopAndSend(filePaths: filePaths, directory: createdDirectoryPath);
+        });
+      }
+    } else {
+      notifications!.uploadError(error: AppMessages.filesNotSelected);
     }
   }
 }

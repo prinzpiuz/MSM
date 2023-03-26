@@ -164,16 +164,20 @@ void uploadFiles(BuildContext context, UploadState uploadState) async {
     if (uploadState.toCustomFolder) {
       directory = uploadState.customPath;
     }
-    BackgroundTasks().uploadTask(data: {
-      "directory": directory,
-      "fileUploadData": uploadState.fileUploadData.localFilesPaths,
-      "newFolders": uploadState.newFoldersToCreate,
-      "insidPath": FileManager.pathBuilder(uploadState.traversedDirectories)
+    await appService.commandExecuter
+        .upload(
+            directory: directory!,
+            filePaths: uploadState.fileUploadData.localFilesPaths,
+            insidPath:
+                FileManager.pathBuilder(uploadState.traversedDirectories),
+            newFolders: uploadState.newFoldersToCreate)
+        .then((value) {
+      showMessage(
+          context: context, text: AppMessages.uploadStarted, duration: 5);
+      uploadState.fileUploadData.clear;
+      uploadState.fileAddOrRemove;
+      Navigator.pop(context);
     });
-    showMessage(context: context, text: AppMessages.uploadStarted, duration: 5);
-    uploadState.fileUploadData.clear;
-    uploadState.fileAddOrRemove;
-    Navigator.pop(context);
   } else {
     showMessage(context: context, text: AppMessages.connectionLost);
   }

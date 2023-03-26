@@ -1,5 +1,8 @@
 // Package imports:
 import 'package:dartssh2/dartssh2.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:msm/models/local_notification.dart';
 import 'package:workmanager/workmanager.dart';
 
 // Project imports:
@@ -8,32 +11,32 @@ import 'package:msm/initialization.dart';
 import 'package:msm/providers/app_provider.dart';
 
 @pragma('vm:entry-point')
-void callbackDispatcher() {
+void backGroundTaskDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     switch (task) {
       case BackgroundTaskUniqueNames.upload:
-        await Init().initialize(background: true).then((value) async {
-          AppService appservice = value["appService"];
-          if (inputData != null) {
-            List<String>? fileUploadData = (inputData['fileUploadData'] as List)
-                .map((item) => item as String)
-                .toList();
-            List<String>? newFolders = (inputData['newFolders'] as List)
-                .map((item) => item as String)
-                .toList();
-            await appservice.server.connect().then((client) async {
-              final SftpClient sftpClient = await client!.sftp();
-              appservice.commandExecuter.client = client;
-              appservice.commandExecuter.sftp = sftpClient;
-              await appservice.commandExecuter.upload(
-                  directory: inputData["directory"],
-                  filePaths: fileUploadData,
-                  insidPath: inputData["insidPath"],
-                  newFolders: newFolders);
-            });
-          }
-        });
-        break;
+        // await Init().initialize(background: true).then((value) async {
+        //   AppService appservice = value["appService"];
+        //   if (inputData != null) {
+        //     await appservice.server.connect().then((client) async {
+        //       final SftpClient sftpClient = await client!.sftp();
+        //       FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        //           await Init.notificationIntialize();
+        //       Notifications notifications = Notifications(
+        //           flutterLocalNotificationsPlugin:
+        //               flutterLocalNotificationsPlugin);
+        //       appservice.commandExecuter.client = client;
+        //       appservice.commandExecuter.sftp = sftpClient;
+        //       appservice.commandExecuter.notifications = notifications;
+        //       await appservice.commandExecuter.sendFile(
+        //           directory: inputData[AppDictKeys.directory],
+        //           filePath: inputData[AppDictKeys.filePath],
+        //           fileSize: inputData[AppDictKeys.fileSize]);
+        //       return Future.value(true);
+        //     });
+        //   }
+        // });
+        return Future.value(true);
       case BackgroundTaskUniqueNames.update:
         break;
       case BackgroundTaskUniqueNames.cleanServer:
@@ -68,13 +71,15 @@ Constraints get constraints => Constraints(
 class BackgroundTasks {
   BackgroundTasks() {
     //TODO flavor app to automatically select debug mode
-    Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
+    WidgetsFlutterBinding.ensureInitialized();
+    Workmanager().initialize(backGroundTaskDispatcher, isInDebugMode: false);
   }
 
   void uploadTask({data}) {
     Workmanager().registerOneOffTask(
         Tasks.upload.uniqueName, Tasks.upload.uniqueName,
         inputData: data,
+        tag: data[AppDictKeys.filePath].hashCode.toString(),
         constraints: constraints,
         existingWorkPolicy: ExistingWorkPolicy.append,
         backoffPolicy: BackoffPolicy.exponential,
@@ -82,8 +87,4 @@ class BackgroundTasks {
   }
 
   static void get cancel => Workmanager().cancelAll();
-
-  static void set(String tag) {
-    Workmanager().cancelByTag(tag);
-  }
 }
