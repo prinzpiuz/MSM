@@ -5,20 +5,20 @@ import 'package:flutter/services.dart';
 // Package imports:
 import 'package:dartssh2/dartssh2.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:msm/models/background_tasks.dart';
-import 'package:msm/models/local_notification.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workmanager/workmanager.dart';
 
 // Project imports:
+import 'package:msm/models/background_tasks.dart';
 import 'package:msm/models/commands/command_executer.dart';
+import 'package:msm/models/local_notification.dart';
 import 'package:msm/models/server.dart';
 import 'package:msm/models/storage.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/providers/folder_configuration_provider.dart';
 import 'package:msm/providers/upload_provider.dart';
-import 'package:workmanager/workmanager.dart';
 
 class Init {
   late AppService appService;

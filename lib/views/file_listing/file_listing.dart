@@ -135,13 +135,13 @@ Widget listings(BuildContext context, FileListingState listingState) {
                       AppFontSizes.noFilesFontSize.sp)),
             );
           } else if (snapshot.hasError) {
-            return serverNotConnected(appService);
+            return Center(child: serverNotConnected(appService, text: false));
           } else {
             return commonCircularProgressIndicator;
           }
         });
   } else {
-    return serverNotConnected(appService);
+    return Center(child: serverNotConnected(appService, text: false));
   }
 }
 

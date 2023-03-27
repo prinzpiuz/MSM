@@ -15,7 +15,7 @@ import 'package:msm/providers/upload_provider.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 
-Widget serverNotConnected(AppService appService) {
+Widget serverNotConnected(AppService appService, {bool text = true}) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     children: [
@@ -27,9 +27,11 @@ Widget serverNotConnected(AppService appService) {
             color: CommonColors.commonGreyColor,
             // size: 90.sp,
           )),
-      AppText.singleLineText(appService.server.state.message,
-          style: AppTextStyles.regular(CommonColors.commonBlackColor,
-              AppFontSizes.notConnectedFontSize.sp))
+      text
+          ? AppText.singleLineText(appService.server.state.message,
+              style: AppTextStyles.regular(CommonColors.commonBlackColor,
+                  AppFontSizes.notConnectedFontSize.sp))
+          : const SizedBox()
     ],
   );
 }

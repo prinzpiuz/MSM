@@ -191,7 +191,6 @@ class CommandExecuter extends Server {
       required String location,
       required int fileSize,
       required int progress}) async {
-    print(progress);
     await notifications!.uploadNotification(
         id: fileName.hashCode.toString(),
         name: fileName,

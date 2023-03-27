@@ -1,13 +1,15 @@
+// Flutter imports:
+import 'package:flutter/widgets.dart';
+
 // Package imports:
 import 'package:dartssh2/dartssh2.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:msm/models/local_notification.dart';
 import 'package:workmanager/workmanager.dart';
 
 // Project imports:
 import 'package:msm/constants/constants.dart';
 import 'package:msm/initialization.dart';
+import 'package:msm/models/local_notification.dart';
 import 'package:msm/providers/app_provider.dart';
 
 @pragma('vm:entry-point')
