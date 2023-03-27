@@ -3,9 +3,9 @@ import 'package:msm/views/upload_pages/upload_page_utils.dart';
 
 class FolderConfiguration {
   //TODO need to check folders exist before saving
-  String? movies;
-  String? tv;
-  String? books;
+  String movies;
+  String tv;
+  String books;
   List<dynamic> customFolders;
 
   FolderConfiguration(
@@ -36,6 +36,13 @@ class FolderConfiguration {
       case UploadCatogories.custom:
         return "custom";
     }
+  }
+
+  bool get dataAvailable {
+    if (movies.isNotEmpty && tv.isNotEmpty && books.isNotEmpty) {
+      return true;
+    }
+    return false;
   }
 
   FolderConfiguration.fromJson(Map<String, dynamic> json)

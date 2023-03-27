@@ -23,6 +23,7 @@ class AppFontSizes {
   static const dialogBoxTitleFontSize = 15.0;
   static const breadCrumbFontSize = 13.0;
   static const customFolderNameSize = 20.0;
+  static const noFilesFontSize = 30.0;
 }
 
 class AppConstants {
@@ -46,6 +47,7 @@ class AppConstants {
   static const notAvailable = "Not Available";
   static const connected = "Connected";
   static const disconnected = "Disconnected";
+  static const uploadSize = 1073741824;
 }
 
 class AppMessages {
@@ -58,10 +60,18 @@ class AppMessages {
   static const errorOccured = "Error While Uploading";
   static const clearingTasks = "All Background Tasks Cleared";
   static const folderCreationError = "Error Occured While Creating Folders";
+  static const serverNotAvailable = "Server Not Available";
+  static const filesNotSelected = "Files Not Selected";
 }
 
 class BackgroundTaskUniqueNames {
   static const upload = "upload";
   static const update = "update";
   static const cleanServer = "cleanServer";
+}
+
+class AppDictKeys {
+  static const directory = "directory";
+  static const filePath = "filePath";
+  static const fileSize = "fileSize";
 }

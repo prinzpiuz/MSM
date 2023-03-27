@@ -10,11 +10,12 @@ import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
 import 'package:msm/initialization.dart';
 import 'package:msm/providers/app_provider.dart';
+import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/providers/upload_provider.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 
-Widget serverNotConnected(AppService appService) {
+Widget serverNotConnected(AppService appService, {bool text = true}) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     children: [
@@ -26,9 +27,11 @@ Widget serverNotConnected(AppService appService) {
             color: CommonColors.commonGreyColor,
             // size: 90.sp,
           )),
-      AppText.singleLineText(appService.server.state.message,
-          style: AppTextStyles.regular(CommonColors.commonBlackColor,
-              AppFontSizes.notConnectedFontSize.sp))
+      text
+          ? AppText.singleLineText(appService.server.state.message,
+              style: AppTextStyles.regular(CommonColors.commonBlackColor,
+                  AppFontSizes.notConnectedFontSize.sp))
+          : const SizedBox()
     ],
   );
 }
@@ -93,6 +96,7 @@ PreferredSizeWidget commonAppBar(
     bool send = false,
     String? text,
     UploadState? uploadState,
+    FileListingState? fileListState,
     List<Widget>? actions,
     required String backroute}) {
   double appBarIconSIze = AppFontSizes.appBarIconSize.sp;
@@ -114,9 +118,14 @@ PreferredSizeWidget commonAppBar(
           Icons.arrow_back,
           color: CommonColors.commonBlackColor,
         ),
-        onPressed: () => handleBack(context, uploadState, backroute),
+        onPressed: () =>
+            handleBack(context, uploadState, fileListState, backroute),
       ),
     ),
     actions: actions,
   );
 }
+
+Widget get commonDivider => const Divider(
+      color: CommonColors.commonBlackColor,
+    );

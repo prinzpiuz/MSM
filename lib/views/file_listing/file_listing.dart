@@ -11,51 +11,15 @@ import 'package:msm/common_utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
+import 'package:msm/models/commands/command_executer.dart';
+import 'package:msm/models/file_manager.dart';
+import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/router/router_utils.dart';
+import 'package:msm/ui_components/floating_action_button/fab.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
-import 'package:msm/views/file_listing/fab.dart';
 import 'package:msm/views/file_listing/file_listing_utils.dart';
-
-//todo this is supposed to be removed when server file model will be created
-const List fileListItems = [
-  {
-    "name": "air force one",
-    "size": "1GB",
-    "date": "08-07-2022",
-    "category": FileCategory.movie,
-    "extention": "MKV"
-  },
-  {
-    "name": "aliens",
-    "size": "32kb",
-    "date": "08-06-2022",
-    "category": FileCategory.subtitle,
-    "extention": "SRT"
-  },
-  {
-    "name": "stranger things",
-    "size": "32GB",
-    "date": "07-12-2020",
-    "category": FileCategory.tv,
-    "extention": "MKV"
-  },
-  {
-    "name": "sapiens",
-    "size": "30MB",
-    "date": "08-07-2022",
-    "category": FileCategory.book,
-    "extention": "EPUB"
-  },
-  {
-    "name": "Image00231",
-    "size": "1GB",
-    "date": "08-07-2022",
-    "category": FileCategory.image,
-    "extention": "JPEG"
-  }
-];
 
 //todo fileinfo option in individual list menu
 
@@ -98,7 +62,7 @@ Widget fileList(BuildContext context, TextEditingController searchController,
             searchController: searchController, listingState: listingState)
         : commonAppBar(
             text: Pages.fileList.toTitle,
-            backroute: Pages.home.toPath,
+            backroute: listingState.firstPage ? Pages.home.toPath : "",
             actions: [
               actionIconButton(
                   icon: Icons.search,
@@ -106,10 +70,10 @@ Widget fileList(BuildContext context, TextEditingController searchController,
               commonPopUpMenu(FileListPopMenu.values)
             ],
             context: context,
-          ),
+            fileListState: listingState),
     backgroundColor: CommonColors.commonWhiteColor,
     floatingActionButton: floatingActionButton(),
-    body: listings(),
+    body: listings(context, listingState),
   );
 }
 
@@ -146,37 +110,78 @@ Widget floatingActionButton() {
   );
 }
 
-Widget listings() {
+Widget listings(BuildContext context, FileListingState listingState) {
+  final AppService appService = Provider.of<AppService>(context);
+  final bool connected = appService.connectionState;
+  CommandExecuter commandExecuter = appService.commandExecuter;
+  final Future<List<FileOrDirectory>?>? fileListFuture =
+      commandExecuter.listAllRemoteDirectories(path: listingState.nextPage);
+  if (connected) {
+    return FutureBuilder<List<FileOrDirectory>?>(
+        future: fileListFuture,
+        builder: (context, AsyncSnapshot<List<FileOrDirectory>?> snapshot) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData &&
+              snapshot.data != null) {
+            if (snapshot.data!.isNotEmpty) {
+              List<FileOrDirectory>? fileOrDirectoryList = snapshot.data!;
+              return fileListView(
+                  fileOrDirectoryList: fileOrDirectoryList,
+                  listingState: listingState);
+            }
+            return Center(
+              child: AppText.centerSingleLineText("No Files",
+                  style: AppTextStyles.medium(CommonColors.commonBlackColor,
+                      AppFontSizes.noFilesFontSize.sp)),
+            );
+          } else if (snapshot.hasError) {
+            return Center(child: serverNotConnected(appService, text: false));
+          } else {
+            return commonCircularProgressIndicator;
+          }
+        });
+  } else {
+    return Center(child: serverNotConnected(appService, text: false));
+  }
+}
+
+Widget fileListView(
+    {required List<FileOrDirectory>? fileOrDirectoryList,
+    required FileListingState listingState}) {
   return ListView.separated(
-      separatorBuilder: (context, index) => const Divider(
-            color: CommonColors.commonBlackColor,
-          ),
-      itemCount: fileListItems.length,
+      separatorBuilder: (context, index) => commonDivider,
+      itemCount: fileOrDirectoryList!.length,
       itemBuilder: (context, i) {
-        //todo while implementation of server file model finishes use that instead of passing all things ass arguments
         return fileTile(
-            leading: fileListItems[i]["category"].categoryIcon,
-            title: fileListItems[i]["name"],
-            subtitle: generateSubtitle(fileListItems[i]));
+            fileOrDirectory: fileOrDirectoryList[i],
+            listingState: listingState);
       });
 }
 
-//todo need to pass server file opject
 Widget fileTile(
-    {required Widget leading,
-    required String title,
-    required String subtitle}) {
+    {required FileOrDirectory fileOrDirectory,
+    required FileListingState listingState}) {
   return ListTile(
     onLongPress: (() {
       print("need to implement");
     }),
+    onTap: () {
+      if (!fileOrDirectory.isFile) {
+        // listingState.backMode = false;
+        listingState.addPath = listingState.setNextPage =
+            "${fileOrDirectory.location}/${fileOrDirectory.name}";
+      }
+    },
     dense: true,
     visualDensity: const VisualDensity(horizontal: -4.0, vertical: -2),
     horizontalTitleGap: 20,
-    leading: leading,
-    title: AppText.singleLineText(title.toUpperCase(),
-        style: AppTextStyles.medium(CommonColors.commonBlackColor, 15.sp)),
-    subtitle: Text(subtitle),
+    leading: fileOrDirectory.isFile
+        ? fileOrDirectory.category!.categoryIcon
+        : leadingIcon(FontAwesomeIcons.folder),
+    title: AppText.singleLineText(fileOrDirectory.name,
+        style: AppTextStyles.medium(CommonColors.commonBlackColor, 18.sp)),
+    subtitle: AppText.text(generateSubtitle(fileOrDirectory),
+        style: AppTextStyles.regular(CommonColors.commonBlackColor, 12.sp)),
     trailing: const Icon(
       Icons.more_vert,
       color: CommonColors.commonBlackColor,

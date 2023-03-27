@@ -15,6 +15,7 @@ import 'package:msm/models/file_manager.dart';
 import 'package:msm/providers/upload_provider.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
+import 'package:msm/views/upload_pages/upload_item_card.dart';
 import 'package:msm/views/upload_pages/upload_page_utils.dart';
 
 class CommonUploadPage extends StatefulWidget {
@@ -34,6 +35,13 @@ class CommonUploadPageState extends State<CommonUploadPage> {
         backRoute: getBackPage(uploadState),
         uploadState: uploadState);
   }
+}
+
+Widget commonUpload(BuildContext context, UploadState uploadState) {
+  return Scaffold(
+      appBar: appBar(context, uploadState),
+      backgroundColor: CommonColors.commonWhiteColor,
+      body: body(context, uploadState));
 }
 
 Widget body(BuildContext context, UploadState uploadState) {
@@ -72,19 +80,15 @@ Widget body(BuildContext context, UploadState uploadState) {
   );
 }
 
-Widget commonUpload(BuildContext context, UploadState uploadState) {
-  return Scaffold(
-      appBar: appBar(context, uploadState),
-      backgroundColor: CommonColors.commonWhiteColor,
-      body: body(context, uploadState));
-}
-
 Widget uploadItemCard(
     BuildContext context, FileOrDirectory data, UploadState uploadState) {
   return Padding(
     padding: EdgeInsets.only(top: 10.h),
     child: Stack(
-      children: [dataCard(data), cardButton(data, uploadState)],
+      children: [
+        dataCard(data),
+        UploadItemCard(data: data, fileUploadData: uploadState.fileUploadData)
+      ],
     ),
   );
 }
@@ -172,33 +176,5 @@ Widget dataCard(FileOrDirectory data) {
         ),
       ),
     ),
-  );
-}
-
-Widget cardButton(FileOrDirectory data, UploadState uploadState) {
-  return Positioned(
-    bottom: 15.h,
-    right: 50.w,
-    child: data.isFile
-        ? Container(
-            width: 60.w,
-            height: 60.h,
-            decoration: const BoxDecoration(
-                shape: BoxShape.circle, color: CommonColors.commonGreenColor),
-            child: IconButton(
-                onPressed: (() => addOrRemove(data, uploadState)),
-                icon: Icon(
-                  uploadState.fileUploadData.fileAdded(data)
-                      ? Icons.remove
-                      : Icons.add,
-                  color: CommonColors.commonWhiteColor,
-                  size: 30.h,
-                )),
-          )
-        : Icon(
-            Icons.folder,
-            color: CommonColors.commonGreyColor,
-            size: 40.h,
-          ),
   );
 }

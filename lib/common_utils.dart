@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 // Project imports:
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
+import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/providers/upload_provider.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
@@ -23,12 +24,13 @@ WillPopScope handleBackButton(
     required Widget child,
     required BuildContext context,
     UploadState? uploadState,
+    FileListingState? fileListState,
     bool pop = false}) {
   // to handle the backroutes of the app
   return WillPopScope(
     onWillPop: () async {
       if (backRoute != null) {
-        handleBack(context, uploadState, backRoute);
+        handleBack(context, uploadState, fileListState, backRoute);
       }
       return pop;
     },
@@ -36,12 +38,18 @@ WillPopScope handleBackButton(
   );
 }
 
-void handleBack(
-    BuildContext context, UploadState? uploadState, String backRoute) {
+void handleBack(BuildContext context, UploadState? uploadState,
+    FileListingState? fileListState, String backRoute) {
   if (uploadState != null) {
     uploadState.commonCalls;
   }
-  GoRouter.of(context).go(backRoute);
+  if (fileListState != null) {
+    fileListState.popPath;
+    fileListState.setNextPage = fileListState.lastPage;
+  }
+  if (backRoute.isNotEmpty) {
+    GoRouter.of(context).go(backRoute);
+  }
 }
 
 PopupMenuButton commonPopUpMenu(List menuListValues) {
@@ -60,7 +68,8 @@ List<PopupMenuEntry> buildPopupMenus(List menuListValues) {
   for (var item in menuListValues) {
     menuList.add(PopupMenuItem(
       value: item,
-      child: Text(item.menuText),
+      child: AppText.text(item.menuText,
+          style: AppTextStyles.regular(CommonColors.commonBlackColor, 15.sp)),
     ));
   }
   return menuList;

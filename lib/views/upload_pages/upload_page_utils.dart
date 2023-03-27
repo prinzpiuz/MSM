@@ -9,7 +9,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:msm/models/folder_configuration.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
@@ -20,6 +19,7 @@ import 'package:msm/constants/constants.dart';
 import 'package:msm/models/background_tasks.dart';
 import 'package:msm/models/commands/command_executer.dart';
 import 'package:msm/models/file_manager.dart';
+import 'package:msm/models/folder_configuration.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/upload_provider.dart';
 import 'package:msm/router/router_utils.dart';
@@ -164,16 +164,20 @@ void uploadFiles(BuildContext context, UploadState uploadState) async {
     if (uploadState.toCustomFolder) {
       directory = uploadState.customPath;
     }
-    BackgroundTasks().uploadTask(data: {
-      "directory": directory,
-      "fileUploadData": uploadState.fileUploadData.localFilesPaths,
-      "newFolders": uploadState.newFoldersToCreate,
-      "insidPath": FileManager.pathBuilder(uploadState.traversedDirectories)
+    await appService.commandExecuter
+        .upload(
+            directory: directory!,
+            filePaths: uploadState.fileUploadData.localFilesPaths,
+            insidPath:
+                FileManager.pathBuilder(uploadState.traversedDirectories),
+            newFolders: uploadState.newFoldersToCreate)
+        .then((value) {
+      showMessage(
+          context: context, text: AppMessages.uploadStarted, duration: 5);
+      uploadState.fileUploadData.clear;
+      uploadState.fileAddOrRemove;
+      Navigator.pop(context);
     });
-    showMessage(context: context, text: AppMessages.uploadStarted, duration: 5);
-    uploadState.fileUploadData.clear;
-    uploadState.fileAddOrRemove;
-    Navigator.pop(context);
   } else {
     showMessage(context: context, text: AppMessages.connectionLost);
   }

@@ -1,11 +1,18 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 // Package imports:
 import 'package:dartssh2/dartssh2.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workmanager/workmanager.dart';
 
 // Project imports:
+import 'package:msm/models/background_tasks.dart';
 import 'package:msm/models/commands/command_executer.dart';
+import 'package:msm/models/local_notification.dart';
 import 'package:msm/models/server.dart';
 import 'package:msm/models/storage.dart';
 import 'package:msm/providers/app_provider.dart';
@@ -20,6 +27,12 @@ class Init {
   late FolderConfigState folderConfigState;
 
   Future<Map<String, dynamic>> initialize({bool background = false}) async {
+    if (!background) {
+      _requestStoragePermissions();
+      _setAppOrientation();
+    }
+    WidgetsFlutterBinding.ensureInitialized();
+    Workmanager().initialize(backGroundTaskDispatcher, isInDebugMode: false);
     Storage storage = await _getUserPreferences();
     AppService appService = AppService(
         server: Server(
@@ -30,17 +43,14 @@ class Init {
     UploadState uploadService = UploadState();
     FileListingState fileListingService = FileListingState();
     FolderConfigState folderConfigState = FolderConfigState();
-    if (!background) {
-      _requestStoragePermissions();
-    }
     appService.commandExecuter = CommandExecuter(
-      serverData: appService.server.serverData,
-      folderConfiguration: appService.server.folderConfiguration,
-      serverFunctionsData: appService.server.serverFunctionsData,
-      client: null,
-    );
-    makeConnections(appService, uploadState: uploadService);
-    _setAppOrientation();
+        serverData: appService.server.serverData,
+        folderConfiguration: appService.server.folderConfiguration,
+        serverFunctionsData: appService.server.serverFunctionsData,
+        client: null,
+        sftp: null,
+        notifications: null);
+    await makeConnections(appService, uploadState: uploadService);
     return {
       "appService": appService,
       "uploadService": uploadService,
@@ -55,7 +65,7 @@ class Init {
     return storage;
   }
 
-  static void makeConnections(AppService appService,
+  static Future<void> makeConnections(AppService appService,
       {UploadState? uploadState}) async {
     appService.initialized = true;
     appService.server.state = ServerState.connecting;
@@ -68,11 +78,17 @@ class Init {
         },
       );
       if (client != null) {
+        final SftpClient sftpClient = await client.sftp();
+        Notifications notifications = Notifications(
+            flutterLocalNotificationsPlugin: await notificationIntialize());
+        appService.notifications = notifications;
         appService.commandExecuter = CommandExecuter(
             serverData: appService.server.serverData,
             folderConfiguration: appService.server.folderConfiguration,
             serverFunctionsData: appService.server.serverFunctionsData,
-            client: client);
+            client: client,
+            sftp: sftpClient,
+            notifications: notifications);
         appService.connectionState = true;
         appService.server.state = ServerState.connected;
       }
@@ -93,5 +109,21 @@ class Init {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+  }
+
+  static Future<FlutterLocalNotificationsPlugin> notificationIntialize() async {
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('msm');
+    const InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse:
+          Notifications.onDidReceiveNotificationResponse,
+      onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+    );
+    return flutterLocalNotificationsPlugin;
   }
 }

@@ -8,7 +8,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 // Project imports:
 import 'package:msm/common_utils.dart';
 import 'package:msm/constants/colors.dart';
-
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/upload_pages/upload_page_utils.dart';
 
@@ -28,9 +27,6 @@ class UploadMenuPageState extends State<UploadMenuPage> {
         backRoute: Pages.home.toPath);
   }
 }
-
-// TODO need to consider the case of custom folders
-// TODO also need to find an algorithm to handle the grids size when custom folders come
 
 Widget uploadMenu(BuildContext context) {
   return Scaffold(
