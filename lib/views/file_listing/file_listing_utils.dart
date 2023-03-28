@@ -16,16 +16,21 @@ PreferredSizeWidget searchBar(
     {required TextEditingController searchController,
     required FileListingState listingState}) {
   return AppBar(
-    title: AppTextField.simpleTextField(controller: searchController),
+    title: AppTextField.simpleTextField(
+      controller: searchController,
+      onChanged: (newValue) {
+        listingState.setSearchText = newValue;
+      },
+    ),
     elevation: AppFontSizes.appBarElevation,
     backgroundColor: CommonColors.commonWhiteColor,
     leading: Padding(
-      padding: EdgeInsets.only(left: 10.w, bottom: 10.h, top: 10.h),
+      padding: EdgeInsets.only(left: 10.w, right: 10.w),
       child: IconButton(
-        icon: Icon(
+        iconSize: AppFontSizes.appBarIconSize.sp,
+        icon: const Icon(
           Icons.arrow_back,
           color: CommonColors.commonBlackColor,
-          size: AppFontSizes.appBarIconSize.sp,
         ),
         onPressed: () {
           listingState.setSearchMode = false;
@@ -71,4 +76,11 @@ String generateSubtitle(FileOrDirectory fileOrDirectory) {
   String date = fileOrDirectory.dateInFormat;
   String location = fileOrDirectory.location;
   return "$size, $extention, $date \n $location";
+}
+
+List<FileOrDirectory>? filterBasedOnSearchText(FileListingState listingState) {
+  return listingState.currentList
+      .where((fileOrDirectory) =>
+          fileOrDirectory.name.contains(listingState.searchText))
+      .toList();
 }

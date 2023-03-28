@@ -51,7 +51,7 @@ class Server {
           serverData.port,
           timeout: const Duration(seconds: 5),
         ),
-        username: serverData.username,
+        username: serverData.username.trim(),
         onPasswordRequest: () => serverData.rootPassword,
       );
       state = ServerState.connected;

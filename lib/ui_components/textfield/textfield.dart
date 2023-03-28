@@ -7,13 +7,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
 import 'package:msm/constants/colors.dart';
+import 'package:msm/constants/constants.dart';
+import 'package:msm/ui_components/text/textstyles.dart';
 import 'package:msm/ui_components/textfield/textfield_decoration.dart';
 
 class AppTextField {
   static TextField simpleTextField(
-      {required TextEditingController controller}) {
+      {required TextEditingController controller, FormFieldSetter? onChanged}) {
     return TextField(
-        controller: controller,
+        // controller: controller,
+        onChanged: onChanged,
+        style: AppTextStyles.regular(
+            CommonColors.commonBlackColor, AppFontSizes.fileSearchFontSize.sp),
         decoration: AppTextFieldDecoratoion.simpleTextFieldDecoration());
   }
 
