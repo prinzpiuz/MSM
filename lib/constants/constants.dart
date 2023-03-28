@@ -24,6 +24,9 @@ class AppFontSizes {
   static const breadCrumbFontSize = 13.0;
   static const customFolderNameSize = 20.0;
   static const noFilesFontSize = 30.0;
+  static const fileSearchFontSize = 13.0;
+  static const fileListTitleFontSize = 12.0;
+  static const fileListSubtitleFontSize = 8.0;
 }
 
 class AppConstants {

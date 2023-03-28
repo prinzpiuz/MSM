@@ -117,6 +117,11 @@ Widget listings(BuildContext context, FileListingState listingState) {
   final Future<List<FileOrDirectory>?>? fileListFuture =
       commandExecuter.listAllRemoteDirectories(path: listingState.nextPage);
   if (connected) {
+    if (listingState.isInSearchMode) {
+      return fileListView(
+          fileOrDirectoryList: filterBasedOnSearchText(listingState),
+          listingState: listingState);
+    }
     return FutureBuilder<List<FileOrDirectory>?>(
         future: fileListFuture,
         builder: (context, AsyncSnapshot<List<FileOrDirectory>?> snapshot) {
@@ -124,7 +129,8 @@ Widget listings(BuildContext context, FileListingState listingState) {
               snapshot.hasData &&
               snapshot.data != null) {
             if (snapshot.data!.isNotEmpty) {
-              List<FileOrDirectory>? fileOrDirectoryList = snapshot.data!;
+              List<FileOrDirectory>? fileOrDirectoryList =
+                  listingState.currentList = snapshot.data!;
               return fileListView(
                   fileOrDirectoryList: fileOrDirectoryList,
                   listingState: listingState);
@@ -179,9 +185,11 @@ Widget fileTile(
         ? fileOrDirectory.category!.categoryIcon
         : leadingIcon(FontAwesomeIcons.folder),
     title: AppText.singleLineText(fileOrDirectory.name,
-        style: AppTextStyles.medium(CommonColors.commonBlackColor, 18.sp)),
+        style: AppTextStyles.medium(CommonColors.commonBlackColor,
+            AppFontSizes.fileListTitleFontSize.sp)),
     subtitle: AppText.text(generateSubtitle(fileOrDirectory),
-        style: AppTextStyles.regular(CommonColors.commonBlackColor, 12.sp)),
+        style: AppTextStyles.regular(CommonColors.commonBlackColor,
+            AppFontSizes.fileListSubtitleFontSize.sp)),
     trailing: const Icon(
       Icons.more_vert,
       color: CommonColors.commonBlackColor,
