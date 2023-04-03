@@ -30,7 +30,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  shared_preferences: ^2.0.20
+  shared_preferences: ^2.1.0
   dartssh2: ^2.7.2+3
   workmanager: ^0.5.1
   permission_handler: ^10.2.0
