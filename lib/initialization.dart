@@ -42,6 +42,8 @@ class Init {
         storage: storage);
     UploadState uploadService = UploadState();
     FileListingState fileListingService = FileListingState();
+    fileListingService.folderConfiguration =
+        appService.server.folderConfiguration;
     FolderConfigState folderConfigState = FolderConfigState();
     appService.commandExecuter = CommandExecuter(
         serverData: appService.server.serverData,

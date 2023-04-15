@@ -21,18 +21,18 @@ enum FileCategory {
   image,
   unknown;
 
-  Icon get categoryIcon {
+  Icon categoryIcon(bool selected) {
     switch (this) {
       case FileCategory.movieOrTv:
-        return leadingIcon(FontAwesomeIcons.film);
+        return leadingIcon(FontAwesomeIcons.film, selected);
       case FileCategory.book:
-        return leadingIcon(FontAwesomeIcons.bookOpenReader);
+        return leadingIcon(FontAwesomeIcons.bookOpenReader, selected);
       case FileCategory.subtitle:
-        return leadingIcon(FontAwesomeIcons.closedCaptioning);
+        return leadingIcon(FontAwesomeIcons.closedCaptioning, selected);
       case FileCategory.image:
-        return leadingIcon(FontAwesomeIcons.fileImage);
+        return leadingIcon(FontAwesomeIcons.fileImage, selected);
       case FileCategory.unknown:
-        return leadingIcon(FontAwesomeIcons.question);
+        return leadingIcon(FontAwesomeIcons.question, selected);
     }
   }
 
@@ -50,8 +50,11 @@ enum FileCategory {
   }
 }
 
-Icon leadingIcon(IconData icon) {
-  return Icon(icon, color: CommonColors.commonBlackColor);
+Icon leadingIcon(IconData icon, bool selected) {
+  return Icon(icon,
+      color: selected
+          ? CommonColors.commonGreenColor
+          : CommonColors.commonBlackColor);
 }
 
 abstract class FileOrDirectory {

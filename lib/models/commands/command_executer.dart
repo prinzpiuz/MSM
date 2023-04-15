@@ -5,11 +5,9 @@ import 'dart:typed_data';
 
 // Package imports:
 import 'package:dartssh2/dartssh2.dart';
-import 'package:filesize/filesize.dart';
 
 // Project imports:
 import 'package:msm/constants/constants.dart';
-import 'package:msm/models/background_tasks.dart';
 import 'package:msm/models/commands/basic_details.dart';
 import 'package:msm/models/commands/commands.dart';
 import 'package:msm/models/file_manager.dart';
@@ -100,7 +98,7 @@ class CommandExecuter extends Server {
           pathsToList.addAll([
             super.folderConfiguration.books,
             super.folderConfiguration.movies,
-            super.folderConfiguration.books
+            super.folderConfiguration.tv
           ]);
         } else {
           return direcories;
