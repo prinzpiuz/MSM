@@ -11,9 +11,12 @@ import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
 import 'package:msm/context_keys.dart';
 import 'package:msm/models/file_manager.dart';
+import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/file_listing_provider.dart';
+import 'package:msm/ui_components/loading/loading_overlay.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 import 'package:msm/ui_components/textfield/textfield.dart';
+import 'package:provider/provider.dart';
 
 PreferredSizeWidget searchBar(
     {required TextEditingController searchController,
@@ -37,6 +40,7 @@ PreferredSizeWidget searchBar(
         ),
         onPressed: () {
           listingState.setSearchMode = false;
+          listingState.clearSearchText;
           searchController.text = '';
         },
       ),
@@ -51,8 +55,8 @@ enum FileListPopMenu {
   booksOnly,
   subtitlesOnly,
   customFolders,
-  deleteSelected,
-  sizeCalculation;
+  folders,
+  deleteSelected;
 
   String get menuText {
     switch (this) {
@@ -70,8 +74,8 @@ enum FileListPopMenu {
         return "Custom";
       case FileListPopMenu.deleteSelected:
         return "Delete Selected";
-      case FileListPopMenu.sizeCalculation:
-        return "Calculate Size";
+      case FileListPopMenu.folders:
+        return "Folders";
     }
   }
 
@@ -91,8 +95,8 @@ enum FileListPopMenu {
         return filterCustomFolders(listingState);
       case FileListPopMenu.deleteSelected:
         return deletedSelected(listingState);
-      case FileListPopMenu.sizeCalculation:
-        break;
+      case FileListPopMenu.folders:
+        return foldersOnly(listingState);
     }
   }
 }
@@ -110,6 +114,13 @@ List<FileOrDirectory>? filterBasedOnSearchText(FileListingState listingState) {
       .where((fileOrDirectory) =>
           fileOrDirectory.name.contains(listingState.searchText))
       .toList();
+}
+
+void foldersOnly(FileListingState listingState) {
+  listingState.currentList = listingState.originalList
+      .where((fileOrDirectory) => !fileOrDirectory.isFile)
+      .toList();
+  listingState.applyFilter = true;
 }
 
 void showAll(FileListingState listingState) {
@@ -160,6 +171,7 @@ void filterCustomFolders(FileListingState listingState) {
 
 void deletedSelected(FileListingState listingState) {
   BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
+  final AppService appService = Provider.of<AppService>(context, listen: false);
   dailogBox(
     context: context,
     content: SizedBox(
@@ -176,9 +188,15 @@ void deletedSelected(FileListingState listingState) {
         },
       ),
     ),
-    okOnPressed: () {
-      print("Deleting");
+    okOnPressed: () async {
       Navigator.pop(context, "OK");
+      LoadingOverlay.of(context).show();
+      await appService.commandExecuter
+          .delete(fileOrDirectories: listingState.selectedList)
+          .then((value) {
+        LoadingOverlay.of(context).hide();
+        listingState.clearSelection;
+      });
     },
     title: AppConstants.deleteFilesTitle,
   );

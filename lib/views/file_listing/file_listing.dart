@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:msm/context_keys.dart';
+import 'package:msm/ui_components/loading/loading_overlay.dart';
 import 'package:msm/views/file_listing/file_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -52,7 +53,8 @@ class _FileListingState extends State<FileListing> {
     FileListingState fileListState = Provider.of<FileListingState>(context);
     return handleBackButton(
         context: context,
-        child: fileList(context, _searchController, fileListState));
+        child: LoadingOverlay(
+            child: fileList(context, _searchController, fileListState)));
   }
 }
 
@@ -174,6 +176,9 @@ Widget fileListView(
       separatorBuilder: (context, index) => commonDivider,
       itemCount: fileOrDirectoryList!.length,
       itemBuilder: (context, i) {
-        return FileTile(fileOrDirectory: fileOrDirectoryList[i]);
+        return FileTile(
+            fileOrDirectory: fileOrDirectoryList[i],
+            selected:
+                listingState.selectedList.contains(fileOrDirectoryList[i]));
       });
 }

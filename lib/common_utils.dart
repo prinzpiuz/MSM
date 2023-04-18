@@ -45,6 +45,7 @@ void handleBack(BuildContext context, UploadState? uploadState,
   }
   if (fileListState != null) {
     fileListState.popPath;
+    fileListState.clearSelection;
     fileListState.setNextPage = fileListState.lastPage;
   }
   if (backRoute.isNotEmpty) {

@@ -48,6 +48,8 @@ class FileListingState with ChangeNotifier {
     notifyListeners();
   }
 
+  void get clearSearchText => _searchText = "";
+
   set setNextPage(String page) {
     _nextPage = page;
     notifyListeners();

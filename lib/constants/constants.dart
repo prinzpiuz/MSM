@@ -80,3 +80,13 @@ class AppDictKeys {
   static const filePath = "filePath";
   static const fileSize = "fileSize";
 }
+
+class Identifiers {
+  static const username = "username";
+  static const uptime = "uptime";
+  static const temperature = "temperature";
+  static const disk = "disk";
+  static const ram = "ram";
+
+  Identifiers._();
+}

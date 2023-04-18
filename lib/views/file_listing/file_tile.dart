@@ -15,54 +15,60 @@ import 'package:msm/ui_components/text/textstyles.dart';
 import 'package:msm/views/file_listing/file_listing_utils.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class FileTile extends StatefulWidget {
   final FileOrDirectory fileOrDirectory;
-  const FileTile({Key? key, required this.fileOrDirectory}) : super(key: key);
+  bool selected;
+  FileTile({Key? key, required this.fileOrDirectory, required this.selected})
+      : super(key: key);
 
   @override
   FileTileState createState() => FileTileState();
 }
 
 class FileTileState extends State<FileTile> {
-  bool selected = false;
   @override
   Widget build(BuildContext context) {
+    // bool selected = widget.selected;
     FileListingState listingState = Provider.of<FileListingState>(context);
     return ListTile(
       onLongPress: (() {
         setState(() {
           listingState.selectOrRemoveItems(widget.fileOrDirectory);
-          selected = !selected;
+          widget.selected = !widget.selected;
         });
       }),
       onTap: () {
-        if (selected) {
+        if (widget.selected) {
           setState(() {
-            selected = !selected;
+            widget.selected = !widget.selected;
+            listingState.selectOrRemoveItems(widget.fileOrDirectory);
           });
         } else {
           if (!widget.fileOrDirectory.isFile) {
+            listingState.setSearchMode = false;
+            listingState.clearSearchText;
             listingState.addPath = listingState.setNextPage =
                 "${widget.fileOrDirectory.location}/${widget.fileOrDirectory.name}";
           }
         }
       },
-      selected: selected,
+      selected: widget.selected,
       dense: true,
       visualDensity: const VisualDensity(horizontal: -4.0, vertical: -2),
       horizontalTitleGap: 20,
       leading: widget.fileOrDirectory.isFile
-          ? widget.fileOrDirectory.category!.categoryIcon(selected)
-          : leadingIcon(FontAwesomeIcons.folder, selected),
+          ? widget.fileOrDirectory.category!.categoryIcon(widget.selected)
+          : leadingIcon(FontAwesomeIcons.folder, widget.selected),
       title: AppText.singleLineText(widget.fileOrDirectory.name,
           style: AppTextStyles.medium(
-              selected
+              widget.selected
                   ? CommonColors.commonGreenColor
                   : CommonColors.commonBlackColor,
               AppFontSizes.fileListTitleFontSize.sp)),
       subtitle: AppText.text(generateSubtitle(widget.fileOrDirectory),
           style: AppTextStyles.regular(
-              selected
+              widget.selected
                   ? CommonColors.commonGreenColor
                   : CommonColors.commonBlackColor,
               AppFontSizes.fileListSubtitleFontSize.sp)),

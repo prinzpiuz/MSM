@@ -69,32 +69,34 @@ class Init {
 
   static Future<void> makeConnections(AppService appService,
       {UploadState? uploadState}) async {
-    appService.initialized = true;
-    appService.server.state = ServerState.connecting;
-    if (appService.server.serverData.detailsAvailable) {
-      SSHClient? client = await appService.server.connect().timeout(
-        const Duration(seconds: 5),
-        onTimeout: () {
-          appService.connectionState = false;
-          return null;
-        },
-      );
-      if (client != null) {
-        final SftpClient sftpClient = await client.sftp();
-        Notifications notifications = Notifications(
-            flutterLocalNotificationsPlugin: await notificationIntialize());
-        appService.notifications = notifications;
-        appService.commandExecuter = CommandExecuter(
-            serverData: appService.server.serverData,
-            folderConfiguration: appService.server.folderConfiguration,
-            serverFunctionsData: appService.server.serverFunctionsData,
-            client: client,
-            sftp: sftpClient,
-            notifications: notifications);
-        appService.connectionState = true;
-        appService.server.state = ServerState.connected;
+    try {
+      appService.initialized = true;
+      appService.server.state = ServerState.connecting;
+      if (appService.server.serverData.detailsAvailable) {
+        SSHClient? client = await appService.server.connect().timeout(
+          const Duration(seconds: 5),
+          onTimeout: () {
+            appService.connectionState = false;
+            return null;
+          },
+        );
+        if (client != null) {
+          final SftpClient sftpClient = await client.sftp();
+          Notifications notifications = Notifications(
+              flutterLocalNotificationsPlugin: await notificationIntialize());
+          appService.notifications = notifications;
+          appService.commandExecuter = CommandExecuter(
+              serverData: appService.server.serverData,
+              folderConfiguration: appService.server.folderConfiguration,
+              serverFunctionsData: appService.server.serverFunctionsData,
+              client: client,
+              sftp: sftpClient,
+              notifications: notifications);
+          appService.connectionState = true;
+          appService.server.state = ServerState.connected;
+        }
       }
-    }
+    } catch (_) {}
   }
 
   static void _requestStoragePermissions() async {

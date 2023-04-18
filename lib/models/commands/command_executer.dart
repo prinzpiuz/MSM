@@ -232,4 +232,19 @@ class CommandExecuter extends Server {
       notifications!.uploadError(error: AppMessages.filesNotSelected);
     }
   }
+
+  Future<void> delete(
+      {List<FileOrDirectory>? fileOrDirectories = const []}) async {
+    try {
+      if (fileOrDirectories != null) {
+        for (FileOrDirectory fileOrDirectory in fileOrDirectories) {
+          if (fileOrDirectory.isFile) {
+            await sftp!.remove(fileOrDirectory.fullPath);
+          } else {
+            await sftp!.rmdir(fileOrDirectory.fullPath);
+          }
+        }
+      }
+    } catch (_) {}
+  }
 }
