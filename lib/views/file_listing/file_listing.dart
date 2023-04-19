@@ -11,15 +11,18 @@ import 'package:msm/common_utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
+import 'package:msm/context_keys.dart';
 import 'package:msm/models/commands/command_executer.dart';
 import 'package:msm/models/file_manager.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/ui_components/floating_action_button/fab.dart';
+import 'package:msm/ui_components/loading/loading_overlay.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 import 'package:msm/views/file_listing/file_listing_utils.dart';
+import 'package:msm/views/file_listing/file_tile.dart';
 
 //todo fileinfo option in individual list menu
 
@@ -50,13 +53,15 @@ class _FileListingState extends State<FileListing> {
     FileListingState fileListState = Provider.of<FileListingState>(context);
     return handleBackButton(
         context: context,
-        child: fileList(context, _searchController, fileListState));
+        child: LoadingOverlay(
+            child: fileList(context, _searchController, fileListState)));
   }
 }
 
 Widget fileList(BuildContext context, TextEditingController searchController,
     FileListingState listingState) {
   return Scaffold(
+    key: ContextKeys.fileListingPageKey,
     appBar: listingState.isInSearchMode
         ? searchBar(
             searchController: searchController, listingState: listingState)
@@ -65,9 +70,16 @@ Widget fileList(BuildContext context, TextEditingController searchController,
             backroute: listingState.firstPage ? Pages.home.toPath : "",
             actions: [
               actionIconButton(
+                  icon: Icons.clear_all,
+                  onTap: () => listingState.clearSelection),
+              actionIconButton(
                   icon: Icons.search,
                   onTap: () => listingState.setSearchMode = true),
-              commonPopUpMenu(FileListPopMenu.values)
+              commonPopUpMenu(
+                  onSelected: (selectedMenu) {
+                    selectedMenu.applyFilter(listingState);
+                  },
+                  menuListValues: FileListPopMenu.values)
             ],
             context: context,
             fileListState: listingState),
@@ -122,6 +134,11 @@ Widget listings(BuildContext context, FileListingState listingState) {
           fileOrDirectoryList: filterBasedOnSearchText(listingState),
           listingState: listingState);
     }
+    if (listingState.filterApplied) {
+      return fileListView(
+          fileOrDirectoryList: listingState.currentList,
+          listingState: listingState);
+    }
     return FutureBuilder<List<FileOrDirectory>?>(
         future: fileListFuture,
         builder: (context, AsyncSnapshot<List<FileOrDirectory>?> snapshot) {
@@ -129,8 +146,8 @@ Widget listings(BuildContext context, FileListingState listingState) {
               snapshot.hasData &&
               snapshot.data != null) {
             if (snapshot.data!.isNotEmpty) {
-              List<FileOrDirectory>? fileOrDirectoryList =
-                  listingState.currentList = snapshot.data!;
+              List<FileOrDirectory>? fileOrDirectoryList = listingState
+                  .originalList = listingState.currentList = snapshot.data!;
               return fileListView(
                   fileOrDirectoryList: fileOrDirectoryList,
                   listingState: listingState);
@@ -154,45 +171,14 @@ Widget listings(BuildContext context, FileListingState listingState) {
 Widget fileListView(
     {required List<FileOrDirectory>? fileOrDirectoryList,
     required FileListingState listingState}) {
+  listingState.turnOffFilter;
   return ListView.separated(
       separatorBuilder: (context, index) => commonDivider,
       itemCount: fileOrDirectoryList!.length,
       itemBuilder: (context, i) {
-        return fileTile(
+        return FileTile(
             fileOrDirectory: fileOrDirectoryList[i],
-            listingState: listingState);
+            selected:
+                listingState.selectedList.contains(fileOrDirectoryList[i]));
       });
-}
-
-Widget fileTile(
-    {required FileOrDirectory fileOrDirectory,
-    required FileListingState listingState}) {
-  return ListTile(
-    onLongPress: (() {
-      print("need to implement");
-    }),
-    onTap: () {
-      if (!fileOrDirectory.isFile) {
-        // listingState.backMode = false;
-        listingState.addPath = listingState.setNextPage =
-            "${fileOrDirectory.location}/${fileOrDirectory.name}";
-      }
-    },
-    dense: true,
-    visualDensity: const VisualDensity(horizontal: -4.0, vertical: -2),
-    horizontalTitleGap: 20,
-    leading: fileOrDirectory.isFile
-        ? fileOrDirectory.category!.categoryIcon
-        : leadingIcon(FontAwesomeIcons.folder),
-    title: AppText.singleLineText(fileOrDirectory.name,
-        style: AppTextStyles.medium(CommonColors.commonBlackColor,
-            AppFontSizes.fileListTitleFontSize.sp)),
-    subtitle: AppText.text(generateSubtitle(fileOrDirectory),
-        style: AppTextStyles.regular(CommonColors.commonBlackColor,
-            AppFontSizes.fileListSubtitleFontSize.sp)),
-    trailing: const Icon(
-      Icons.more_vert,
-      color: CommonColors.commonBlackColor,
-    ),
-  );
 }

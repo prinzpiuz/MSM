@@ -27,6 +27,7 @@ class AppFontSizes {
   static const fileSearchFontSize = 13.0;
   static const fileListTitleFontSize = 12.0;
   static const fileListSubtitleFontSize = 8.0;
+  static const deleteFileDailogBoxHeight = 25.0;
 }
 
 class AppConstants {
@@ -51,6 +52,7 @@ class AppConstants {
   static const connected = "Connected";
   static const disconnected = "Disconnected";
   static const uploadSize = 1073741824;
+  static const deleteFilesTitle = "Delete These Files?";
 }
 
 class AppMessages {
@@ -65,6 +67,7 @@ class AppMessages {
   static const folderCreationError = "Error Occured While Creating Folders";
   static const serverNotAvailable = "Server Not Available";
   static const filesNotSelected = "Files Not Selected";
+  static const filesDeletedSuccesfully = "Files Deleted Succesfully";
 }
 
 class BackgroundTaskUniqueNames {
@@ -77,4 +80,14 @@ class AppDictKeys {
   static const directory = "directory";
   static const filePath = "filePath";
   static const fileSize = "fileSize";
+}
+
+class Identifiers {
+  static const username = "username";
+  static const uptime = "uptime";
+  static const temperature = "temperature";
+  static const disk = "disk";
+  static const ram = "ram";
+
+  Identifiers._();
 }

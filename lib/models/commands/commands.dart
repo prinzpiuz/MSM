@@ -1,12 +1,5 @@
-class Identifiers {
-  static const username = "username";
-  static const uptime = "uptime";
-  static const temperature = "temperature";
-  static const disk = "disk";
-  static const ram = "ram";
-
-  Identifiers._();
-}
+// Project imports:
+import 'package:msm/constants/constants.dart';
 
 class Commands {
   //added echo -n '<identifier>:' to prepand and identifier with the command output
@@ -19,6 +12,7 @@ class Commands {
   static const diskUsage =
       "df -hl --total --exclude-type=overlay | awk 'END{print}'";
   static const ramUsage = "free -h | grep Mem";
+  static const deleteFileOrFolders = "rm -rf";
 
   static List<String> basicDetailsGroup = [
     addIdentifier(whoAmI, Identifiers.username),
@@ -62,6 +56,18 @@ class CommandBuilder {
     } else {
       for (int i = 0; i < commands.length; i++) {
         output += "${i == 0 ? '' : Operators.grep} ${commands[i]} ";
+      }
+      return output;
+    }
+  }
+
+  String addArguments(String command, List<String> args) {
+    //add arguments to command supplied
+    if (args.length == 1) {
+      return "$command ${args.first}";
+    } else {
+      for (int i = 0; i < args.length; i++) {
+        output += "${i == 0 ? command : ''} ${args[i]} ";
       }
       return output;
     }

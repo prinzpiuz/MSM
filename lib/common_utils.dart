@@ -45,6 +45,7 @@ void handleBack(BuildContext context, UploadState? uploadState,
   }
   if (fileListState != null) {
     fileListState.popPath;
+    fileListState.clearSelection;
     fileListState.setNextPage = fileListState.lastPage;
   }
   if (backRoute.isNotEmpty) {
@@ -52,14 +53,16 @@ void handleBack(BuildContext context, UploadState? uploadState,
   }
 }
 
-PopupMenuButton commonPopUpMenu(List menuListValues) {
+PopupMenuButton commonPopUpMenu(
+    {required void Function(dynamic) onSelected,
+    required List menuListValues}) {
   return PopupMenuButton(
       icon: Icon(
         FontAwesomeIcons.ellipsisVertical,
         color: CommonColors.commonBlackColor,
         size: AppFontSizes.appBarIconSize.sp,
       ),
-      onSelected: (dynamic item) {},
+      onSelected: onSelected,
       itemBuilder: (BuildContext context) => buildPopupMenus(menuListValues));
 }
 
