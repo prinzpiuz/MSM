@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 // Project imports:
 import 'package:msm/constants/colors.dart';
@@ -13,7 +14,6 @@ import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 import 'package:msm/views/file_listing/file_listing_utils.dart';
-import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class FileTile extends StatefulWidget {
@@ -29,7 +29,6 @@ class FileTile extends StatefulWidget {
 class FileTileState extends State<FileTile> {
   @override
   Widget build(BuildContext context) {
-    // bool selected = widget.selected;
     FileListingState listingState = Provider.of<FileListingState>(context);
     return ListTile(
       onLongPress: (() {

@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:msm/context_keys.dart';
-import 'package:msm/ui_components/loading/loading_overlay.dart';
-import 'package:msm/views/file_listing/file_tile.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
@@ -14,15 +11,18 @@ import 'package:msm/common_utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
+import 'package:msm/context_keys.dart';
 import 'package:msm/models/commands/command_executer.dart';
 import 'package:msm/models/file_manager.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/ui_components/floating_action_button/fab.dart';
+import 'package:msm/ui_components/loading/loading_overlay.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 import 'package:msm/views/file_listing/file_listing_utils.dart';
+import 'package:msm/views/file_listing/file_tile.dart';
 
 //todo fileinfo option in individual list menu
 

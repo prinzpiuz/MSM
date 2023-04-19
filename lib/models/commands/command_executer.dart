@@ -65,13 +65,16 @@ class CommandExecuter extends Server {
           for (final item in items) {
             if (item.attr.isDirectory &&
                 (item.filename != "." && item.filename != "..")) {
+              String filepath =
+                  "$directory/${FileManager.linuxCompatibleNameString(item.filename)}";
               direcories.add(DirectoryObject(
-                  Directory("$directory/${item.filename}"),
+                  Directory(filepath),
                   item.filename,
                   item.attr.size ?? 0,
                   FileType.directory,
                   0, //intentionally put to zero because it does'nt matter at the moment
                   directory,
+                  filepath,
                   true,
                   null, //file category does'nt matter here
                   item.attr.modifyTime ??
@@ -112,20 +115,22 @@ class CommandExecuter extends Server {
           await sftp!.listdir(path).then((items) {
             for (final item in items) {
               if (item.filename != "." && item.filename != "..") {
+                String filepath =
+                    "$path/${FileManager.linuxCompatibleNameString(item.filename)}";
                 if (item.attr.isDirectory) {
                   direcories.add(DirectoryObject(
-                      Directory("$path/${item.filename}"),
+                      Directory(filepath),
                       item.filename,
                       item.attr.size ?? 0,
                       FileType.directory,
                       0, //intentionally put to zero because it does'nt matter at the moment
                       path,
+                      filepath,
                       true,
                       FileCategory.getCategoryFromExtention(
                           item.filename.split(".").last),
                       item.attr.modifyTime ?? 0));
                 } else {
-                  String filepath = "$path/${item.filename}";
                   direcories.add(FileObject(
                       File(filepath),
                       item.filename,
@@ -245,6 +250,18 @@ class CommandExecuter extends Server {
           }
         }
       }
-    } catch (_) {}
+    } catch (_) {
+      //this is implemented because for avoid delete errror `SftpStatusError`
+      // in some files with spaces or special chars in file name
+      if (fileOrDirectories != null) {
+        List<String> pathList = [];
+        for (FileOrDirectory fileOrDirectory in fileOrDirectories) {
+          pathList.add(fileOrDirectory.fullPath);
+        }
+        String command = CommandBuilder()
+            .addArguments(Commands.deleteFileOrFolders, pathList);
+        client!.execute(command);
+      }
+    }
   }
 }

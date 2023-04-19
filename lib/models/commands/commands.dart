@@ -1,3 +1,4 @@
+// Project imports:
 import 'package:msm/constants/constants.dart';
 
 class Commands {
@@ -11,7 +12,7 @@ class Commands {
   static const diskUsage =
       "df -hl --total --exclude-type=overlay | awk 'END{print}'";
   static const ramUsage = "free -h | grep Mem";
-  static const deleteFileOrFolders = "sudo rm -rf";
+  static const deleteFileOrFolders = "rm -rf";
 
   static List<String> basicDetailsGroup = [
     addIdentifier(whoAmI, Identifiers.username),

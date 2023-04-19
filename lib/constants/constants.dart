@@ -67,6 +67,7 @@ class AppMessages {
   static const folderCreationError = "Error Occured While Creating Folders";
   static const serverNotAvailable = "Server Not Available";
   static const filesNotSelected = "Files Not Selected";
+  static const filesDeletedSuccesfully = "Files Deleted Succesfully";
 }
 
 class BackgroundTaskUniqueNames {

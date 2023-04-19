@@ -1,9 +1,13 @@
 //code took from here
 //https://dartling.dev/displaying-a-loading-overlay-or-progress-hud-in-flutter
 
+// Dart imports:
 import 'dart:ui';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:msm/common_widgets.dart';
 
 class LoadingOverlay extends StatefulWidget {

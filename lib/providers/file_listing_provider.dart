@@ -1,5 +1,7 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:msm/models/file_manager.dart';
 import 'package:msm/models/folder_configuration.dart';
 

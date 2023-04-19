@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:msm/common_utils.dart';
-import 'package:msm/common_widgets.dart';
+import 'package:provider/provider.dart';
 
 // Project imports:
+import 'package:msm/common_utils.dart';
+import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
 import 'package:msm/context_keys.dart';
@@ -16,7 +17,6 @@ import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/ui_components/loading/loading_overlay.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 import 'package:msm/ui_components/textfield/textfield.dart';
-import 'package:provider/provider.dart';
 
 PreferredSizeWidget searchBar(
     {required TextEditingController searchController,
@@ -171,6 +171,11 @@ void filterCustomFolders(FileListingState listingState) {
 
 void deletedSelected(FileListingState listingState) {
   BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
+  if (listingState.selectedList.isEmpty) {
+    showMessage(context: context, text: AppMessages.filesNotSelected);
+    return;
+  }
+
   final AppService appService = Provider.of<AppService>(context, listen: false);
   dailogBox(
     context: context,
@@ -194,8 +199,12 @@ void deletedSelected(FileListingState listingState) {
       await appService.commandExecuter
           .delete(fileOrDirectories: listingState.selectedList)
           .then((value) {
-        LoadingOverlay.of(context).hide();
+        listingState.setSearchMode = false;
+        listingState.applyFilter = false;
         listingState.clearSelection;
+        LoadingOverlay.of(context).hide();
+        showMessage(
+            context: context, text: AppMessages.filesDeletedSuccesfully);
       });
     },
     title: AppConstants.deleteFilesTitle,

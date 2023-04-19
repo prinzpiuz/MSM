@@ -137,6 +137,7 @@ class DirectoryObject extends FileOrDirectory {
   final FileType _type;
   final int _fileCount;
   final String _location;
+  final String _fullPath;
   final bool _remoteDirectory;
   final FileCategory? _category;
   final int _date;
@@ -148,6 +149,7 @@ class DirectoryObject extends FileOrDirectory {
       this._type,
       this._fileCount,
       this._location,
+      this._fullPath,
       this._remoteDirectory,
       this._category,
       this._date);
@@ -172,6 +174,9 @@ class DirectoryObject extends FileOrDirectory {
 
   @override
   String get size => filesize(_size);
+
+  @override
+  String get fullPath => _fullPath;
 
   @override
   int get date => _date;
@@ -263,6 +268,23 @@ class FileManager {
     return directory.path.split("/").last.toString();
   }
 
+  static String linuxCompatibleNameString(String name) {
+    //to change filenames to linux compatible string
+    //eg: Mr. Brooks (2007) => Mr.\ Brooks\ \(2007\)
+    List<String> letters = name.split("");
+    int count = 0;
+    for (var i = 0; i < name.length; i++) {
+      if (name[i] == " ") {
+        letters.insert(i + count, '\\');
+        count++;
+      }
+      if (name[i] == "(" || name[i] == ")") {
+        letters.insert(letters.indexOf(name[i]), '\\');
+      }
+    }
+    return letters.join();
+  }
+
   static Future<List<FileOrDirectory>> getFiles(
       Directory directory, UploadState uploadState) async {
     List<FileOrDirectory> files = [];
@@ -280,6 +302,7 @@ class FileManager {
             FileType.directory,
             directoryIterables.length,
             directory.path,
+            "${directory.path}/${getDirectoryName(directory)}",
             false,
             null,
             0)); //file category does'nt matter here
