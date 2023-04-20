@@ -70,6 +70,9 @@ Widget fileList(BuildContext context, TextEditingController searchController,
             backroute: listingState.firstPage ? Pages.home.toPath : "",
             actions: [
               actionIconButton(
+                  icon: Icons.delete_outline_rounded,
+                  onTap: () => deletedSelected(listingState)),
+              actionIconButton(
                   icon: Icons.clear_all,
                   onTap: () => listingState.clearSelection),
               actionIconButton(
@@ -79,7 +82,8 @@ Widget fileList(BuildContext context, TextEditingController searchController,
                   onSelected: (selectedMenu) {
                     selectedMenu.applyFilter(listingState);
                   },
-                  menuListValues: FileListPopMenu.values)
+                  menuListValues: FileListPopMenu.values,
+                  size: AppFontSizes.appBarIconSize)
             ],
             context: context,
             fileListState: listingState),

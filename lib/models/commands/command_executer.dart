@@ -239,29 +239,41 @@ class CommandExecuter extends Server {
   }
 
   Future<void> delete(
-      {List<FileOrDirectory>? fileOrDirectories = const []}) async {
+      {required List<FileOrDirectory> fileOrDirectories}) async {
     try {
-      if (fileOrDirectories != null) {
-        for (FileOrDirectory fileOrDirectory in fileOrDirectories) {
-          if (fileOrDirectory.isFile) {
-            await sftp!.remove(fileOrDirectory.fullPath);
-          } else {
-            await sftp!.rmdir(fileOrDirectory.fullPath);
-          }
+      for (FileOrDirectory fileOrDirectory in fileOrDirectories) {
+        if (fileOrDirectory.isFile) {
+          await sftp!.remove(fileOrDirectory.fullPath);
+        } else {
+          await sftp!.rmdir(fileOrDirectory.fullPath);
         }
       }
     } catch (_) {
       //this is implemented because for avoid delete errror `SftpStatusError`
       // in some files with spaces or special chars in file name
-      if (fileOrDirectories != null) {
-        List<String> pathList = [];
-        for (FileOrDirectory fileOrDirectory in fileOrDirectories) {
-          pathList.add(fileOrDirectory.fullPath);
-        }
-        String command = CommandBuilder()
-            .addArguments(Commands.deleteFileOrFolders, pathList);
-        client!.execute(command);
+      List<String> pathList = [];
+      for (FileOrDirectory fileOrDirectory in fileOrDirectories) {
+        pathList.add(fileOrDirectory.fullPath);
       }
+      String command =
+          CommandBuilder().addArguments(Commands.deleteFileOrFolders, pathList);
+      client!.execute(command);
+    }
+  }
+
+  Future<void> rename(
+      {required FileOrDirectory fileOrDirectory,
+      required String newName}) async {
+    String newPath =
+        "${fileOrDirectory.location}/${FileManager.linuxCompatibleNameString(newName)}";
+    try {
+      await sftp!.rename(fileOrDirectory.fullPath, newPath);
+    } catch (_) {
+      //this is implemented because for avoid delete errror `SftpStatusError`
+      // in some files with spaces or special chars in file name
+      String command = CommandBuilder()
+          .addArguments(Commands.rename, [fileOrDirectory.fullPath, newPath]);
+      client!.execute(command);
     }
   }
 }

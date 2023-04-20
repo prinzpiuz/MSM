@@ -33,6 +33,8 @@ class FileListingState with ChangeNotifier {
     notifyListeners();
   }
 
+  void get cancelModes => _applyFilter = _searchMode = false;
+
   void get turnOffFilter => _applyFilter = false;
 
   void selectOrRemoveItems(FileOrDirectory fileOrDirectory) {

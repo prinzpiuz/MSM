@@ -55,12 +55,13 @@ void handleBack(BuildContext context, UploadState? uploadState,
 
 PopupMenuButton commonPopUpMenu(
     {required void Function(dynamic) onSelected,
-    required List menuListValues}) {
+    required List menuListValues,
+    required double size}) {
   return PopupMenuButton(
       icon: Icon(
         FontAwesomeIcons.ellipsisVertical,
         color: CommonColors.commonBlackColor,
-        size: AppFontSizes.appBarIconSize.sp,
+        size: size.sp,
       ),
       onSelected: onSelected,
       itemBuilder: (BuildContext context) => buildPopupMenus(menuListValues));

@@ -13,6 +13,7 @@ class Commands {
       "df -hl --total --exclude-type=overlay | awk 'END{print}'";
   static const ramUsage = "free -h | grep Mem";
   static const deleteFileOrFolders = "rm -rf";
+  static const rename = "mv";
 
   static List<String> basicDetailsGroup = [
     addIdentifier(whoAmI, Identifiers.username),
