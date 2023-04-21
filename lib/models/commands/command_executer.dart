@@ -276,4 +276,17 @@ class CommandExecuter extends Server {
       client!.execute(command);
     }
   }
+
+  Future<void> move(
+      {required FileOrDirectory fileOrDirectory,
+      required String newLocation}) async {
+    String newPath = FileManager.linuxCompatibleNameString(newLocation);
+    try {
+      String command = CommandBuilder()
+          .addArguments(Commands.rename, [fileOrDirectory.fullPath, newPath]);
+      client!.execute(command);
+    } catch (_) {
+      print(_);
+    }
+  }
 }

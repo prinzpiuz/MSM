@@ -146,6 +146,7 @@ Widget listings(BuildContext context, FileListingState listingState) {
     return FutureBuilder<List<FileOrDirectory>?>(
         future: fileListFuture,
         builder: (context, AsyncSnapshot<List<FileOrDirectory>?> snapshot) {
+          print("calling");
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData &&
               snapshot.data != null) {
