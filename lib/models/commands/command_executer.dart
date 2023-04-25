@@ -297,12 +297,14 @@ class CommandExecuter extends Server {
       File localFileObj =
           File("${FileManager.downloadLocation}/${fileOrDirectory.name}");
       final size = (await remoteFile.stat()).size;
-      const defaultChunkSize = 1024 * 1024 * 10;
+      const defaultChunkSize = 1024 * 1024 * 10; //10MB
       if (size != null) {
         int chunkSize = size > defaultChunkSize ? defaultChunkSize : size;
         for (var i = chunkSize; chunkSize > 0; i += chunkSize) {
-          final fileData = await remoteFile.readBytes(length: chunkSize);
-          await localFileObj.writeAsBytes(fileData, mode: FileMode.append);
+          final fileData = await remoteFile.readBytes(
+              length: chunkSize, offset: i - chunkSize);
+          await localFileObj.writeAsBytes(fileData,
+              mode: FileMode.append, flush: true);
           notify(
               fileName: fileOrDirectory.name,
               location: FileManager.downloadLocation,
