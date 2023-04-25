@@ -17,6 +17,7 @@ import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/ui_components/loading/loading_overlay.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 import 'package:msm/ui_components/textfield/textfield.dart';
+import 'package:msm/ui_components/textfield/validators.dart';
 
 PreferredSizeWidget searchBar(
     {required TextEditingController searchController,
@@ -55,8 +56,7 @@ enum FileListPopMenu {
   booksOnly,
   subtitlesOnly,
   customFolders,
-  folders,
-  deleteSelected;
+  folders;
 
   String get menuText {
     switch (this) {
@@ -72,8 +72,6 @@ enum FileListPopMenu {
         return "Subtitles";
       case FileListPopMenu.customFolders:
         return "Custom";
-      case FileListPopMenu.deleteSelected:
-        return "Delete Selected";
       case FileListPopMenu.folders:
         return "Folders";
     }
@@ -93,10 +91,58 @@ enum FileListPopMenu {
         return filterSubtitleOnly(listingState);
       case FileListPopMenu.customFolders:
         return filterCustomFolders(listingState);
-      case FileListPopMenu.deleteSelected:
-        return deletedSelected(listingState);
       case FileListPopMenu.folders:
         return foldersOnly(listingState);
+    }
+  }
+}
+
+enum FileActionMenu {
+  rename,
+  delete,
+  move,
+  download;
+
+  String get menuText {
+    switch (this) {
+      case FileActionMenu.rename:
+        return "Rename";
+      case FileActionMenu.delete:
+        return "Delete";
+      case FileActionMenu.move:
+        return "Move";
+      case FileActionMenu.download:
+        return "Download";
+    }
+  }
+
+  void executeAction(FileOrDirectory fileOrDirectory) {
+    switch (this) {
+      case FileActionMenu.rename:
+        return renameFile(fileOrDirectory);
+      case FileActionMenu.delete:
+        return deleteSingleFile(fileOrDirectory);
+      case FileActionMenu.move:
+        return moveFile(fileOrDirectory);
+      case FileActionMenu.download:
+        return downloadFile(fileOrDirectory);
+    }
+  }
+}
+
+enum FileSorting {
+  date,
+  size,
+  name;
+
+  void sort() {
+    switch (this) {
+      case FileSorting.date:
+        return sortOnDate;
+      case FileSorting.size:
+        return sortOnSize;
+      case FileSorting.name:
+        return sortOnName;
     }
   }
 }
@@ -169,6 +215,32 @@ void filterCustomFolders(FileListingState listingState) {
   listingState.applyFilter = true;
 }
 
+void deleteSingleFile(FileOrDirectory fileOrDirectory) {
+  BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
+  final AppService appService = Provider.of<AppService>(context, listen: false);
+  dailogBox(
+    context: context,
+    content: Text(
+      fileOrDirectory.name,
+      style: AppTextStyles.regular(CommonColors.commonBlackColor, 12.sp),
+    ),
+    okOnPressed: () async {
+      Navigator.pop(context, "OK");
+      LoadingOverlay.of(context).show();
+      await appService.commandExecuter
+          .delete(fileOrDirectories: [fileOrDirectory]).then((value) {
+        LoadingOverlay.of(context).hide();
+        showMessage(
+            context: context, text: AppMessages.filesDeletedSuccesfully);
+        FileListingState fileListState =
+            Provider.of<FileListingState>(context, listen: false);
+        fileListState.clearSelection;
+      });
+    },
+    title: AppConstants.deleteFilesTitle,
+  );
+}
+
 void deletedSelected(FileListingState listingState) {
   BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
   if (listingState.selectedList.isEmpty) {
@@ -180,8 +252,9 @@ void deletedSelected(FileListingState listingState) {
   dailogBox(
     context: context,
     content: SizedBox(
-      height: AppFontSizes.deleteFileDailogBoxHeight.h *
-          listingState.selectedList.length,
+      height: (AppFontSizes.deleteFileDailogBoxHeight *
+              listingState.selectedList.length)
+          .h,
       child: ListView.separated(
         separatorBuilder: (context, index) => commonDivider,
         itemCount: listingState.selectedList.length,
@@ -199,14 +272,142 @@ void deletedSelected(FileListingState listingState) {
       await appService.commandExecuter
           .delete(fileOrDirectories: listingState.selectedList)
           .then((value) {
-        listingState.setSearchMode = false;
-        listingState.applyFilter = false;
-        listingState.clearSelection;
+        listingState.cancelModes;
         LoadingOverlay.of(context).hide();
         showMessage(
             context: context, text: AppMessages.filesDeletedSuccesfully);
+        listingState.clearSelection;
       });
     },
     title: AppConstants.deleteFilesTitle,
   );
+}
+
+void renameFile(FileOrDirectory fileOrDirectory) {
+  BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
+  final reNameFormKey = GlobalKey<FormState>();
+  dailogBox(
+    context: context,
+    content: reNameField(reNameFormKey, context, fileOrDirectory),
+    okOnPressed: () {
+      hideKeyboard(context);
+      if (reNameFormKey.currentState!.validate()) {
+        reNameFormKey.currentState!.save();
+      }
+    },
+    title: AppConstants.renameFile,
+  );
+}
+
+Widget reNameField(
+    Key key, BuildContext context, FileOrDirectory fileOrDirectory) {
+  return Form(
+    key: key,
+    child: AppTextField.commonTextFeild(
+      initialValue: fileOrDirectory.name,
+      onsaved: (data) async {
+        final AppService appService =
+            Provider.of<AppService>(context, listen: false);
+        Navigator.pop(context, "OK");
+        LoadingOverlay.of(context).show();
+        await appService.commandExecuter
+            .rename(fileOrDirectory: fileOrDirectory, newName: data)
+            .then((value) {
+          LoadingOverlay.of(context).hide();
+          showMessage(context: context, text: AppMessages.fileRename);
+          FileListingState fileListState =
+              Provider.of<FileListingState>(context, listen: false);
+          fileListState.clearSelection;
+        });
+      },
+      validator: valueNeeded,
+      keyboardType: TextInputType.text,
+      labelText: "New File Name",
+      hintText: "File Rename",
+    ),
+  );
+}
+
+void moveFile(FileOrDirectory fileOrDirectory) {
+  BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
+  dailogBox(
+    onlycancel: true,
+    context: context,
+    content: moveLocations(context, fileOrDirectory),
+    title: AppConstants.moveFile,
+  );
+}
+
+Widget moveLocations(
+    BuildContext mainContext, FileOrDirectory fileOrDirectory) {
+  FileListingState fileListState =
+      Provider.of<FileListingState>(mainContext, listen: false);
+  List<String> locations = [
+    fileListState.folderConfiguration.movies,
+    fileListState.folderConfiguration.tv,
+    fileListState.folderConfiguration.books,
+    ...fileListState.folderConfiguration.customFolders
+  ];
+  return SizedBox(
+    height: (AppFontSizes.deleteFileDailogBoxHeight * locations.length).h,
+    child: ListView.separated(
+      separatorBuilder: (context, index) => commonDivider,
+      itemCount: locations.length,
+      itemBuilder: (BuildContext context, int index) {
+        return TextButton(
+          onPressed: () async {
+            final AppService appService =
+                Provider.of<AppService>(context, listen: false);
+            Navigator.pop(context, "OK");
+            LoadingOverlay.of(mainContext).show();
+            await appService.commandExecuter
+                .move(
+                    fileOrDirectory: fileOrDirectory,
+                    newLocation: locations[index])
+                .then((value) {
+              LoadingOverlay.of(mainContext).hide();
+              showMessage(context: context, text: AppMessages.moveFile);
+              FileListingState fileListState =
+                  Provider.of<FileListingState>(context, listen: false);
+              fileListState.clearSelection;
+            });
+          },
+          child: Text(
+            locations[index].split("/").last.toUpperCase(),
+            style: AppTextStyles.regular(CommonColors.commonBlackColor, 12.sp),
+          ),
+        );
+      },
+    ),
+  );
+}
+
+void downloadFile(FileOrDirectory fileOrDirectory) async {
+  BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
+  final AppService appService = Provider.of<AppService>(context, listen: false);
+  await appService.commandExecuter.download(fileOrDirectory: fileOrDirectory);
+}
+
+void get sortOnDate {
+  BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
+  FileListingState listingState =
+      Provider.of<FileListingState>(context, listen: false);
+  listingState.originalList.sort((a, b) => a.date.compareTo(b.date));
+  listingState.applyFilter = true;
+}
+
+void get sortOnSize {
+  BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
+  FileListingState listingState =
+      Provider.of<FileListingState>(context, listen: false);
+  listingState.originalList.sort((a, b) => a.size.compareTo(b.size));
+  listingState.applyFilter = true;
+}
+
+void get sortOnName {
+  BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
+  FileListingState listingState =
+      Provider.of<FileListingState>(context, listen: false);
+  listingState.originalList.sort((a, b) => a.name.compareTo(b.name));
+  listingState.applyFilter = true;
 }

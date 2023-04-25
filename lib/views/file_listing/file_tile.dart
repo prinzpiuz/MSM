@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
+import 'package:msm/common_utils.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
 import 'package:msm/models/file_manager.dart';
@@ -71,10 +72,12 @@ class FileTileState extends State<FileTile> {
                   ? CommonColors.commonGreenColor
                   : CommonColors.commonBlackColor,
               AppFontSizes.fileListSubtitleFontSize.sp)),
-      trailing: const Icon(
-        Icons.more_vert,
-        color: CommonColors.commonBlackColor,
-      ),
+      trailing: commonPopUpMenu(
+          onSelected: (selectedMenu) {
+            selectedMenu.executeAction(widget.fileOrDirectory);
+          },
+          menuListValues: FileActionMenu.values,
+          size: AppFontSizes.fileMenuIconSize),
     );
   }
 }

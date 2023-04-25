@@ -28,6 +28,7 @@ class AppFontSizes {
   static const fileListTitleFontSize = 12.0;
   static const fileListSubtitleFontSize = 8.0;
   static const deleteFileDailogBoxHeight = 25.0;
+  static const fileMenuIconSize = 20.0;
 }
 
 class AppConstants {
@@ -53,6 +54,8 @@ class AppConstants {
   static const disconnected = "Disconnected";
   static const uploadSize = 1073741824;
   static const deleteFilesTitle = "Delete These Files?";
+  static const renameFile = "Enter New Name";
+  static const moveFile = "Select The Folder To Move";
 }
 
 class AppMessages {
@@ -68,6 +71,8 @@ class AppMessages {
   static const serverNotAvailable = "Server Not Available";
   static const filesNotSelected = "Files Not Selected";
   static const filesDeletedSuccesfully = "Files Deleted Succesfully";
+  static const fileRename = "File Renamed Succesfully";
+  static const moveFile = "File Moved Succesfully";
 }
 
 class BackgroundTaskUniqueNames {

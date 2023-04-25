@@ -10,6 +10,20 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
   // handle action
 }
 
+enum NotificationType {
+  upload,
+  download;
+
+  String get getString {
+    switch (this) {
+      case NotificationType.upload:
+        return "Upload";
+      case NotificationType.download:
+        return "Download";
+    }
+  }
+}
+
 class Notifications {
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   Notifications({required this.flutterLocalNotificationsPlugin});
@@ -34,7 +48,8 @@ class Notifications {
       required String name,
       required String location,
       required int progress,
-      required int fileSize}) async {
+      required int fileSize,
+      required NotificationType notificationType}) async {
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
       id,
@@ -53,7 +68,7 @@ class Notifications {
         NotificationDetails(android: androidNotificationDetails);
     await flutterLocalNotificationsPlugin.show(
         name.hashCode,
-        'Upload ${_uploadStatus(fileSize, progress)} For $name',
+        '${notificationType.getString} ${_uploadStatus(fileSize, progress)} For $name',
         'Saving to $location \n ${filesize(progress)}/${filesize(fileSize)}',
         notificationDetails);
   }

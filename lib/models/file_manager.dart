@@ -278,8 +278,14 @@ class FileManager {
         letters.insert(i + count, '\\');
         count++;
       }
-      if (name[i] == "(" || name[i] == ")") {
-        letters.insert(letters.indexOf(name[i]), '\\');
+      if (name[i] == "(" ||
+          name[i] == ")" ||
+          name[i] == "[" ||
+          name[i] == "]" ||
+          name[i] == "{" ||
+          name[i] == "}") {
+        letters.insert(i + count, '\\');
+        count++;
       }
     }
     return letters.join();

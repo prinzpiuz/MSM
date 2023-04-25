@@ -55,12 +55,13 @@ void handleBack(BuildContext context, UploadState? uploadState,
 
 PopupMenuButton commonPopUpMenu(
     {required void Function(dynamic) onSelected,
-    required List menuListValues}) {
+    required List menuListValues,
+    required double size}) {
   return PopupMenuButton(
       icon: Icon(
         FontAwesomeIcons.ellipsisVertical,
         color: CommonColors.commonBlackColor,
-        size: AppFontSizes.appBarIconSize.sp,
+        size: size.sp,
       ),
       onSelected: onSelected,
       itemBuilder: (BuildContext context) => buildPopupMenus(menuListValues));
@@ -112,14 +113,17 @@ void showMessage(
   overlayEntry.remove();
 }
 
-Future<dynamic> dailogBox({
-  required BuildContext context,
-  required String title,
-  Widget? content,
-  required void Function() okOnPressed,
-  List<Widget>? actions,
-  void Function()? cancelOnPressed,
-}) {
+Future<dynamic> dailogBox(
+    {required BuildContext context,
+    required String title,
+    Widget? content,
+    void Function()? okOnPressed,
+    List<Widget>? actions,
+    void Function()? cancelOnPressed,
+    bool onlycancel = false}) {
+  if (!onlycancel && okOnPressed == null) {
+    okOnPressed = () => Navigator.pop(context, 'Ok');
+  }
   return showDialog<String>(
     context: context,
     barrierDismissible: false,
@@ -136,12 +140,13 @@ Future<dynamic> dailogBox({
                   style: AppTextStyles.regular(CommonColors.commonBlackColor,
                       AppFontSizes.dialogBoxactionFontSixe.sp)),
             ),
-            TextButton(
-              onPressed: okOnPressed,
-              child: Text('OK',
-                  style: AppTextStyles.regular(CommonColors.commonBlackColor,
-                      AppFontSizes.dialogBoxactionFontSixe.sp)),
-            ),
+            if (!onlycancel)
+              TextButton(
+                onPressed: okOnPressed,
+                child: Text('OK',
+                    style: AppTextStyles.regular(CommonColors.commonBlackColor,
+                        AppFontSizes.dialogBoxactionFontSixe.sp)),
+              ),
           ],
     ),
   );

@@ -179,7 +179,8 @@ class CommandExecuter extends Server {
               fileName: fileName,
               location: directory,
               fileSize: totalFileSize,
-              progress: progress),
+              progress: progress,
+              notificationType: NotificationType.upload),
         );
       } else {
         notifications!.uploadError(error: AppMessages.serverNotAvailable);
@@ -193,13 +194,15 @@ class CommandExecuter extends Server {
       {required String fileName,
       required String location,
       required int fileSize,
-      required int progress}) async {
+      required int progress,
+      required NotificationType notificationType}) async {
     await notifications!.uploadNotification(
         id: fileName.hashCode.toString(),
         name: fileName,
         location: location,
         progress: progress,
-        fileSize: fileSize);
+        fileSize: fileSize,
+        notificationType: notificationType);
   }
 
   Future<String> _createFolders(
@@ -239,29 +242,80 @@ class CommandExecuter extends Server {
   }
 
   Future<void> delete(
-      {List<FileOrDirectory>? fileOrDirectories = const []}) async {
+      {required List<FileOrDirectory> fileOrDirectories}) async {
     try {
-      if (fileOrDirectories != null) {
-        for (FileOrDirectory fileOrDirectory in fileOrDirectories) {
-          if (fileOrDirectory.isFile) {
-            await sftp!.remove(fileOrDirectory.fullPath);
-          } else {
-            await sftp!.rmdir(fileOrDirectory.fullPath);
-          }
+      for (FileOrDirectory fileOrDirectory in fileOrDirectories) {
+        if (fileOrDirectory.isFile) {
+          await sftp!.remove(fileOrDirectory.fullPath);
+        } else {
+          await sftp!.rmdir(fileOrDirectory.fullPath);
         }
       }
     } catch (_) {
       //this is implemented because for avoid delete errror `SftpStatusError`
       // in some files with spaces or special chars in file name
-      if (fileOrDirectories != null) {
-        List<String> pathList = [];
-        for (FileOrDirectory fileOrDirectory in fileOrDirectories) {
-          pathList.add(fileOrDirectory.fullPath);
-        }
-        String command = CommandBuilder()
-            .addArguments(Commands.deleteFileOrFolders, pathList);
-        client!.execute(command);
+      List<String> pathList = [];
+      for (FileOrDirectory fileOrDirectory in fileOrDirectories) {
+        pathList.add(fileOrDirectory.fullPath);
       }
+      String command =
+          CommandBuilder().addArguments(Commands.deleteFileOrFolders, pathList);
+      client!.execute(command);
     }
+  }
+
+  Future<void> rename(
+      {required FileOrDirectory fileOrDirectory,
+      required String newName}) async {
+    String newPath =
+        "${fileOrDirectory.location}/${FileManager.linuxCompatibleNameString(newName)}";
+    try {
+      await sftp!.rename(fileOrDirectory.fullPath, newPath);
+    } catch (_) {
+      //this is implemented because for avoid delete errror `SftpStatusError`
+      // in some files with spaces or special chars in file name
+      String command = CommandBuilder()
+          .addArguments(Commands.rename, [fileOrDirectory.fullPath, newPath]);
+      client!.execute(command);
+    }
+  }
+
+  Future<void> move(
+      {required FileOrDirectory fileOrDirectory,
+      required String newLocation}) async {
+    String newPath = FileManager.linuxCompatibleNameString(newLocation);
+    try {
+      String command = CommandBuilder()
+          .addArguments(Commands.rename, [fileOrDirectory.fullPath, newPath]);
+      client!.execute(command);
+    } catch (_) {}
+  }
+
+  Future<void> download({required FileOrDirectory fileOrDirectory}) async {
+    try {
+      final remoteFile = await sftp!.open(fileOrDirectory.fullPath);
+      File localFileObj =
+          File("${FileManager.downloadLocation}/${fileOrDirectory.name}");
+      final size = (await remoteFile.stat()).size;
+      const defaultChunkSize = 1024 * 1024 * 10; //10MB
+      if (size != null) {
+        int chunkSize = size > defaultChunkSize ? defaultChunkSize : size;
+        for (var i = chunkSize; chunkSize > 0; i += chunkSize) {
+          final fileData = await remoteFile.readBytes(
+              length: chunkSize, offset: i - chunkSize);
+          await localFileObj.writeAsBytes(fileData,
+              mode: FileMode.append, flush: true);
+          notify(
+              fileName: fileOrDirectory.name,
+              location: FileManager.downloadLocation,
+              fileSize: size,
+              progress: i,
+              notificationType: NotificationType.download);
+          if (i + chunkSize > size) {
+            chunkSize = size - i;
+          }
+        }
+      }
+    } catch (_) {}
   }
 }
