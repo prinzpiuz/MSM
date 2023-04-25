@@ -179,7 +179,8 @@ class CommandExecuter extends Server {
               fileName: fileName,
               location: directory,
               fileSize: totalFileSize,
-              progress: progress),
+              progress: progress,
+              notificationType: NotificationType.upload),
         );
       } else {
         notifications!.uploadError(error: AppMessages.serverNotAvailable);
@@ -193,13 +194,15 @@ class CommandExecuter extends Server {
       {required String fileName,
       required String location,
       required int fileSize,
-      required int progress}) async {
+      required int progress,
+      required NotificationType notificationType}) async {
     await notifications!.uploadNotification(
         id: fileName.hashCode.toString(),
         name: fileName,
         location: location,
         progress: progress,
-        fileSize: fileSize);
+        fileSize: fileSize,
+        notificationType: notificationType);
   }
 
   Future<String> _createFolders(
@@ -285,8 +288,32 @@ class CommandExecuter extends Server {
       String command = CommandBuilder()
           .addArguments(Commands.rename, [fileOrDirectory.fullPath, newPath]);
       client!.execute(command);
-    } catch (_) {
-      print(_);
-    }
+    } catch (_) {}
+  }
+
+  Future<void> download({required FileOrDirectory fileOrDirectory}) async {
+    try {
+      final remoteFile = await sftp!.open(fileOrDirectory.fullPath);
+      File localFileObj =
+          File("${FileManager.downloadLocation}/${fileOrDirectory.name}");
+      final size = (await remoteFile.stat()).size;
+      const defaultChunkSize = 1024 * 1024 * 10;
+      if (size != null) {
+        int chunkSize = size > defaultChunkSize ? defaultChunkSize : size;
+        for (var i = chunkSize; chunkSize > 0; i += chunkSize) {
+          final fileData = await remoteFile.readBytes(length: chunkSize);
+          await localFileObj.writeAsBytes(fileData, mode: FileMode.append);
+          notify(
+              fileName: fileOrDirectory.name,
+              location: FileManager.downloadLocation,
+              fileSize: size,
+              progress: i,
+              notificationType: NotificationType.download);
+          if (i + chunkSize > size) {
+            chunkSize = size - i;
+          }
+        }
+      }
+    } catch (_) {}
   }
 }

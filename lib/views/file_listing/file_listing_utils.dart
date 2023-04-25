@@ -125,7 +125,24 @@ enum FileActionMenu {
       case FileActionMenu.move:
         return moveFile(fileOrDirectory);
       case FileActionMenu.download:
-        break;
+        return downloadFile(fileOrDirectory);
+    }
+  }
+}
+
+enum FileSorting {
+  date,
+  size,
+  name;
+
+  void sort() {
+    switch (this) {
+      case FileSorting.date:
+        return sortOnDate;
+      case FileSorting.size:
+        return sortOnSize;
+      case FileSorting.name:
+        return sortOnName;
     }
   }
 }
@@ -363,4 +380,34 @@ Widget moveLocations(
       },
     ),
   );
+}
+
+void downloadFile(FileOrDirectory fileOrDirectory) async {
+  BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
+  final AppService appService = Provider.of<AppService>(context, listen: false);
+  await appService.commandExecuter.download(fileOrDirectory: fileOrDirectory);
+}
+
+void get sortOnDate {
+  BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
+  FileListingState listingState =
+      Provider.of<FileListingState>(context, listen: false);
+  listingState.originalList.sort((a, b) => a.date.compareTo(b.date));
+  listingState.applyFilter = true;
+}
+
+void get sortOnSize {
+  BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
+  FileListingState listingState =
+      Provider.of<FileListingState>(context, listen: false);
+  listingState.originalList.sort((a, b) => a.size.compareTo(b.size));
+  listingState.applyFilter = true;
+}
+
+void get sortOnName {
+  BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
+  FileListingState listingState =
+      Provider.of<FileListingState>(context, listen: false);
+  listingState.originalList.sort((a, b) => a.name.compareTo(b.name));
+  listingState.applyFilter = true;
 }

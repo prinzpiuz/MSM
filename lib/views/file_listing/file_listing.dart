@@ -111,15 +111,15 @@ Widget floatingActionButton() {
     distance: 112.0,
     children: [
       ActionButton(
-        onPressed: () => {},
+        onPressed: () => FileSorting.date.sort(),
         icon: const Icon(Icons.date_range_outlined),
       ),
       ActionButton(
-        onPressed: () => {},
+        onPressed: () => FileSorting.size.sort(),
         icon: const Icon(FontAwesomeIcons.database),
       ),
       ActionButton(
-        onPressed: () => {},
+        onPressed: () => FileSorting.name.sort(),
         icon: const Icon(FontAwesomeIcons.arrowDownAZ),
       ),
     ],
@@ -146,7 +146,6 @@ Widget listings(BuildContext context, FileListingState listingState) {
     return FutureBuilder<List<FileOrDirectory>?>(
         future: fileListFuture,
         builder: (context, AsyncSnapshot<List<FileOrDirectory>?> snapshot) {
-          print("calling");
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData &&
               snapshot.data != null) {
