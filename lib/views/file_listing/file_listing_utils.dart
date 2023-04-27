@@ -405,8 +405,7 @@ void sendToKindle(FileOrDirectory fileOrDirectory) async {
       SendTokindle sendTokindle = SendTokindle(
           base64EncodedData: base64encodedString,
           notifications: appService.notifications,
-          apiKey:
-              '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',
+          apiKey: '',
           enabled: true,
           fileName: fileOrDirectory.name,
           fromEmail: "prinzpiuz@gmail.com",
