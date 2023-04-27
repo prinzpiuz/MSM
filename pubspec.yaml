@@ -45,6 +45,7 @@ dependencies:
   url_launcher: ^6.1.10
   flutter_svg: ^2.0.5
   flutter_local_notifications: ^13.0.0
+  dio: ^5.1.1
 
 dev_dependencies:
   flutter_test:

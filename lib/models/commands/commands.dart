@@ -14,6 +14,7 @@ class Commands {
   static const ramUsage = "free -h | grep Mem";
   static const deleteFileOrFolders = "rm -rf";
   static const rename = "mv";
+  static const base64 = "base64 --wrap=0";
 
   static List<String> basicDetailsGroup = [
     addIdentifier(whoAmI, Identifiers.username),

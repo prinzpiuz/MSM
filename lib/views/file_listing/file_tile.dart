@@ -73,6 +73,10 @@ class FileTileState extends State<FileTile> {
                   : CommonColors.commonBlackColor,
               AppFontSizes.fileListSubtitleFontSize.sp)),
       trailing: commonPopUpMenu(
+          disabledItem: !FileManager.allowedDocumentExtentions
+                  .contains(widget.fileOrDirectory.extention)
+              ? FileActionMenu.sendKindle
+              : null,
           onSelected: (selectedMenu) {
             selectedMenu.executeAction(widget.fileOrDirectory);
           },

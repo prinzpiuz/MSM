@@ -56,7 +56,8 @@ void handleBack(BuildContext context, UploadState? uploadState,
 PopupMenuButton commonPopUpMenu(
     {required void Function(dynamic) onSelected,
     required List menuListValues,
-    required double size}) {
+    required double size,
+    dynamic disabledItem}) {
   return PopupMenuButton(
       icon: Icon(
         FontAwesomeIcons.ellipsisVertical,
@@ -64,17 +65,21 @@ PopupMenuButton commonPopUpMenu(
         size: size.sp,
       ),
       onSelected: onSelected,
-      itemBuilder: (BuildContext context) => buildPopupMenus(menuListValues));
+      itemBuilder: (BuildContext context) =>
+          buildPopupMenus(menuListValues, disabledItem));
 }
 
-List<PopupMenuEntry> buildPopupMenus(List menuListValues) {
+List<PopupMenuEntry> buildPopupMenus(
+    List menuListValues, dynamic disabledItem) {
   List<PopupMenuEntry> menuList = [];
   for (var item in menuListValues) {
     menuList.add(PopupMenuItem(
-      value: item,
-      child: AppText.text(item.menuText,
-          style: AppTextStyles.regular(CommonColors.commonBlackColor, 15.sp)),
-    ));
+        enabled: !(item == disabledItem),
+        textStyle: item == disabledItem
+            ? AppTextStyles.regular(CommonColors.commonGreenColor, 15.sp)
+            : AppTextStyles.regular(CommonColors.commonBlackColor, 15.sp),
+        value: item,
+        child: AppText.text(item.menuText)));
   }
   return menuList;
 }

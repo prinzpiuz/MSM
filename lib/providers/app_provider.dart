@@ -11,7 +11,6 @@ import 'package:msm/models/server_functions.dart';
 import 'package:msm/models/storage.dart';
 
 class AppService with ChangeNotifier {
-  //TODO add server class also here for having the connection status
   bool _connectionState = false;
   bool _initialized = false;
   Storage storage;

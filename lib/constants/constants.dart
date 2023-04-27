@@ -73,6 +73,8 @@ class AppMessages {
   static const filesDeletedSuccesfully = "Files Deleted Succesfully";
   static const fileRename = "File Renamed Succesfully";
   static const moveFile = "File Moved Succesfully";
+  static const sendToKindle = "File Succesfully Sent To Kindle";
+  static const sendToKindleError = "File Sending To Kindle Failed \n Try Again";
 }
 
 class BackgroundTaskUniqueNames {

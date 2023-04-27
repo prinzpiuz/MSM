@@ -12,6 +12,8 @@ import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
 import 'package:msm/context_keys.dart';
 import 'package:msm/models/file_manager.dart';
+import 'package:msm/models/send_to_kindle.dart';
+import 'package:msm/models/server.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/ui_components/loading/loading_overlay.dart';
@@ -101,7 +103,8 @@ enum FileActionMenu {
   rename,
   delete,
   move,
-  download;
+  download,
+  sendKindle;
 
   String get menuText {
     switch (this) {
@@ -113,6 +116,8 @@ enum FileActionMenu {
         return "Move";
       case FileActionMenu.download:
         return "Download";
+      case FileActionMenu.sendKindle:
+        return "Send To Kindle";
     }
   }
 
@@ -126,6 +131,8 @@ enum FileActionMenu {
         return moveFile(fileOrDirectory);
       case FileActionMenu.download:
         return downloadFile(fileOrDirectory);
+      case FileActionMenu.sendKindle:
+        return sendToKindle(fileOrDirectory);
     }
   }
 }
@@ -386,6 +393,36 @@ void downloadFile(FileOrDirectory fileOrDirectory) async {
   BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
   final AppService appService = Provider.of<AppService>(context, listen: false);
   await appService.commandExecuter.download(fileOrDirectory: fileOrDirectory);
+}
+
+void sendToKindle(FileOrDirectory fileOrDirectory) async {
+  BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
+  final AppService appService = Provider.of<AppService>(context, listen: false);
+  await appService.commandExecuter
+      .base64(fileOrDirectory: fileOrDirectory)
+      .then((base64encodedString) async {
+    if (base64encodedString.isNotEmpty) {
+      SendTokindle sendTokindle = SendTokindle(
+          base64EncodedData: base64encodedString,
+          notifications: appService.notifications,
+          apiKey:
+              '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',
+          enabled: true,
+          fileName: fileOrDirectory.name,
+          fromEmail: "prinzpiuz@gmail.com",
+          kindleMailAddress: "prinzpiuz@gmail.com",
+          type: SupportedMailers.sendgrid);
+      await sendTokindle.sendMail(SupportedMailers.sendgrid).then((response) {
+        if (response != null && response.statusCode == 202) {
+          showMessage(context: context, text: AppMessages.sendToKindle);
+        } else {
+          showMessage(context: context, text: AppMessages.sendToKindleError);
+        }
+      });
+    } else {
+      showMessage(context: context, text: AppMessages.sendToKindleError);
+    }
+  });
 }
 
 void get sortOnDate {

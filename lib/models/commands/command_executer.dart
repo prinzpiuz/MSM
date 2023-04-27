@@ -65,8 +65,8 @@ class CommandExecuter extends Server {
           for (final item in items) {
             if (item.attr.isDirectory &&
                 (item.filename != "." && item.filename != "..")) {
-              String filepath =
-                  "$directory/${FileManager.linuxCompatibleNameString(item.filename)}";
+              String filepath = FileManager.linuxCompatibleNameString(
+                  "$directory/${item.filename}");
               direcories.add(DirectoryObject(
                   Directory(filepath),
                   item.filename,
@@ -115,8 +115,8 @@ class CommandExecuter extends Server {
           await sftp!.listdir(path).then((items) {
             for (final item in items) {
               if (item.filename != "." && item.filename != "..") {
-                String filepath =
-                    "$path/${FileManager.linuxCompatibleNameString(item.filename)}";
+                String filepath = FileManager.linuxCompatibleNameString(
+                    "$path/${item.filename}");
                 if (item.attr.isDirectory) {
                   direcories.add(DirectoryObject(
                       Directory(filepath),
@@ -267,8 +267,8 @@ class CommandExecuter extends Server {
   Future<void> rename(
       {required FileOrDirectory fileOrDirectory,
       required String newName}) async {
-    String newPath =
-        "${fileOrDirectory.location}/${FileManager.linuxCompatibleNameString(newName)}";
+    String newPath = FileManager.linuxCompatibleNameString(
+        "${fileOrDirectory.location}/$newName");
     try {
       await sftp!.rename(fileOrDirectory.fullPath, newPath);
     } catch (_) {
@@ -317,5 +317,16 @@ class CommandExecuter extends Server {
         }
       }
     } catch (_) {}
+  }
+
+  Future<String> base64({required FileOrDirectory fileOrDirectory}) async {
+    try {
+      String command = CommandBuilder()
+          .addArguments(Commands.base64, [fileOrDirectory.fullPath]);
+      final String encodedString = _decodeOutput(await client!.run(command));
+      return encodedString;
+    } catch (_) {
+      return "";
+    }
   }
 }
