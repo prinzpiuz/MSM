@@ -58,8 +58,8 @@ List<Widget> dataWidget({required PackageInfo? data}) {
   return [
     SvgPicture.asset(
       AppConstants.appIconImageLocation,
-      height: AppFontSizes.appInfoIconHeight.h,
-      width: AppFontSizes.appInfoIconWidth.w,
+      height: AppMeasurements.appInfoIconHeight.h,
+      width: AppMeasurements.appInfoIconWidth.w,
     ),
     AppText.centerSingleLineText(data!.appName.toUpperCase(),
         style: AppTextStyles.medium(CommonColors.commonBlackColor,

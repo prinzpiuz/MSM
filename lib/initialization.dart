@@ -40,6 +40,7 @@ class Init {
             folderConfiguration: storage.getFolderConfigurations,
             serverFunctionsData: storage.getServerFunctions),
         storage: storage);
+    appService.kindleData = storage.getKindleData;
     UploadState uploadService = UploadState();
     FileListingState fileListingService = FileListingState();
     fileListingService.folderConfiguration =

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:msm/models/commands/command_executer.dart';
 import 'package:msm/models/folder_configuration.dart';
 import 'package:msm/models/local_notification.dart';
+import 'package:msm/models/send_to_kindle.dart';
 import 'package:msm/models/server.dart';
 import 'package:msm/models/server_details.dart';
 import 'package:msm/models/server_functions.dart';
@@ -15,6 +16,7 @@ class AppService with ChangeNotifier {
   bool _initialized = false;
   Storage storage;
   Server server;
+  KindleData kindleData = KindleData();
   late CommandExecuter commandExecuter;
   late Notifications notifications;
 

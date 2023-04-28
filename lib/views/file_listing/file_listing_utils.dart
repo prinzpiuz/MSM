@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:msm/router/router_utils.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
@@ -10,10 +12,8 @@ import 'package:msm/common_utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
-import 'package:msm/context_keys.dart';
 import 'package:msm/models/file_manager.dart';
 import 'package:msm/models/send_to_kindle.dart';
-import 'package:msm/models/server.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/ui_components/loading/loading_overlay.dart';
@@ -31,7 +31,7 @@ PreferredSizeWidget searchBar(
         listingState.setSearchText = newValue;
       },
     ),
-    elevation: AppFontSizes.appBarElevation,
+    elevation: AppMeasurements.appBarElevation,
     backgroundColor: CommonColors.commonWhiteColor,
     leading: Padding(
       padding: EdgeInsets.only(left: 10.w, right: 10.w),
@@ -229,7 +229,8 @@ void deleteSingleFile(FileOrDirectory fileOrDirectory) {
     context: context,
     content: Text(
       fileOrDirectory.name,
-      style: AppTextStyles.regular(CommonColors.commonBlackColor, 12.sp),
+      style: AppTextStyles.regular(
+          CommonColors.commonBlackColor, AppFontSizes.dailogBoxTextFontSize.sp),
     ),
     okOnPressed: () async {
       Navigator.pop(context, "OK");
@@ -259,7 +260,7 @@ void deletedSelected(FileListingState listingState) {
   dailogBox(
     context: context,
     content: SizedBox(
-      height: (AppFontSizes.deleteFileDailogBoxHeight *
+      height: (AppMeasurements.deleteFileDailogBoxHeight *
               listingState.selectedList.length)
           .h,
       child: ListView.separated(
@@ -268,7 +269,8 @@ void deletedSelected(FileListingState listingState) {
         itemBuilder: (BuildContext context, int index) {
           return Text(
             listingState.selectedList[index].name,
-            style: AppTextStyles.regular(CommonColors.commonBlackColor, 12.sp),
+            style: AppTextStyles.regular(CommonColors.commonBlackColor,
+                AppFontSizes.dailogBoxTextFontSize.sp),
           );
         },
       ),
@@ -356,7 +358,7 @@ Widget moveLocations(
     ...fileListState.folderConfiguration.customFolders
   ];
   return SizedBox(
-    height: (AppFontSizes.deleteFileDailogBoxHeight * locations.length).h,
+    height: (AppMeasurements.deleteFileDailogBoxHeight * locations.length).h,
     child: ListView.separated(
       separatorBuilder: (context, index) => commonDivider,
       itemCount: locations.length,
@@ -381,7 +383,8 @@ Widget moveLocations(
           },
           child: Text(
             locations[index].split("/").last.toUpperCase(),
-            style: AppTextStyles.regular(CommonColors.commonBlackColor, 12.sp),
+            style: AppTextStyles.regular(CommonColors.commonBlackColor,
+                AppFontSizes.dailogBoxTextFontSize.sp),
           ),
         );
       },
@@ -398,30 +401,33 @@ void downloadFile(FileOrDirectory fileOrDirectory) async {
 void sendToKindle(FileOrDirectory fileOrDirectory) async {
   BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
   final AppService appService = Provider.of<AppService>(context, listen: false);
-  await appService.commandExecuter
-      .base64(fileOrDirectory: fileOrDirectory)
-      .then((base64encodedString) async {
-    if (base64encodedString.isNotEmpty) {
-      SendTokindle sendTokindle = SendTokindle(
-          base64EncodedData: base64encodedString,
-          notifications: appService.notifications,
-          apiKey: '',
-          enabled: true,
-          fileName: fileOrDirectory.name,
-          fromEmail: "prinzpiuz@gmail.com",
-          kindleMailAddress: "prinzpiuz@gmail.com",
-          type: SupportedMailers.sendgrid);
-      await sendTokindle.sendMail(SupportedMailers.sendgrid).then((response) {
-        if (response != null && response.statusCode == 202) {
-          showMessage(context: context, text: AppMessages.sendToKindle);
-        } else {
-          showMessage(context: context, text: AppMessages.sendToKindleError);
-        }
-      });
-    } else {
-      showMessage(context: context, text: AppMessages.sendToKindleError);
-    }
-  });
+  if (appService.kindleData.dataAvailable) {
+    await appService.commandExecuter
+        .base64(fileOrDirectory: fileOrDirectory)
+        .then((base64encodedString) async {
+      if (base64encodedString.isNotEmpty) {
+        SendTokindle sendTokindle = SendTokindle(
+            base64EncodedData: base64encodedString,
+            notifications: appService.notifications,
+            enabled: true,
+            fileName: fileOrDirectory.name,
+            type: SupportedMailers.sendgrid,
+            kindleData: KindleData());
+        await sendTokindle.sendMail(SupportedMailers.sendgrid).then((response) {
+          if (response != null && response.statusCode == 202) {
+            showMessage(context: context, text: AppMessages.sendToKindle);
+          } else {
+            showMessage(context: context, text: AppMessages.sendToKindleError);
+          }
+        });
+      } else {
+        showMessage(context: context, text: AppMessages.sendToKindleError);
+      }
+    });
+  } else {
+    context.goNamed(SettingsSubRoute.serverFunctions.toName);
+    showMessage(context: context, text: AppMessages.setupKindleDetails);
+  }
 }
 
 void get sortOnDate {

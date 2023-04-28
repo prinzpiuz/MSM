@@ -108,7 +108,7 @@ PreferredSizeWidget commonAppBar(
             style: AppTextStyles.medium(CommonColors.commonBlackColor,
                 AppFontSizes.titleBarFontSize.sp))
         : const SizedBox(),
-    elevation: AppFontSizes.appBarElevation,
+    elevation: AppMeasurements.appBarElevation,
     backgroundColor: CommonColors.commonWhiteColor,
     leading: Padding(
       padding: appBarIconPadding,

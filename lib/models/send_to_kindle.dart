@@ -4,16 +4,60 @@ import 'package:dio/dio.dart';
 // Project imports:
 import 'package:msm/models/local_notification.dart';
 
+class KindleData {
+  String fromEmail = "";
+  String kindleMailAddress = "";
+  String apiKey = "";
+  SupportedMailers mailer = SupportedMailers.sendgrid;
+
+  KindleData();
+
+  bool get dataAvailable {
+    return fromEmail.isNotEmpty &&
+        kindleMailAddress.isNotEmpty &&
+        apiKey.isNotEmpty;
+  }
+
+  KindleData.fromJson(Map<String, dynamic> json)
+      : fromEmail = json['fromEmail'],
+        kindleMailAddress = json['kindleMailAddress'],
+        apiKey = json['apiKey'],
+        mailer = json['mailer'];
+
+  Map<String, dynamic> toJson() => {
+        'fromEmail': fromEmail,
+        'kindleMailAddress': kindleMailAddress,
+        'apiKey': apiKey,
+        'mailer': mailer
+      };
+}
+
 enum SupportedMailers {
   sendgrid,
   mailchimp;
+
+  String get getName {
+    switch (this) {
+      case SupportedMailers.sendgrid:
+        return "Sendgrid";
+      case SupportedMailers.mailchimp:
+        return "Mailchimp";
+    }
+  }
+
+  String get baseUrl {
+    switch (this) {
+      case SupportedMailers.sendgrid:
+        return "https://api.sendgrid.com/v3/mail/send";
+      case SupportedMailers.mailchimp:
+        return "";
+    }
+  }
 }
 
 class SendTokindle {
   final Dio dio = Dio();
-  final String fromEmail;
-  final String kindleMailAddress;
-  final String apiKey;
+  final KindleData kindleData;
   final String fileName;
   SupportedMailers type = SupportedMailers.sendgrid;
   bool enabled = false;
@@ -24,9 +68,7 @@ class SendTokindle {
       {required this.base64EncodedData,
       required this.notifications,
       required this.enabled,
-      required this.fromEmail,
-      required this.kindleMailAddress,
-      required this.apiKey,
+      required this.kindleData,
       required this.fileName,
       required this.type});
 
@@ -36,20 +78,20 @@ class SendTokindle {
         case SupportedMailers.sendgrid:
           try {
             final response = await dio.post(
-              'https://api.sendgrid.com/v3/mail/send',
+              type.baseUrl,
               options: Options(headers: {
                 "Content-type": "application/json",
-                "Authorization": "Bearer $apiKey"
+                "Authorization": "Bearer ${kindleData.apiKey}"
               }),
               data: {
                 "personalizations": [
                   {
                     "to": [
-                      {"email": kindleMailAddress}
+                      {"email": kindleData.kindleMailAddress}
                     ]
                   }
                 ],
-                "from": {"email": fromEmail},
+                "from": {"email": kindleData.fromEmail},
                 "subject": "Kindle Ebook $fileName",
                 "content": [
                   {

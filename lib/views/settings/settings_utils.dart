@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:msm/common_widgets.dart';
+import 'package:msm/models/send_to_kindle.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
@@ -176,4 +178,39 @@ void getFoldersList(
         .incrementFolderCount();
   }));
   folderConfigState.pathTextFields = folders;
+}
+
+void setKindleDetails(bool value) {
+  BuildContext context = ContextKeys.serverFunctionsPagekey.currentContext!;
+  final AppService appService = Provider.of<AppService>(context, listen: false);
+  ServerFunctionsData serverFunctionsData =
+      appService.storage.getServerFunctions;
+  serverFunctionsData.sendTokindle = value;
+  dailogBox(
+    onlycancel: true,
+    context: context,
+    title: "Select Default Mailer",
+    content: SizedBox(
+      height: (AppMeasurements.deleteFileDailogBoxHeight *
+              SupportedMailers.values.length)
+          .h,
+      child: ListView.separated(
+        separatorBuilder: (context, index) => commonDivider,
+        itemCount: SupportedMailers.values.length,
+        itemBuilder: (BuildContext context, int index) {
+          return TextButton(
+            onPressed: () {
+              appService.kindleData.mailer = SupportedMailers.values[index];
+              Navigator.pop(context, 'Ok');
+            },
+            child: Text(
+              SupportedMailers.values[index].getName,
+              style: AppTextStyles.regular(CommonColors.commonBlackColor,
+                  AppFontSizes.dailogBoxTextFontSize.sp),
+            ),
+          );
+        },
+      ),
+    ),
+  );
 }

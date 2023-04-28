@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class AppFontSizes {
   static const serverStatFontSize = 13.0;
   static const homePageIconFontSize = 60.0;
@@ -16,9 +18,6 @@ class AppFontSizes {
   static const connectingFontSize = 15.0;
   static const notConnectedIconSize = 90.0;
   static const notConnectedFontSize = 15.0;
-  static const appBarElevation = 1.0;
-  static const appInfoIconHeight = 100.0;
-  static const appInfoIconWidth = 100.0;
   static const dialogBoxactionFontSixe = 13.0;
   static const dialogBoxTitleFontSize = 15.0;
   static const breadCrumbFontSize = 13.0;
@@ -27,8 +26,15 @@ class AppFontSizes {
   static const fileSearchFontSize = 13.0;
   static const fileListTitleFontSize = 12.0;
   static const fileListSubtitleFontSize = 8.0;
-  static const deleteFileDailogBoxHeight = 25.0;
   static const fileMenuIconSize = 20.0;
+  static const dailogBoxTextFontSize = 12.0;
+}
+
+class AppMeasurements {
+  static const appBarElevation = 1.0;
+  static const appInfoIconHeight = 100.0;
+  static const appInfoIconWidth = 100.0;
+  static const deleteFileDailogBoxHeight = 50.0;
 }
 
 class AppConstants {
@@ -75,6 +81,7 @@ class AppMessages {
   static const moveFile = "File Moved Succesfully";
   static const sendToKindle = "File Succesfully Sent To Kindle";
   static const sendToKindleError = "File Sending To Kindle Failed \n Try Again";
+  static const setupKindleDetails = "Please Add Required Kindle Details";
 }
 
 class BackgroundTaskUniqueNames {
@@ -97,4 +104,11 @@ class Identifiers {
   static const ram = "ram";
 
   Identifiers._();
+}
+
+class ContextKeys {
+  static GlobalKey<NavigatorState> fileListingPageKey =
+      GlobalKey<NavigatorState>();
+  static GlobalKey<NavigatorState> serverFunctionsPagekey =
+      GlobalKey<NavigatorState>();
 }
