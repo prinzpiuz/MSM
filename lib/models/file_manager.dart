@@ -218,7 +218,7 @@ class FileManager {
     'html',
     'azw',
     'mobi',
-    'asw3',
+    'azw3',
     'epub'
   ];
 

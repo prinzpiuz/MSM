@@ -12,7 +12,8 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
 
 enum NotificationType {
   upload,
-  download;
+  download,
+  kindle;
 
   String get getString {
     switch (this) {
@@ -20,6 +21,8 @@ enum NotificationType {
         return "Upload";
       case NotificationType.download:
         return "Download";
+      case NotificationType.kindle:
+        return "Kindle";
     }
   }
 }
@@ -36,11 +39,25 @@ class Notifications {
     }
   }
 
-  String _uploadStatus(int total, int progress) {
-    if (total == progress) {
-      return "Completed";
+  String _uploadStatus(
+      int total, int progress, NotificationType notificationType) {
+    switch (notificationType) {
+      case NotificationType.upload:
+        if (total == progress) {
+          return "Completed";
+        }
+        return "Started";
+      case NotificationType.download:
+        if (total == progress) {
+          return "Completed";
+        }
+        return "Started";
+      case NotificationType.kindle:
+        if (total == progress) {
+          return "Sent";
+        }
+        return "Sending";
     }
-    return "Started";
   }
 
   Future<void> uploadNotification(
@@ -68,8 +85,37 @@ class Notifications {
         NotificationDetails(android: androidNotificationDetails);
     await flutterLocalNotificationsPlugin.show(
         name.hashCode,
-        '${notificationType.getString} ${_uploadStatus(fileSize, progress)} For $name',
+        '${notificationType.getString} ${_uploadStatus(fileSize, progress, notificationType)} For $name',
         'Saving to $location \n ${filesize(progress)}/${filesize(fileSize)}',
+        notificationDetails);
+  }
+
+  Future<void> sendToKindle(
+      {required String id,
+      required String name,
+      required int progress,
+      required int total,
+      required NotificationType notificationType}) async {
+    AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails(
+      id,
+      'upload notification',
+      importance: Importance.max,
+      priority: Priority.high,
+      playSound: true,
+      channelShowBadge: false,
+      enableVibration: true,
+      onlyAlertOnce: true,
+      showProgress: true,
+      maxProgress: total,
+      progress: progress,
+    );
+    NotificationDetails notificationDetails =
+        NotificationDetails(android: androidNotificationDetails);
+    await flutterLocalNotificationsPlugin.show(
+        name.hashCode,
+        name,
+        'Succesfully ${_uploadStatus(total, progress, notificationType)} To ${notificationType.getString} \n ${filesize(progress)}/${filesize(total)}',
         notificationDetails);
   }
 

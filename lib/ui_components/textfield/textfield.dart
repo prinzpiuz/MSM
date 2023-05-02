@@ -36,9 +36,12 @@ class AppTextField {
       String? initialValue,
       bool obscureText = false,
       bool suffix = false,
+      bool disableLeftRightPadding = false,
       void Function()? onSuffixIconPressed}) {
+    double leftRightPadding = disableLeftRightPadding ? 0 : 18.w;
     return Padding(
-      padding: EdgeInsets.only(top: 20.h, left: 18.w, right: 18.w),
+      padding: EdgeInsets.only(
+          top: 20.h, left: leftRightPadding, right: leftRightPadding),
       child: TextFormField(
           validator: validator,
           onSaved: onsaved,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
@@ -10,10 +11,11 @@ import 'package:msm/common_utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
-import 'package:msm/context_keys.dart';
 import 'package:msm/models/file_manager.dart';
+import 'package:msm/models/send_to_kindle.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/file_listing_provider.dart';
+import 'package:msm/router/router_utils.dart';
 import 'package:msm/ui_components/loading/loading_overlay.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 import 'package:msm/ui_components/textfield/textfield.dart';
@@ -29,7 +31,7 @@ PreferredSizeWidget searchBar(
         listingState.setSearchText = newValue;
       },
     ),
-    elevation: AppFontSizes.appBarElevation,
+    elevation: AppMeasurements.appBarElevation,
     backgroundColor: CommonColors.commonWhiteColor,
     leading: Padding(
       padding: EdgeInsets.only(left: 10.w, right: 10.w),
@@ -101,7 +103,8 @@ enum FileActionMenu {
   rename,
   delete,
   move,
-  download;
+  download,
+  sendKindle;
 
   String get menuText {
     switch (this) {
@@ -113,6 +116,8 @@ enum FileActionMenu {
         return "Move";
       case FileActionMenu.download:
         return "Download";
+      case FileActionMenu.sendKindle:
+        return "Send To Kindle";
     }
   }
 
@@ -126,6 +131,8 @@ enum FileActionMenu {
         return moveFile(fileOrDirectory);
       case FileActionMenu.download:
         return downloadFile(fileOrDirectory);
+      case FileActionMenu.sendKindle:
+        return sendToKindle(fileOrDirectory);
     }
   }
 }
@@ -222,7 +229,8 @@ void deleteSingleFile(FileOrDirectory fileOrDirectory) {
     context: context,
     content: Text(
       fileOrDirectory.name,
-      style: AppTextStyles.regular(CommonColors.commonBlackColor, 12.sp),
+      style: AppTextStyles.regular(
+          CommonColors.commonBlackColor, AppFontSizes.dailogBoxTextFontSize.sp),
     ),
     okOnPressed: () async {
       Navigator.pop(context, "OK");
@@ -252,7 +260,7 @@ void deletedSelected(FileListingState listingState) {
   dailogBox(
     context: context,
     content: SizedBox(
-      height: (AppFontSizes.deleteFileDailogBoxHeight *
+      height: (AppMeasurements.deleteFileDailogBoxHeight *
               listingState.selectedList.length)
           .h,
       child: ListView.separated(
@@ -261,7 +269,8 @@ void deletedSelected(FileListingState listingState) {
         itemBuilder: (BuildContext context, int index) {
           return Text(
             listingState.selectedList[index].name,
-            style: AppTextStyles.regular(CommonColors.commonBlackColor, 12.sp),
+            style: AppTextStyles.regular(CommonColors.commonBlackColor,
+                AppFontSizes.dailogBoxTextFontSize.sp),
           );
         },
       ),
@@ -349,7 +358,7 @@ Widget moveLocations(
     ...fileListState.folderConfiguration.customFolders
   ];
   return SizedBox(
-    height: (AppFontSizes.deleteFileDailogBoxHeight * locations.length).h,
+    height: (AppMeasurements.deleteFileDailogBoxHeight * locations.length).h,
     child: ListView.separated(
       separatorBuilder: (context, index) => commonDivider,
       itemCount: locations.length,
@@ -374,7 +383,8 @@ Widget moveLocations(
           },
           child: Text(
             locations[index].split("/").last.toUpperCase(),
-            style: AppTextStyles.regular(CommonColors.commonBlackColor, 12.sp),
+            style: AppTextStyles.regular(CommonColors.commonBlackColor,
+                AppFontSizes.dailogBoxTextFontSize.sp),
           ),
         );
       },
@@ -386,6 +396,38 @@ void downloadFile(FileOrDirectory fileOrDirectory) async {
   BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
   final AppService appService = Provider.of<AppService>(context, listen: false);
   await appService.commandExecuter.download(fileOrDirectory: fileOrDirectory);
+}
+
+void sendToKindle(FileOrDirectory fileOrDirectory) async {
+  BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
+  final AppService appService = Provider.of<AppService>(context, listen: false);
+  if (appService.kindleData.dataAvailable) {
+    await appService.commandExecuter
+        .base64(fileOrDirectory: fileOrDirectory)
+        .then((base64encodedString) async {
+      if (base64encodedString.isNotEmpty) {
+        SendTokindle sendTokindle = SendTokindle(
+            base64EncodedData: base64encodedString,
+            notifications: appService.notifications,
+            enabled: true,
+            fileName: fileOrDirectory.name,
+            type: SupportedMailers.sendgrid,
+            kindleData: appService.kindleData);
+        await sendTokindle.sendMail(SupportedMailers.sendgrid).then((response) {
+          if (response != null && response.statusCode == 202) {
+            showMessage(context: context, text: AppMessages.sendToKindle);
+          } else {
+            showMessage(context: context, text: AppMessages.sendToKindleError);
+          }
+        });
+      } else {
+        showMessage(context: context, text: AppMessages.sendToKindleError);
+      }
+    });
+  } else {
+    context.goNamed(SettingsSubRoute.serverFunctions.toName);
+    showMessage(context: context, text: AppMessages.setupKindleDetails);
+  }
 }
 
 void get sortOnDate {

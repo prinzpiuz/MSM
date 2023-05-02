@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:msm/common_utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
+import 'package:msm/constants/constants.dart';
 import 'package:msm/models/server_functions.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/router/router_utils.dart';
@@ -24,15 +24,16 @@ class ServerFunctions extends StatefulWidget {
 class _ServerFunctionsState extends State<ServerFunctions> {
   @override
   Widget build(BuildContext context) {
-    ServerFunctionsData serverFunctionsData =
-        Provider.of<AppService>(context).storage.getServerFunctions;
-    return functions(context, serverFunctionsData);
+    AppService appService = Provider.of<AppService>(context);
+    return functions(context, appService);
   }
 }
 
-Widget functions(
-    BuildContext context, ServerFunctionsData serverFunctionsData) {
+Widget functions(BuildContext context, AppService appService) {
+  ServerFunctionsData serverFunctionsData =
+      appService.storage.getServerFunctions;
   return Scaffold(
+      key: ContextKeys.serverFunctionsPagekey,
       appBar: commonAppBar(
           backroute: Pages.settings.toPath,
           context: context,
@@ -44,14 +45,19 @@ Widget functions(
       body: Column(
         children: [
           CommonSwitch(
-            text: 'Wake On Lan',
-            value: serverFunctionsData.wakeOnLan,
-            onChanged: (value) => {serverFunctionsData.wakeOnLan = value},
-          ),
+              text: 'Wake On Lan',
+              value: serverFunctionsData.wakeOnLan,
+              onChanged: (value) => serverFunctionsData.wakeOnLan = value),
           CommonSwitch(
               text: 'AutoUpdate Server',
               value: serverFunctionsData.autoUpdate,
               onChanged: (value) => serverFunctionsData.autoUpdate = value),
+          serverFunctionsData.sendTokindle
+              ? editSendToKindle(serverFunctionsData.sendTokindle)
+              : CommonSwitch(
+                  text: 'Send To Kindle',
+                  value: serverFunctionsData.sendTokindle,
+                  onChanged: (value) => setKindleDetails(value)),
         ],
       ));
 }

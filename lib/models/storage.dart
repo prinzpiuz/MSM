@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:msm/models/folder_configuration.dart';
+import 'package:msm/models/send_to_kindle.dart';
 import 'package:msm/models/server_details.dart';
 import 'package:msm/models/server_functions.dart';
 
@@ -13,7 +14,8 @@ enum StorageKeys {
   firstTime,
   serverData,
   serverFunctions,
-  folderConfigurations
+  folderConfigurations,
+  kindleData
 }
 
 extension StorageKeysExtension on StorageKeys {
@@ -27,6 +29,8 @@ extension StorageKeysExtension on StorageKeys {
         return "serverFunctions";
       case StorageKeys.folderConfigurations:
         return "folderConfigurations";
+      case StorageKeys.kindleData:
+        return "kindleData";
     }
   }
 }
@@ -74,6 +78,14 @@ class Storage {
       return FolderConfiguration.fromJson(data);
     }
     return FolderConfiguration();
+  }
+
+  KindleData get getKindleData {
+    Map<String, dynamic>? data = _getJson(StorageKeys.kindleData.key);
+    if (data != null) {
+      return KindleData.fromJson(data);
+    }
+    return KindleData();
   }
 
   Future<bool> getFirstTimeInstall() async =>
