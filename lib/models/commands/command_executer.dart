@@ -99,9 +99,9 @@ class CommandExecuter extends Server {
       } else {
         if (super.folderConfiguration.dataAvailable) {
           pathsToList.addAll([
-            super.folderConfiguration.books,
             super.folderConfiguration.movies,
-            super.folderConfiguration.tv
+            super.folderConfiguration.tv,
+            super.folderConfiguration.books,
           ]);
         } else {
           return direcories;

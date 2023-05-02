@@ -1,10 +1,5 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:msm/common_utils.dart';
-import 'package:msm/constants/constants.dart';
-import 'package:msm/models/send_to_kindle.dart';
-import 'package:msm/ui_components/text/textstyles.dart';
 
 // Package imports:
 import 'package:provider/provider.dart';
@@ -12,6 +7,7 @@ import 'package:provider/provider.dart';
 // Project imports:
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
+import 'package:msm/constants/constants.dart';
 import 'package:msm/models/server_functions.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/router/router_utils.dart';
@@ -29,7 +25,6 @@ class _ServerFunctionsState extends State<ServerFunctions> {
   @override
   Widget build(BuildContext context) {
     AppService appService = Provider.of<AppService>(context);
-
     return functions(context, appService);
   }
 }
@@ -57,10 +52,12 @@ Widget functions(BuildContext context, AppService appService) {
               text: 'AutoUpdate Server',
               value: serverFunctionsData.autoUpdate,
               onChanged: (value) => serverFunctionsData.autoUpdate = value),
-          CommonSwitch(
-              text: 'Send To Kindle',
-              value: serverFunctionsData.sendTokindle,
-              onChanged: (value) => setKindleDetails(value)),
+          serverFunctionsData.sendTokindle
+              ? editSendToKindle(serverFunctionsData.sendTokindle)
+              : CommonSwitch(
+                  text: 'Send To Kindle',
+                  value: serverFunctionsData.sendTokindle,
+                  onChanged: (value) => setKindleDetails(value)),
         ],
       ));
 }

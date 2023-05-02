@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:msm/common_widgets.dart';
-import 'package:msm/models/send_to_kindle.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
 import 'package:msm/common_utils.dart';
+import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
 import 'package:msm/models/folder_configuration.dart';
+import 'package:msm/models/send_to_kindle.dart';
 import 'package:msm/models/server_details.dart';
 import 'package:msm/models/server_functions.dart';
 import 'package:msm/models/storage.dart';
@@ -181,36 +181,155 @@ void getFoldersList(
 }
 
 void setKindleDetails(bool value) {
-  BuildContext context = ContextKeys.serverFunctionsPagekey.currentContext!;
+  final BuildContext context =
+      ContextKeys.serverFunctionsPagekey.currentContext!;
   final AppService appService = Provider.of<AppService>(context, listen: false);
   ServerFunctionsData serverFunctionsData =
       appService.storage.getServerFunctions;
   serverFunctionsData.sendTokindle = value;
   dailogBox(
-    onlycancel: true,
-    context: context,
-    title: "Select Default Mailer",
-    content: SizedBox(
-      height: (AppMeasurements.deleteFileDailogBoxHeight *
-              SupportedMailers.values.length)
-          .h,
-      child: ListView.separated(
-        separatorBuilder: (context, index) => commonDivider,
-        itemCount: SupportedMailers.values.length,
-        itemBuilder: (BuildContext context, int index) {
-          return TextButton(
+      context: context,
+      title: "Select Default Mailer",
+      content: SizedBox(
+        height: (AppMeasurements.deleteFileDailogBoxHeight *
+                SupportedMailers.values.length)
+            .h,
+        child: ListView.separated(
+          separatorBuilder: (context, index) => commonDivider,
+          itemCount: SupportedMailers.values.length,
+          itemBuilder: (BuildContext context, int index) {
+            return TextButton(
+              onPressed: () {
+                appService.kindleData.mailer = SupportedMailers.values[index];
+                Navigator.pop(context);
+                kindleDataForm(serverFunctionsData);
+              },
+              child: Text(
+                SupportedMailers.values[index].getName,
+                style: AppTextStyles.regular(CommonColors.commonBlackColor,
+                    AppFontSizes.dailogBoxTextFontSize.sp),
+              ),
+            );
+          },
+        ),
+      ),
+      actions: [
+        if (serverFunctionsData.sendTokindle)
+          TextButton(
             onPressed: () {
-              appService.kindleData.mailer = SupportedMailers.values[index];
-              Navigator.pop(context, 'Ok');
+              serverFunctionsData.sendTokindle = false;
+              appService.turnOffSendToKindle;
+              saveServerFunctions(serverFunctionsData, context);
+              Navigator.pop(context);
             },
             child: Text(
-              SupportedMailers.values[index].getName,
+              "Turn Off",
               style: AppTextStyles.regular(CommonColors.commonBlackColor,
-                  AppFontSizes.dailogBoxTextFontSize.sp),
+                  AppFontSizes.dialogBoxactionFontSixe.sp),
             ),
-          );
-        },
+          ),
+        dialogCancelButton(context),
+      ]);
+}
+
+void kindleDataForm(ServerFunctionsData serverFunctionsData) {
+  final BuildContext context =
+      ContextKeys.serverFunctionsPagekey.currentContext!;
+  final AppService appService = Provider.of<AppService>(context, listen: false);
+  final kindleformKey = GlobalKey<FormState>();
+  dailogBox(
+      context: context,
+      title: "Enter Kindle Details",
+      content: SizedBox(
+        height: AppMeasurements.kindleFormHeight.h,
+        child: Form(
+          key: kindleformKey,
+          child: Column(children: [
+            fromEmail(appService.kindleData),
+            kindleEmail(appService.kindleData),
+            apikey(appService.kindleData)
+          ]),
+        ),
       ),
+      actions: [
+        dialogCancelButton(context),
+        TextButton(
+          onPressed: () {
+            if (kindleformKey.currentState!.validate()) {
+              kindleformKey.currentState!.save();
+              appService.storage.saveObject(
+                  StorageKeys.serverFunctions.key, serverFunctionsData);
+              appService.storage.saveObject(
+                  StorageKeys.kindleData.key, appService.kindleData);
+              appService.turnOffSendToKindle;
+              Navigator.pop(context);
+            }
+          },
+          child: Text(
+            "Save",
+            style: AppTextStyles.regular(CommonColors.commonBlackColor,
+                AppFontSizes.dialogBoxactionFontSixe.sp),
+          ),
+        )
+      ]);
+}
+
+Widget fromEmail(KindleData kindleData) => AppTextField.commonTextFeild(
+      disableLeftRightPadding: true,
+      onsaved: (data) {
+        kindleData.fromEmail = data;
+      },
+      initialValue: kindleData.fromEmail,
+      validator: validateEmail,
+      keyboardType: TextInputType.emailAddress,
+      labelText: "From Email",
+      hintText: "Email Adress You Want To Send From",
+    );
+
+Widget kindleEmail(KindleData kindleData) => AppTextField.commonTextFeild(
+      disableLeftRightPadding: true,
+      onsaved: (data) {
+        kindleData.kindleMailAddress = data;
+      },
+      initialValue: kindleData.kindleMailAddress,
+      validator: validateEmail,
+      keyboardType: TextInputType.emailAddress,
+      labelText: "Kindle Email",
+      hintText: "Email Adress Of Your Kindle",
+    );
+
+Widget apikey(KindleData kindleData) => AppTextField.commonTextFeild(
+      disableLeftRightPadding: true,
+      onsaved: (data) {
+        kindleData.apiKey = data;
+      },
+      initialValue: kindleData.apiKey,
+      validator: valueNeeded,
+      keyboardType: const TextInputType.numberWithOptions(),
+      labelText: "${kindleData.mailer.getName} API KEY",
+      hintText: "API Key of ${kindleData.mailer.getName}",
+    );
+
+Widget editSendToKindle(bool value) {
+  return Padding(
+    padding: EdgeInsets.only(left: 18.w, right: 18.w),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        AppText.singleLineText('Send To Kindle',
+            style: AppTextStyles.medium(CommonColors.commonBlackColor,
+                AppFontSizes.systemToolsTittleFontSize.sp)),
+        TextButton(
+          onPressed: () {
+            setKindleDetails(value);
+          },
+          child: Text(
+            "Edit",
+            style: AppTextStyles.regular(CommonColors.commonLinkColor,
+                AppFontSizes.dialogBoxactionFontSixe.sp),
+          ),
+        )
+      ],
     ),
   );
 }

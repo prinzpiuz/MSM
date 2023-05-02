@@ -1,3 +1,4 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 class AppFontSizes {
@@ -35,6 +36,7 @@ class AppMeasurements {
   static const appInfoIconHeight = 100.0;
   static const appInfoIconWidth = 100.0;
   static const deleteFileDailogBoxHeight = 50.0;
+  static const kindleFormHeight = 290.0;
 }
 
 class AppConstants {
@@ -49,7 +51,10 @@ class AppConstants {
   static const licenseUrl =
       "https://github.com/prinzpiuz/MSM/blob/refactored/LICENSE";
   static const alphaAndSpecialChars = r'/^[ A-Za-z_@./#&+-]*$/.';
+  static const emailvalidationRegex =
+      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$";
   static const upperLower = "[a-zA-Z]";
+  static const lowerCase = "[a-z]";
   static const ipFormat = "[0-9.]";
   static const numberOnly = "[0-9]";
   static const macFormat = "[A-Z0-9:]";
@@ -109,6 +114,6 @@ class Identifiers {
 class ContextKeys {
   static GlobalKey<NavigatorState> fileListingPageKey =
       GlobalKey<NavigatorState>();
-  static GlobalKey<NavigatorState> serverFunctionsPagekey =
-      GlobalKey<NavigatorState>();
+  static GlobalKey<ScaffoldState> serverFunctionsPagekey =
+      GlobalKey<ScaffoldState>();
 }

@@ -129,3 +129,10 @@ PreferredSizeWidget commonAppBar(
 Widget get commonDivider => const Divider(
       color: CommonColors.commonBlackColor,
     );
+
+Widget dialogCancelButton(BuildContext context) => TextButton(
+      onPressed: () => Navigator.pop(context),
+      child: Text('Cancel',
+          style: AppTextStyles.regular(CommonColors.commonBlackColor,
+              AppFontSizes.dialogBoxactionFontSixe.sp)),
+    );

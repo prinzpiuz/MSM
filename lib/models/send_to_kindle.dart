@@ -18,17 +18,26 @@ class KindleData {
         apiKey.isNotEmpty;
   }
 
+  static SupportedMailers _getMailer(String mailerName) {
+    if (mailerName == SupportedMailers.sendgrid.name) {
+      return SupportedMailers.sendgrid;
+    } else if (mailerName == SupportedMailers.mailchimp.name) {
+      return SupportedMailers.mailchimp;
+    }
+    return SupportedMailers.sendgrid;
+  }
+
   KindleData.fromJson(Map<String, dynamic> json)
       : fromEmail = json['fromEmail'],
         kindleMailAddress = json['kindleMailAddress'],
         apiKey = json['apiKey'],
-        mailer = json['mailer'];
+        mailer = _getMailer(json['mailer']);
 
   Map<String, dynamic> toJson() => {
         'fromEmail': fromEmail,
         'kindleMailAddress': kindleMailAddress,
         'apiKey': apiKey,
-        'mailer': mailer
+        'mailer': mailer.name
       };
 }
 

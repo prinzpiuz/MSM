@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:msm/router/router_utils.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
@@ -16,6 +15,7 @@ import 'package:msm/models/file_manager.dart';
 import 'package:msm/models/send_to_kindle.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/file_listing_provider.dart';
+import 'package:msm/router/router_utils.dart';
 import 'package:msm/ui_components/loading/loading_overlay.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 import 'package:msm/ui_components/textfield/textfield.dart';
@@ -412,7 +412,7 @@ void sendToKindle(FileOrDirectory fileOrDirectory) async {
             enabled: true,
             fileName: fileOrDirectory.name,
             type: SupportedMailers.sendgrid,
-            kindleData: KindleData());
+            kindleData: appService.kindleData);
         await sendTokindle.sendMail(SupportedMailers.sendgrid).then((response) {
           if (response != null && response.statusCode == 202) {
             showMessage(context: context, text: AppMessages.sendToKindle);

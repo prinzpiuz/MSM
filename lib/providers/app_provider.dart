@@ -25,6 +25,16 @@ class AppService with ChangeNotifier {
   bool get connectionState => _connectionState;
   bool get initialized => _initialized;
 
+  void get turnOffSendToKindle {
+    server.serverFunctionsData.sendTokindle = false;
+    notifyListeners();
+  }
+
+  void get turnOnSendToKindle {
+    server.serverFunctionsData.sendTokindle = true;
+    notifyListeners();
+  }
+
   set setServer(Server server) {
     server = server;
   }

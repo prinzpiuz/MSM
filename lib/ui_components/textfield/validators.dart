@@ -37,3 +37,10 @@ String? macValidation(String? value) {
   }
   return null;
 }
+
+String? validateEmail(String? value) {
+  if (RegExp(AppConstants.emailvalidationRegex).hasMatch(value!)) {
+    return null;
+  }
+  return "Invalid Email Address";
+}
