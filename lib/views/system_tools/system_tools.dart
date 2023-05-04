@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 // Project imports:
 import 'package:msm/common_utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
+import 'package:msm/providers/app_provider.dart';
 import 'package:msm/router/router_utils.dart';
+import 'package:msm/views/system_tools/live_terminal.dart';
 
 class SystemTools extends StatelessWidget {
   const SystemTools({super.key});
@@ -20,6 +23,7 @@ class SystemTools extends StatelessWidget {
 }
 
 Widget systemToolsMenu(BuildContext context) {
+  AppService appService = Provider.of<AppService>(context);
   return Scaffold(
       appBar: commonAppBar(
           text: Pages.systemTools.toTitle,
@@ -32,9 +36,14 @@ Widget systemToolsMenu(BuildContext context) {
           commonTile(
               icon: FontAwesomeIcons.terminal,
               title: 'Live Terminal',
-              subtitle: 'To interact with server terminal live',
+              subtitle: 'To live interact with server terminal',
               onTap: () {
-                print("pressed1");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          LiveTerminalPage(appService: appService)),
+                );
               }),
           commonTile(
               icon: FontAwesomeIcons.code,
