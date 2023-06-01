@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+import 'dart:convert';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -155,4 +158,8 @@ Future<dynamic> dailogBox(
 
 String fileNameFromPath(String path) {
   return path.split('/').last.toString();
+}
+
+String decodeOutput(Uint8List output) {
+  return utf8.decode(output);
 }

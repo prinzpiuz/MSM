@@ -15,6 +15,11 @@ enum SettingsSubRoute {
   appInfo,
 }
 
+enum SystemToolsSubRoute {
+  liveTerminal,
+  services,
+}
+
 extension AppPageExtension on Pages {
   String get toPath {
     switch (this) {
@@ -117,6 +122,35 @@ extension SettingSubRouteExtention on SettingsSubRoute {
         return "App Info";
       case SettingsSubRoute.serverFunctions:
         return "Server Functions";
+    }
+  }
+}
+
+extension SystemToolsSubRouteExtention on SystemToolsSubRoute {
+  String get toPath {
+    switch (this) {
+      case SystemToolsSubRoute.liveTerminal:
+        return "liveTerminal";
+      case SystemToolsSubRoute.services:
+        return "services";
+    }
+  }
+
+  String get toName {
+    switch (this) {
+      case SystemToolsSubRoute.liveTerminal:
+        return "LIVE TERMINAL";
+      case SystemToolsSubRoute.services:
+        return "SERVICES";
+    }
+  }
+
+  String get toTitle {
+    switch (this) {
+      case SystemToolsSubRoute.liveTerminal:
+        return "Live Terminal";
+      case SystemToolsSubRoute.services:
+        return "Services";
     }
   }
 }
