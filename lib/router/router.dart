@@ -13,7 +13,7 @@ import 'package:msm/views/settings/server_details_view.dart';
 import 'package:msm/views/settings/server_functions_view.dart';
 import 'package:msm/views/settings/settings.dart';
 import 'package:msm/views/system_tools/live_terminal.dart';
-import 'package:msm/views/system_tools/services.dart';
+import 'package:msm/views/system_tools/services_list.dart';
 import 'package:msm/views/system_tools/system_tools.dart';
 import 'package:msm/views/upload_pages/common_upload_interface.dart';
 import 'package:msm/views/upload_pages/upload_menu.dart';
@@ -61,7 +61,7 @@ class AppRouter {
             GoRoute(
                 path: SystemToolsSubRoute.services.toPath,
                 name: SystemToolsSubRoute.services.toName,
-                builder: (context, state) => const Services())
+                builder: (context, state) => const ServicesList())
           ]),
       GoRoute(
         path: Pages.fileList.toPath,

@@ -6,6 +6,7 @@ class Services {
   String unit = "";
   String serviceStatus = "";
   String description = "";
+  late SSHClient client;
 
   bool get isActive {
     if (serviceStatus == "running") {
@@ -19,41 +20,42 @@ class Services {
       required this.serviceStatus,
       required this.description});
 
-  String serviceName() {
-    return unit.split(".").last;
-  }
+  String get serviceName => unit.split(".").first;
 
-  Future<String> start(SSHClient client) async {
+  Future<bool> get start async {
     try {
       String command =
           CommandBuilder().addArguments(Commands.serviceStart, [unit]);
-      return decodeOutput(await client.run(command));
+      await client.run(command);
+      return true;
     } catch (_) {
-      return _.toString();
+      return false;
     }
   }
 
-  Future<String> stop(SSHClient client) async {
+  Future<bool> get stop async {
     try {
       String command =
           CommandBuilder().addArguments(Commands.serviceStop, [unit]);
-      return decodeOutput(await client.run(command));
+      await client.run(command);
+      return true;
     } catch (_) {
-      return _.toString();
+      return false;
     }
   }
 
-  Future<String> restart(SSHClient client) async {
+  Future<bool> get restart async {
     try {
       String command =
           CommandBuilder().addArguments(Commands.serviceRestart, [unit]);
-      return decodeOutput(await client.run(command));
+      await client.run(command);
+      return true;
     } catch (_) {
-      return _.toString();
+      return false;
     }
   }
 
-  Future<String> status(SSHClient client) async {
+  Future<String> get status async {
     try {
       String command =
           CommandBuilder().addArguments(Commands.serviceStatus, [unit]);
