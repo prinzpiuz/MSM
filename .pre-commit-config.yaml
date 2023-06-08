@@ -1,12 +1,13 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.3.0
+    rev: v4.4.0
     hooks:
       - id: check-yaml
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: check-merge-conflict
-  - repo: https://github.com/Cretezy/flutter-format-pre-commit
-    rev: "4a1df675bb74dea371c17934933e257e46f8dd98"
-    hooks:
-      - id: flutter-format
+  # - repo: https://github.com/Cretezy/dart-format-pre-commit
+  #   rev: "fa83c73f40014f9e268bd0e62374eaa581fe3540"
+  #   hooks:
+  #     - id: dart-format
+  #       files: lib/* # Only format source files

@@ -271,6 +271,7 @@ class FileManager {
   static String linuxCompatibleNameString(String name) {
     //to change filenames to linux compatible string
     //eg: Mr. Brooks (2007) => Mr.\ Brooks\ \(2007\)
+    List<String> watchLetters = ["(", ")", "[", "]", "{", "}", "'"];
     List<String> letters = name.split("");
     int count = 0;
     for (var i = 0; i < name.length; i++) {
@@ -278,12 +279,7 @@ class FileManager {
         letters.insert(i + count, '\\');
         count++;
       }
-      if (name[i] == "(" ||
-          name[i] == ")" ||
-          name[i] == "[" ||
-          name[i] == "]" ||
-          name[i] == "{" ||
-          name[i] == "}") {
+      if (watchLetters.contains(name[i])) {
         letters.insert(i + count, '\\');
         count++;
       }

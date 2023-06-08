@@ -137,14 +137,18 @@ Widget buttonRow(Services service, BuildContext context) {
 }
 
 Widget startButton(Services service, BuildContext context) {
+  final AppService appService = Provider.of<AppService>(context);
   return Padding(
     padding: EdgeInsets.only(right: 8.w),
     child: IconButton(
       onPressed: () async {
-        await service.start.then((value) => showMessage(
-            duration: 5,
-            context: context,
-            text: actionStatus(service, "start", value)));
+        await service.start.then((value) {
+          showMessage(
+              duration: 5,
+              context: context,
+              text: actionStatus(service, "start", value));
+          appService.pageRefresh;
+        });
       },
       icon: const Icon(
         FontAwesomeIcons.circlePlay,
@@ -155,12 +159,16 @@ Widget startButton(Services service, BuildContext context) {
 }
 
 Widget stopButton(Services service, BuildContext context) {
+  final AppService appService = Provider.of<AppService>(context);
   return IconButton(
     onPressed: () async {
-      await service.stop.then((value) => showMessage(
-          duration: 5,
-          context: context,
-          text: actionStatus(service, "stop", value)));
+      await service.stop.then((value) {
+        showMessage(
+            duration: 5,
+            context: context,
+            text: actionStatus(service, "stop", value));
+        appService.pageRefresh;
+      });
     },
     icon: const Icon(FontAwesomeIcons.circleStop,
         color: CommonColors.commonBlackColor),

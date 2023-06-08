@@ -10,6 +10,7 @@ import 'package:msm/common_utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/router/router_utils.dart';
+import 'package:msm/views/system_tools/system_tool_utils.dart';
 
 class SystemTools extends StatelessWidget {
   const SystemTools({super.key});
@@ -42,23 +43,16 @@ Widget systemToolsMenu(BuildContext context) {
               subtitle: 'Systemd services available in server',
               onTap: () =>
                   context.goNamed(SystemToolsSubRoute.services.toName)),
-          commonTile(
-              icon: FontAwesomeIcons.floppyDisk,
-              title: 'Saved Commands',
-              subtitle: 'Pre-saved commands to run instantly',
-              onTap: () {
-                print("pressed2");
-              }),
-          commonTile(
-              icon: FontAwesomeIcons.user,
-              title: 'User Management',
-              subtitle: 'Linux user management(Experimental)',
-              onTap: () {
-                print("pressed2");
-              }),
+          // commonTile(
+          //     icon: FontAwesomeIcons.user,
+          //     title: 'User Management',
+          //     subtitle: 'Linux user management(Experimental)',
+          //     onTap: () {
+          //       print("pressed2");
+          //     }),
           commonTile(
               icon: FontAwesomeIcons.download,
-              title: 'Sytem Upgrade',
+              title: 'System Upgrade',
               subtitle: 'Commands to update system OS',
               onTap: () {
                 print("pressed2");
@@ -67,23 +61,14 @@ Widget systemToolsMenu(BuildContext context) {
               icon: FontAwesomeIcons.gaugeHigh,
               title: 'Speed Test',
               subtitle: 'Test your network speed',
-              onTap: () {
-                print("pressed2");
-              }),
-          commonTile(
-              icon: FontAwesomeIcons.tableTennisPaddleBall,
-              title: 'Ping Test',
-              subtitle: 'Send ICMP echo request to configured host',
-              onTap: () {
-                print("pressed2");
-              }),
-          commonTile(
-              icon: FontAwesomeIcons.chartColumn,
-              title: 'Charts',
-              subtitle: 'See your system perfomance in graphs',
-              onTap: () {
-                print("pressed2");
-              })
+              onTap: () => speedTestOutput(context)),
+          // commonTile(
+          //     icon: FontAwesomeIcons.chartColumn,
+          //     title: 'Charts',
+          //     subtitle: 'See your system perfomance in graphs',
+          //     onTap: () {
+          //       print("pressed2");
+          //     })
         ],
       ));
 }

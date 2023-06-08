@@ -348,4 +348,18 @@ class CommandExecuter extends Server {
       return serviceList;
     }
   }
+
+  Future<dynamic> speedTest() async {
+    try {
+      String command = Commands.speedTest;
+      String output = decodeOutput(await client!.run(command));
+      if (output.contains("command not found")) {
+        return "$output"
+            "\n Please Install speedtest-cli \n https://www.speedtest.net/apps/cli";
+      }
+      return Speed(commandOutput: output);
+    } catch (_) {
+      return "";
+    }
+  }
 }

@@ -17,11 +17,13 @@ class Commands {
   static const base64 = "base64 --wrap=0";
   // added `end` at the end for identification it also used for spliting output string
   static const getServices =
-      r"""systemctl --type=service | awk '{ print $1,"," $3,"," $4,",", $5,$6,$7,$8,$9,"end"}'""";
+      r"""systemctl --type=service -a --plain | awk '{ print $1,"," $3,"," $4,",", $5,$6,$7,$8,$9,"end"}'""";
   static const serviceStart = "systemctl start";
   static const serviceStatus = "systemctl status";
   static const serviceStop = "systemctl stop";
   static const serviceRestart = "systemctl restart";
+  static const ping = "";
+  static const speedTest = "speedtest-cli --secure --bytes --json";
 
   static List<String> basicDetailsGroup = [
     addIdentifier(whoAmI, Identifiers.username),
