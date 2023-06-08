@@ -1,15 +1,15 @@
 // Dart imports:
-import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 // Package imports:
 import 'package:dartssh2/dartssh2.dart';
+import 'package:msm/common_utils.dart';
 
 // Project imports:
 import 'package:msm/constants/constants.dart';
 import 'package:msm/models/commands/basic_details.dart';
 import 'package:msm/models/commands/commands.dart';
+import 'package:msm/models/commands/services.dart';
 import 'package:msm/models/file_manager.dart';
 import 'package:msm/models/local_notification.dart';
 import 'package:msm/models/server.dart';
@@ -27,16 +27,12 @@ class CommandExecuter extends Server {
       required this.sftp,
       required this.notifications});
 
-  String _decodeOutput(Uint8List output) {
-    return utf8.decode(output);
-  }
-
   Future<BasicDetails> get basicDetails async {
     try {
       String command = CommandBuilder().andAll(Commands.basicDetailsGroup);
       //TODO need to handle the condition of connection termination while running command
       if (client != null) {
-        final basicDetails = _decodeOutput(await client!.run(command));
+        final basicDetails = decodeOutput(await client!.run(command));
         return BasicDetails(BasicDetails.mapSource(basicDetails));
       }
       return BasicDetails({});
@@ -323,8 +319,45 @@ class CommandExecuter extends Server {
     try {
       String command = CommandBuilder()
           .addArguments(Commands.base64, [fileOrDirectory.fullPath]);
-      final String encodedString = _decodeOutput(await client!.run(command));
+      final String encodedString = decodeOutput(await client!.run(command));
       return encodedString;
+    } catch (_) {
+      return "";
+    }
+  }
+
+  Future<List<Services>> availableServices() async {
+    List<Services> serviceList = [];
+    try {
+      String command = Commands.getServices;
+      String output = decodeOutput(await client!.run(command));
+      List<String> splitAtEnd = output.split("end");
+      if (splitAtEnd.isNotEmpty) {
+        List<String> wantedServices =
+            splitAtEnd.sublist(1, splitAtEnd.length - 9);
+        for (String item in wantedServices) {
+          List individualService = item.split(",");
+          serviceList.add(Services(
+              unit: individualService[0].trim(),
+              serviceStatus: individualService[2].trim(),
+              description: individualService[3].trim()));
+        }
+      }
+      return serviceList;
+    } catch (_) {
+      return serviceList;
+    }
+  }
+
+  Future<dynamic> speedTest() async {
+    try {
+      String command = Commands.speedTest;
+      String output = decodeOutput(await client!.run(command));
+      if (output.contains("command not found")) {
+        return "$output"
+            "\n Please Install speedtest-cli \n https://www.speedtest.net/apps/cli";
+      }
+      return Speed(commandOutput: output);
     } catch (_) {
       return "";
     }

@@ -12,6 +12,8 @@ import 'package:msm/views/settings/folder_configuration_view.dart';
 import 'package:msm/views/settings/server_details_view.dart';
 import 'package:msm/views/settings/server_functions_view.dart';
 import 'package:msm/views/settings/settings.dart';
+import 'package:msm/views/system_tools/live_terminal.dart';
+import 'package:msm/views/system_tools/services_list.dart';
 import 'package:msm/views/system_tools/system_tools.dart';
 import 'package:msm/views/upload_pages/common_upload_interface.dart';
 import 'package:msm/views/upload_pages/upload_menu.dart';
@@ -47,10 +49,20 @@ class AppRouter {
         builder: (context, state) => const CommonUploadPage(),
       ),
       GoRoute(
-        path: Pages.systemTools.toPath,
-        name: Pages.systemTools.toName,
-        builder: (context, state) => const SystemTools(),
-      ),
+          path: Pages.systemTools.toPath,
+          name: Pages.systemTools.toName,
+          builder: (context, state) => const SystemTools(),
+          routes: [
+            GoRoute(
+                path: SystemToolsSubRoute.liveTerminal.toPath,
+                name: SystemToolsSubRoute.liveTerminal.toName,
+                builder: (context, state) =>
+                    LiveTerminalPage(appService: appService)),
+            GoRoute(
+                path: SystemToolsSubRoute.services.toPath,
+                name: SystemToolsSubRoute.services.toName,
+                builder: (context, state) => const ServicesList())
+          ]),
       GoRoute(
         path: Pages.fileList.toPath,
         name: Pages.fileList.toName,

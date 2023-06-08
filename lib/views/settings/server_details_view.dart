@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:msm/common_utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';

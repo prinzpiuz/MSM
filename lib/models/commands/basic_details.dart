@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:filesize/filesize.dart';
+
 // Project imports:
 import 'package:msm/constants/constants.dart';
 
@@ -102,4 +106,25 @@ class BasicDetails {
     List<String> tempSource = source[Identifiers.temperature]!;
     return tempSource.first.split(" ").last;
   }
+}
+
+class Speed {
+  String commandOutput = "";
+  String upload = "";
+  String download = "";
+  String country = "";
+  String isp = "";
+  String ping = "";
+
+  Speed({required this.commandOutput}) {
+    Map jsonData = jsonDecode(commandOutput);
+    upload = jsonData["upload"].toString().split(".").first;
+    download = jsonData["download"].toString().split(".").first;
+    ping = jsonData["ping"].toString();
+    country = jsonData["client"]["country"].toString();
+    isp = jsonData["client"]["isp"].toString();
+  }
+
+  String get uploadSpeed => "${filesize(upload)}/S";
+  String get downloadSpeed => "${filesize(download)}/S";
 }
