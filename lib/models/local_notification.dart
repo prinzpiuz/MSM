@@ -13,7 +13,8 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
 enum NotificationType {
   upload,
   download,
-  kindle;
+  kindle,
+  update;
 
   String get getString {
     switch (this) {
@@ -23,6 +24,8 @@ enum NotificationType {
         return "Download";
       case NotificationType.kindle:
         return "Kindle";
+      case NotificationType.update:
+        return "Update";
     }
   }
 }
@@ -39,8 +42,7 @@ class Notifications {
     }
   }
 
-  String _uploadStatus(
-      int total, int progress, NotificationType notificationType) {
+  String _status(int? total, int? progress, NotificationType notificationType) {
     switch (notificationType) {
       case NotificationType.upload:
         if (total == progress) {
@@ -57,6 +59,8 @@ class Notifications {
           return "Sent";
         }
         return "Sending";
+      case NotificationType.update:
+        return "Updated";
     }
   }
 
@@ -85,7 +89,7 @@ class Notifications {
         NotificationDetails(android: androidNotificationDetails);
     await flutterLocalNotificationsPlugin.show(
         name.hashCode,
-        '${notificationType.getString} ${_uploadStatus(fileSize, progress, notificationType)} For $name',
+        '${notificationType.getString} ${_status(fileSize, progress, notificationType)} For $name',
         'Saving to $location \n ${filesize(progress)}/${filesize(fileSize)}',
         notificationDetails);
   }
@@ -115,7 +119,32 @@ class Notifications {
     await flutterLocalNotificationsPlugin.show(
         name.hashCode,
         name,
-        'Succesfully ${_uploadStatus(total, progress, notificationType)} To ${notificationType.getString} \n ${filesize(progress)}/${filesize(total)}',
+        'Succesfully ${_status(total, progress, notificationType)} To ${notificationType.getString} \n ${filesize(progress)}/${filesize(total)}',
+        notificationDetails);
+  }
+
+  Future<void> systemUpdate(
+      {required String id,
+      required String name,
+      required NotificationType notificationType}) async {
+    AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails(
+      id,
+      'system update notification',
+      importance: Importance.max,
+      priority: Priority.high,
+      playSound: true,
+      channelShowBadge: false,
+      enableVibration: true,
+      onlyAlertOnce: true,
+      showProgress: false,
+    );
+    NotificationDetails notificationDetails =
+        NotificationDetails(android: androidNotificationDetails);
+    await flutterLocalNotificationsPlugin.show(
+        name.hashCode,
+        name,
+        'Succesfully ${_status(null, null, notificationType)} System',
         notificationDetails);
   }
 

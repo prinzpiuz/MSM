@@ -67,6 +67,8 @@ class AppConstants {
   static const deleteFilesTitle = "Delete These Files?";
   static const renameFile = "Enter New Name";
   static const moveFile = "Select The Folder To Move";
+  static const githubUpdateCommandsUrl =
+      "https://raw.githubusercontent.com/prinzpiuz/MSM/refactored/linux_update_commands.json";
 }
 
 class AppMessages {
@@ -107,6 +109,7 @@ class Identifiers {
   static const temperature = "temperature";
   static const disk = "disk";
   static const ram = "ram";
+  static const distribution = "distribution";
 
   Identifiers._();
 }

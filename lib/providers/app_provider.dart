@@ -14,7 +14,6 @@ import 'package:msm/models/storage.dart';
 class AppService with ChangeNotifier {
   bool _connectionState = false;
   bool _initialized = false;
-  bool _pageRefresh = false;
   Storage storage;
   Server server;
   KindleData kindleData = KindleData();
@@ -37,7 +36,6 @@ class AppService with ChangeNotifier {
   }
 
   void get pageRefresh {
-    _pageRefresh = true;
     notifyListeners();
   }
 

@@ -54,9 +54,7 @@ Widget systemToolsMenu(BuildContext context) {
               icon: FontAwesomeIcons.download,
               title: 'System Upgrade',
               subtitle: 'Commands to update system OS',
-              onTap: () {
-                print("pressed2");
-              }),
+              onTap: () => systemUpdate(context)),
           commonTile(
               icon: FontAwesomeIcons.gaugeHigh,
               title: 'Speed Test',

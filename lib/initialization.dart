@@ -38,7 +38,8 @@ class Init {
         server: Server(
             serverData: storage.getServerData,
             folderConfiguration: storage.getFolderConfigurations,
-            serverFunctionsData: storage.getServerFunctions),
+            serverFunctionsData: storage.getServerFunctions,
+            serverOS: storage.getServerOSData),
         storage: storage);
     appService.kindleData = storage.getKindleData;
     UploadState uploadService = UploadState();
@@ -50,6 +51,7 @@ class Init {
         serverData: appService.server.serverData,
         folderConfiguration: appService.server.folderConfiguration,
         serverFunctionsData: appService.server.serverFunctionsData,
+        serverOS: appService.server.serverOS,
         client: null,
         sftp: null,
         notifications: null);
@@ -90,6 +92,7 @@ class Init {
               serverData: appService.server.serverData,
               folderConfiguration: appService.server.folderConfiguration,
               serverFunctionsData: appService.server.serverFunctionsData,
+              serverOS: appService.server.serverOS,
               client: client,
               sftp: sftpClient,
               notifications: notifications);

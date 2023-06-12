@@ -13,19 +13,22 @@ import 'package:msm/models/commands/services.dart';
 import 'package:msm/models/file_manager.dart';
 import 'package:msm/models/local_notification.dart';
 import 'package:msm/models/server.dart';
+import 'package:msm/models/storage.dart';
 import 'package:msm/views/upload_pages/upload_page_utils.dart';
 
 class CommandExecuter extends Server {
   late SSHClient? client;
   late SftpClient? sftp;
   late Notifications? notifications;
-  CommandExecuter(
-      {required super.serverData,
-      required super.folderConfiguration,
-      required super.serverFunctionsData,
-      required this.client,
-      required this.sftp,
-      required this.notifications});
+  CommandExecuter({
+    required super.serverData,
+    required super.folderConfiguration,
+    required super.serverFunctionsData,
+    required super.serverOS,
+    required this.client,
+    required this.sftp,
+    required this.notifications,
+  });
 
   Future<BasicDetails> get basicDetails async {
     try {
@@ -359,7 +362,50 @@ class CommandExecuter extends Server {
       }
       return Speed(commandOutput: output);
     } catch (_) {
+      return null;
+    }
+  }
+
+  Future<ServerOS?> getDistribution(Storage storage) async {
+    try {
+      String command = Commands.linuxDistribution;
+      String output = decodeOutput(await client!.run(command));
+      if (output.contains("command not found")) {
+        return null;
+      }
+      serverOS.serverOS = output.trim();
+      storage.saveObject(StorageKeys.serverOS.key, serverOS);
+      return serverOS;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<String> updateList() async {
+    try {
+      String updateCommand = serverOS.updateCommand;
+      String listCommand = serverOS.listCommand;
+      await client!.run(updateCommand);
+      String output = decodeOutput(await client!.run(listCommand));
+      return output;
+    } catch (_) {
       return "";
     }
+  }
+
+  Future<void> systemUpgrade() async {
+    try {
+      String command = serverOS.upgradeCommand;
+      await client!.run(command).then((value) {
+        if (serverOS.afterRunCommand.isNotEmpty) {
+          client!.run(serverOS.afterRunCommand);
+        }
+
+        notifications!.systemUpdate(
+            id: "",
+            name: "System Update",
+            notificationType: NotificationType.update);
+      });
+    } catch (_) {}
   }
 }
