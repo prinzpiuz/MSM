@@ -5,6 +5,7 @@ class Commands {
   //added echo -n '<identifier>:' to prepand and identifier with the command output
   static const whoAmI = "whoami";
   static const uptime = "uptime -p";
+  static const linuxDistribution = "lsb_release -i -s";
   // https://askubuntu.com/a/854029/596101
   static const temperature =
       r"paste <(cat /sys/class/thermal/thermal_zone*/type) <(cat /sys/class/thermal/thermal_zone*/temp) | column -s $'\t' -t | sed 's/\(.\)..$/.\1°C/' | grep x86_pkg_temp";

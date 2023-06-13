@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Package imports:
+import 'package:msm/models/server.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
@@ -15,7 +16,8 @@ enum StorageKeys {
   serverData,
   serverFunctions,
   folderConfigurations,
-  kindleData
+  kindleData,
+  serverOS
 }
 
 extension StorageKeysExtension on StorageKeys {
@@ -31,6 +33,8 @@ extension StorageKeysExtension on StorageKeys {
         return "folderConfigurations";
       case StorageKeys.kindleData:
         return "kindleData";
+      case StorageKeys.serverOS:
+        return "serverOS";
     }
   }
 }
@@ -62,6 +66,14 @@ class Storage {
       return ServerData.fromJson(data);
     }
     return ServerData();
+  }
+
+  ServerOS get getServerOSData {
+    Map<String, dynamic>? data = _getJson(StorageKeys.serverOS.key);
+    if (data != null) {
+      return ServerOS.fromJson(data);
+    }
+    return ServerOS();
   }
 
   ServerFunctionsData get getServerFunctions {
