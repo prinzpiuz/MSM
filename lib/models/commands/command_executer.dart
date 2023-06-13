@@ -403,7 +403,6 @@ class CommandExecuter extends Server {
         if (serverOS.afterRunCommand.isNotEmpty) {
           client!.run(serverOS.afterRunCommand);
         }
-
         notifications!.systemUpdate(
             id: "",
             name: "System Update",
