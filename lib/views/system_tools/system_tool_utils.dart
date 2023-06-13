@@ -128,6 +128,13 @@ Widget updateProcess(BuildContext context) {
                   style: AppTextStyles.medium(
                       CommonColors.commonBlackColor, 15.sp));
             } else {
+              if (snapshot.data!
+                  .toString()
+                  .contains("All packages are up to date.")) {
+                return AppText.text(snapshot.data!,
+                    style: AppTextStyles.regular(
+                        CommonColors.commonBlackColor, 15.sp));
+              }
               return SingleChildScrollView(
                 child: Column(
                   children: [

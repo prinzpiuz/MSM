@@ -385,7 +385,10 @@ class CommandExecuter extends Server {
     try {
       String updateCommand = serverOS.updateCommand;
       String listCommand = serverOS.listCommand;
-      await client!.run(updateCommand);
+      String updateStatus = decodeOutput(await client!.run(updateCommand));
+      if (updateStatus.contains("All packages are up to date.")) {
+        return "All packages are up to date.";
+      }
       String output = decodeOutput(await client!.run(listCommand));
       return output;
     } catch (_) {
