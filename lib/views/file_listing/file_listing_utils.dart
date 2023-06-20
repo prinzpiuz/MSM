@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:msm/models/background_tasks.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
@@ -395,7 +396,11 @@ Widget moveLocations(
 void downloadFile(FileOrDirectory fileOrDirectory) async {
   BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
   final AppService appService = Provider.of<AppService>(context, listen: false);
-  await appService.commandExecuter.download(fileOrDirectory: fileOrDirectory);
+  BackgroundTasks().task(task: Task.download, appService: appService, data: {
+    "fullPath": fileOrDirectory.fullPath,
+    "name": fileOrDirectory.name
+  });
+  // await appService.commandExecuter.download(fileOrDirectory: fileOrDirectory);
 }
 
 void sendToKindle(FileOrDirectory fileOrDirectory) async {

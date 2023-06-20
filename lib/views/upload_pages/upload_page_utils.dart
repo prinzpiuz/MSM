@@ -2,6 +2,7 @@
 import 'dart:io';
 
 // Flutter imports:
+import 'package:dartssh2/dartssh2.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -9,6 +10,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:msm/models/background_tasks.dart';
+import 'package:msm/models/upload_and_download.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
@@ -163,20 +166,30 @@ void uploadFiles(BuildContext context, UploadState uploadState) async {
     if (uploadState.toCustomFolder) {
       directory = uploadState.customPath;
     }
-    await appService.commandExecuter
-        .upload(
-            directory: directory!,
-            filePaths: uploadState.fileUploadData.localFilesPaths,
-            insidPath:
-                FileManager.pathBuilder(uploadState.traversedDirectories),
-            newFolders: uploadState.newFoldersToCreate)
-        .then((value) {
-      showMessage(
-          context: context, text: AppMessages.uploadStarted, duration: 5);
-      uploadState.fileUploadData.clear;
-      uploadState.fileAddOrRemove;
-      Navigator.pop(context);
-    });
+    BackgroundTasks().task(
+        task: Task.upload,
+        data: {
+          "directory": directory!,
+          "filePaths": uploadState.fileUploadData.localFilesPaths,
+          "insidPath":
+              FileManager.pathBuilder(uploadState.traversedDirectories),
+          "newFolders": uploadState.newFoldersToCreate
+        },
+        appService: appService);
+    //////////////////////
+    // final SftpClient sftpClient =
+    //     await appService.commandExecuter.client!.sftp();
+    // await upload(
+    //     directory: directory!,
+    //     filePaths: uploadState.fileUploadData.localFilesPaths,
+    //     sftp: sftpClient,
+    //     notifications: appService.commandExecuter.notifications);
+    ///////////////////
+    showMessage(context: context, text: AppMessages.uploadStarted, duration: 5);
+    uploadState.fileUploadData.clear;
+    uploadState.fileAddOrRemove;
+    Navigator.pop(context);
+    // });
   } else {
     showMessage(context: context, text: AppMessages.connectionLost);
   }

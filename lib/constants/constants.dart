@@ -95,6 +95,7 @@ class BackgroundTaskUniqueNames {
   static const upload = "upload";
   static const update = "update";
   static const cleanServer = "cleanServer";
+  static const download = "download";
 }
 
 class AppDictKeys {

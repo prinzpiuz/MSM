@@ -4,10 +4,10 @@ import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:dartssh2/dartssh2.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:workmanager/workmanager.dart';
 
 // Project imports:
 import 'package:msm/models/background_tasks.dart';
@@ -32,15 +32,17 @@ class Init {
       _setAppOrientation();
     }
     WidgetsFlutterBinding.ensureInitialized();
-    Workmanager().initialize(backGroundTaskDispatcher, isInDebugMode: false);
     Storage storage = await _getUserPreferences();
+    FlutterBackgroundService backgroundService = FlutterBackgroundService();
     AppService appService = AppService(
         server: Server(
             serverData: storage.getServerData,
             folderConfiguration: storage.getFolderConfigurations,
             serverFunctionsData: storage.getServerFunctions,
             serverOS: storage.getServerOSData),
+        backgroundService: backgroundService,
         storage: storage);
+    configureBackgroundService(backgroundService);
     appService.kindleData = storage.getKindleData;
     UploadState uploadService = UploadState();
     FileListingState fileListingService = FileListingState();
@@ -117,6 +119,20 @@ class Init {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+  }
+
+  static void configureBackgroundService(
+      FlutterBackgroundService backgroundService) async {
+    await backgroundService.configure(
+      androidConfiguration: AndroidConfiguration(
+        onStart: backGroundTaskDispatcher,
+        autoStart: true,
+        isForegroundMode: true,
+      ),
+      iosConfiguration: IosConfiguration(),
+    );
+
+    backgroundService.startService();
   }
 
   static Future<FlutterLocalNotificationsPlugin> notificationIntialize() async {

@@ -1,87 +1,109 @@
 // Flutter imports:
-import 'package:flutter/widgets.dart';
+// ignore_for_file: depend_on_referenced_packages
 
-// Package imports:
-import 'package:workmanager/workmanager.dart';
+import 'dart:ui';
+
+import 'package:dartssh2/dartssh2.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_background_service_android/flutter_background_service_android.dart';
+import 'package:msm/initialization.dart';
+import 'package:msm/models/local_notification.dart';
+import 'package:msm/models/upload_and_download.dart';
 
 // Project imports:
 import 'package:msm/constants/constants.dart';
+import 'package:msm/providers/app_provider.dart';
 
 @pragma('vm:entry-point')
-void backGroundTaskDispatcher() {
-  Workmanager().executeTask((task, inputData) async {
-    switch (task) {
-      case BackgroundTaskUniqueNames.upload:
-        // await Init().initialize(background: true).then((value) async {
-        //   AppService appservice = value["appService"];
-        //   if (inputData != null) {
-        //     await appservice.server.connect().then((client) async {
-        //       final SftpClient sftpClient = await client!.sftp();
-        //       FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        //           await Init.notificationIntialize();
-        //       Notifications notifications = Notifications(
-        //           flutterLocalNotificationsPlugin:
-        //               flutterLocalNotificationsPlugin);
-        //       appservice.commandExecuter.client = client;
-        //       appservice.commandExecuter.sftp = sftpClient;
-        //       appservice.commandExecuter.notifications = notifications;
-        //       await appservice.commandExecuter.sendFile(
-        //           directory: inputData[AppDictKeys.directory],
-        //           filePath: inputData[AppDictKeys.filePath],
-        //           fileSize: inputData[AppDictKeys.fileSize]);
-        //       return Future.value(true);
-        //     });
-        //   }
-        // });
-        return Future.value(true);
-      case BackgroundTaskUniqueNames.update:
-        break;
-      case BackgroundTaskUniqueNames.cleanServer:
-        break;
+void backGroundTaskDispatcher(ServiceInstance service) async {
+  DartPluginRegistrant.ensureInitialized();
+  Notifications notifications = Notifications(
+      flutterLocalNotificationsPlugin: await Init.notificationIntialize());
+  try {
+    if (service is AndroidServiceInstance) {
+      service.on(Task.upload.uniqueName).listen((event) async {
+        if (event != null) {
+          final SftpClient sftpClient = await getSFTPClient(event);
+          upload(
+              newFolders: event["newFolders"].cast<String>(),
+              insidPath: event["insidPath"],
+              directory: event["directory"],
+              filePaths: event["filePaths"].cast<String>(),
+              notifications: notifications,
+              sftp: sftpClient);
+        }
+      });
+      service.on(Task.download.uniqueName).listen((event) async {
+        if (event != null) {
+          final SftpClient sftpClient = await getSFTPClient(event);
+          download(
+              notifications: notifications,
+              sftp: sftpClient,
+              fullPath: event["fullPath"],
+              name: event["name"]);
+        }
+      });
+      service.on('stopService').listen((event) {
+        service.stopSelf();
+      });
     }
-    return Future.value(true);
-  });
+  } catch (_) {}
 }
 
-enum Tasks { upload, update, cleanServer }
+enum Task { upload, download, update, cleanServer }
 
-extension TasksExtension on Tasks {
+extension TasksExtension on Task {
   String get uniqueName {
     switch (this) {
-      case Tasks.upload:
+      case Task.upload:
         return BackgroundTaskUniqueNames.upload;
-      case Tasks.update:
+      case Task.update:
         return BackgroundTaskUniqueNames.update;
-      case Tasks.cleanServer:
+      case Task.cleanServer:
         return BackgroundTaskUniqueNames.cleanServer;
+      case Task.download:
+        return BackgroundTaskUniqueNames.download;
     }
   }
 }
-
-Constraints get constraints => Constraints(
-    networkType: NetworkType.connected,
-    requiresBatteryNotLow: true,
-    requiresCharging: false,
-    requiresDeviceIdle: false,
-    requiresStorageNotLow: false);
 
 class BackgroundTasks {
   BackgroundTasks() {
-    //TODO flavor app to automatically select debug mode
     WidgetsFlutterBinding.ensureInitialized();
-    Workmanager().initialize(backGroundTaskDispatcher, isInDebugMode: false);
   }
 
-  void uploadTask({data}) {
-    Workmanager().registerOneOffTask(
-        Tasks.upload.uniqueName, Tasks.upload.uniqueName,
-        inputData: data,
-        tag: data[AppDictKeys.filePath].hashCode.toString(),
-        constraints: constraints,
-        existingWorkPolicy: ExistingWorkPolicy.append,
-        backoffPolicy: BackoffPolicy.exponential,
-        backoffPolicyDelay: const Duration(seconds: 10));
+  void task(
+      {required Task task,
+      required Map<String, dynamic> data,
+      required AppService appService}) async {
+    data.addAll(appService.server.serverData.toJson());
+    final service = appService.backgroundService;
+    bool isRunning = await service.isRunning();
+    if (!isRunning) {
+      service.startService();
+    }
+    switch (task) {
+      case Task.upload:
+        service.invoke(Task.upload.uniqueName, data);
+        break;
+      case Task.download:
+        service.invoke(Task.download.uniqueName, data);
+        break;
+      case Task.update:
+        // TODO: Handle this case.
+        break;
+      case Task.cleanServer:
+        // TODO: Handle this case.
+        break;
+    }
   }
 
-  static void get cancel => Workmanager().cancelAll();
+  static void cancel() async {
+    final FlutterBackgroundService service = FlutterBackgroundService();
+    bool isRunning = await service.isRunning();
+    if (isRunning) {
+      service.invoke("stopService");
+    }
+  }
 }
