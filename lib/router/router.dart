@@ -1,6 +1,5 @@
 // Package imports:
 import 'package:go_router/go_router.dart';
-import 'package:msm/initialization.dart';
 import 'package:msm/models/server.dart';
 
 // Project imports:
