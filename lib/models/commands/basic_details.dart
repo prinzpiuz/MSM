@@ -12,11 +12,14 @@ class Disk {
   String available = "";
   String usePercentage = "0";
 
-  Disk(this.source)
-      : size = _parseSource(source)[0],
-        used = _parseSource(source)[1],
-        available = _parseSource(source)[2],
-        usePercentage = _parseSource(source)[3];
+  Disk(this.source) {
+    if (source.isNotEmpty) {
+      size = _parseSource(source)[0];
+      used = _parseSource(source)[1];
+      available = _parseSource(source)[2];
+      usePercentage = _parseSource(source)[3];
+    }
+  }
 
   static List<String> _parseSource(String source) {
     List<String> splitSource = source.split(" ");
@@ -39,10 +42,13 @@ class Ram {
   String used = "";
   String free = "";
 
-  Ram(this.source)
-      : size = _parseSource(source)[0],
-        used = _parseSource(source)[1],
-        free = _parseSource(source)[2];
+  Ram(this.source) {
+    if (source.isNotEmpty) {
+      size = _parseSource(source)[0];
+      used = _parseSource(source)[1];
+      free = _parseSource(source)[2];
+    }
+  }
 
   static List<String> _parseSource(String source) {
     List<String> splitSource = source.split(" ");
@@ -64,12 +70,15 @@ class BasicDetails {
   late Ram ram;
   late Disk disk;
 
-  BasicDetails(this.source)
-      : user = _parseUser(source),
-        uptime = _parseUptime(source),
-        tempreture = _parseTemperature(source),
-        disk = _parseDisk(source),
-        ram = _parseRam(source);
+  BasicDetails(this.source) {
+    if (source.isNotEmpty) {
+      user = _parseUser(source);
+      uptime = _parseUptime(source);
+      tempreture = _parseTemperature(source);
+      disk = _parseDisk(source);
+      ram = _parseRam(source);
+    }
+  }
 
   static Map<String, List<String>> mapSource(String source) {
     Map<String, List<String>> outAsMap = {};
@@ -117,12 +126,14 @@ class Speed {
   String ping = "";
 
   Speed({required this.commandOutput}) {
-    Map jsonData = jsonDecode(commandOutput);
-    upload = jsonData["upload"].toString().split(".").first;
-    download = jsonData["download"].toString().split(".").first;
-    ping = jsonData["ping"].toString();
-    country = jsonData["client"]["country"].toString();
-    isp = jsonData["client"]["isp"].toString();
+    if (commandOutput.isNotEmpty) {
+      Map jsonData = jsonDecode(commandOutput);
+      upload = jsonData["upload"].toString().split(".").first;
+      download = jsonData["download"].toString().split(".").first;
+      ping = jsonData["ping"].toString();
+      country = jsonData["client"]["country"].toString();
+      isp = jsonData["client"]["isp"].toString();
+    }
   }
 
   String get uploadSpeed => "${filesize(upload)}/S";

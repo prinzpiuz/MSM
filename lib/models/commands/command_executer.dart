@@ -32,7 +32,6 @@ class CommandExecuter extends Server {
   Future<BasicDetails> get basicDetails async {
     try {
       String command = CommandBuilder().andAll(Commands.basicDetailsGroup);
-      //TODO need to handle the condition of connection termination while running command
       if (client != null) {
         final basicDetails = decodeOutput(await client!.run(command));
         return BasicDetails(BasicDetails.mapSource(basicDetails));

@@ -1,5 +1,7 @@
 // Package imports:
 import 'package:go_router/go_router.dart';
+import 'package:msm/initialization.dart';
+import 'package:msm/models/server.dart';
 
 // Project imports:
 import 'package:msm/providers/app_provider.dart';
@@ -96,6 +98,12 @@ class AppRouter {
           ])
     ],
     redirect: (context, state) async {
+      if (appService.commandExecuter.client == null ||
+          appService.commandExecuter.client!.isClosed) {
+        appService.connectionState = false;
+        appService.server.state = ServerState.disconnected;
+        return null;
+      }
       if (!appService.server.serverData.detailsAvailable) {
         return "${Pages.settings.toPath}/${SettingsSubRoute.serverDetails.toPath}";
       }
