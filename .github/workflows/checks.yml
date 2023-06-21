@@ -1,0 +1,25 @@
+on: push
+name: Pre-Merging checks
+jobs:
+  pre-commit:
+    name: Run Pre-commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+      - uses: subosito/flutter-action@v2
+      - uses: pre-commit/action@v3.0.0
+  sort_analyse_test:
+    name: Sort Analyze Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.10.3"
+          channel: "stable"
+      - run: flutter --version
+      - run: flutter pub get
+      - run: flutter pub run import_sorter:main
+      - run: flutter analyze
+      - run: flutter test

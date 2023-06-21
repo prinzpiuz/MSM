@@ -1,0 +1,8 @@
+{
+  "Debian": {
+    "update": "sudo apt update",
+    "list": "sudo apt list --upgradable",
+    "upgrade": "sudo apt upgrade -y",
+    "after": "sudo apt autoremove"
+  }
+}
