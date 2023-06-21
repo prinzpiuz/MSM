@@ -4,10 +4,11 @@ import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:dartssh2/dartssh2.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:msm/constants/constants.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:workmanager/workmanager.dart';
 
 // Project imports:
 import 'package:msm/models/background_tasks.dart';
@@ -26,21 +27,21 @@ class Init {
   late FileListingState fileListingService;
   late FolderConfigState folderConfigState;
 
-  Future<Map<String, dynamic>> initialize({bool background = false}) async {
-    if (!background) {
-      _requestStoragePermissions();
-      _setAppOrientation();
-    }
+  Future<Map<String, dynamic>> initialize() async {
+    _requestStoragePermissions();
+    _setAppOrientation();
     WidgetsFlutterBinding.ensureInitialized();
-    Workmanager().initialize(backGroundTaskDispatcher, isInDebugMode: false);
     Storage storage = await _getUserPreferences();
+    FlutterBackgroundService backgroundService = FlutterBackgroundService();
     AppService appService = AppService(
         server: Server(
             serverData: storage.getServerData,
             folderConfiguration: storage.getFolderConfigurations,
             serverFunctionsData: storage.getServerFunctions,
             serverOS: storage.getServerOSData),
+        backgroundService: backgroundService,
         storage: storage);
+    configureBackgroundService(backgroundService);
     appService.kindleData = storage.getKindleData;
     UploadState uploadService = UploadState();
     FileListingState fileListingService = FileListingState();
@@ -119,6 +120,36 @@ class Init {
     ]);
   }
 
+  static void configureBackgroundService(
+      FlutterBackgroundService backgroundService) async {
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      BackGroundTaskRelated.notificationChannelId, // id
+      BackGroundTaskRelated.initialNotificationTitle, // title
+      importance: Importance.low, // importance must be at low or higher level
+    );
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+    await backgroundService.configure(
+      androidConfiguration: AndroidConfiguration(
+          onStart: backGroundTaskDispatcher,
+          autoStart: true,
+          isForegroundMode: true,
+          notificationChannelId: BackGroundTaskRelated.notificationChannelId,
+          foregroundServiceNotificationId:
+              BackGroundTaskRelated.foregroundServiceNotificationId,
+          initialNotificationContent:
+              BackGroundTaskRelated.initialNotificationContent,
+          initialNotificationTitle:
+              BackGroundTaskRelated.initialNotificationTitle),
+      iosConfiguration: IosConfiguration(),
+    );
+    backgroundService.startService();
+  }
+
   static Future<FlutterLocalNotificationsPlugin> notificationIntialize() async {
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
@@ -128,8 +159,6 @@ class Init {
         InitializationSettings(android: initializationSettingsAndroid);
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveNotificationResponse:
-          Notifications.onDidReceiveNotificationResponse,
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
     return flutterLocalNotificationsPlugin;

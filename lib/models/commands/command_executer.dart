@@ -6,7 +6,6 @@ import 'package:dartssh2/dartssh2.dart';
 import 'package:msm/common_utils.dart';
 
 // Project imports:
-import 'package:msm/constants/constants.dart';
 import 'package:msm/models/commands/basic_details.dart';
 import 'package:msm/models/commands/commands.dart';
 import 'package:msm/models/commands/services.dart';
@@ -156,90 +155,6 @@ class CommandExecuter extends Server {
     }
   }
 
-  void loopAndSend(
-      {required List<String> filePaths, required String directory}) {
-    for (String filePath in filePaths) {
-      sendFile(directory: directory, filePath: filePath);
-    }
-  }
-
-  Future<void> sendFile(
-      {required String directory, required String filePath}) async {
-    try {
-      if (sftp != null) {
-        final int totalFileSize = File(filePath).lengthSync();
-        final String fileName = filePath.split('/').last.toString();
-        final String remotePath = "$directory/$fileName";
-        final remoteFile = await sftp!.open(remotePath,
-            mode: SftpFileOpenMode.create | SftpFileOpenMode.write);
-        await remoteFile.write(
-          File(filePath).openRead().cast(),
-          onProgress: (progress) => notify(
-              fileName: fileName,
-              location: directory,
-              fileSize: totalFileSize,
-              progress: progress,
-              notificationType: NotificationType.upload),
-        );
-      } else {
-        notifications!.uploadError(error: AppMessages.serverNotAvailable);
-      }
-    } catch (_) {
-      notifications!.uploadError(error: _.toString());
-    }
-  }
-
-  Future<void> notify(
-      {required String fileName,
-      required String location,
-      required int fileSize,
-      required int progress,
-      required NotificationType notificationType}) async {
-    await notifications!.uploadNotification(
-        id: fileName.hashCode.toString(),
-        name: fileName,
-        location: location,
-        progress: progress,
-        fileSize: fileSize,
-        notificationType: notificationType);
-  }
-
-  Future<String> _createFolders(
-      {required String directory, required List<String> newFolders}) async {
-    try {
-      for (String folder in newFolders) {
-        directory += "/$folder";
-        await sftp!.mkdir(directory);
-      }
-      return directory;
-    } catch (_) {
-      notifications!.uploadError(error: AppMessages.folderCreationError);
-      return AppMessages.folderCreationError;
-    }
-  }
-
-  Future<void> upload(
-      {List<String> newFolders = const [],
-      String insidPath = "",
-      required String directory,
-      required List<String> filePaths}) async {
-    if (filePaths.isNotEmpty) {
-      if (insidPath.isNotEmpty) {
-        directory = "$directory/$insidPath";
-      }
-      if (newFolders.isEmpty) {
-        loopAndSend(filePaths: filePaths, directory: directory);
-      } else {
-        await _createFolders(directory: directory, newFolders: newFolders)
-            .then((createdDirectoryPath) {
-          loopAndSend(filePaths: filePaths, directory: createdDirectoryPath);
-        });
-      }
-    } else {
-      notifications!.uploadError(error: AppMessages.filesNotSelected);
-    }
-  }
-
   Future<void> delete(
       {required List<FileOrDirectory> fileOrDirectories}) async {
     try {
@@ -287,34 +202,6 @@ class CommandExecuter extends Server {
       String command = CommandBuilder()
           .addArguments(Commands.rename, [fileOrDirectory.fullPath, newPath]);
       client!.execute(command);
-    } catch (_) {}
-  }
-
-  Future<void> download({required FileOrDirectory fileOrDirectory}) async {
-    try {
-      final remoteFile = await sftp!.open(fileOrDirectory.fullPath);
-      File localFileObj =
-          File("${FileManager.downloadLocation}/${fileOrDirectory.name}");
-      final size = (await remoteFile.stat()).size;
-      const defaultChunkSize = 1024 * 1024 * 10; //10MB
-      if (size != null) {
-        int chunkSize = size > defaultChunkSize ? defaultChunkSize : size;
-        for (var i = chunkSize; chunkSize > 0; i += chunkSize) {
-          final fileData = await remoteFile.readBytes(
-              length: chunkSize, offset: i - chunkSize);
-          await localFileObj.writeAsBytes(fileData,
-              mode: FileMode.append, flush: true);
-          notify(
-              fileName: fileOrDirectory.name,
-              location: FileManager.downloadLocation,
-              fileSize: size,
-              progress: i,
-              notificationType: NotificationType.download);
-          if (i + chunkSize > size) {
-            chunkSize = size - i;
-          }
-        }
-      }
     } catch (_) {}
   }
 

@@ -32,7 +32,6 @@ dependencies:
 
   shared_preferences: ^2.1.0
   dartssh2: ^2.7.2+3
-  workmanager: ^0.5.1
   permission_handler: ^10.2.0
   filesize: ^2.0.1
   flutter_screenutil: ^5.7.0
@@ -48,6 +47,7 @@ dependencies:
   dio: ^5.1.1
   xterm: ^3.5.0
   flutter_pty: ^0.3.1
+  flutter_background_service: ^3.0.1
 
 dev_dependencies:
   flutter_test:

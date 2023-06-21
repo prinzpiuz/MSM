@@ -95,6 +95,7 @@ class BackgroundTaskUniqueNames {
   static const upload = "upload";
   static const update = "update";
   static const cleanServer = "cleanServer";
+  static const download = "download";
 }
 
 class AppDictKeys {
@@ -119,4 +120,15 @@ class ContextKeys {
       GlobalKey<NavigatorState>();
   static GlobalKey<ScaffoldState> serverFunctionsPagekey =
       GlobalKey<ScaffoldState>();
+}
+
+class BackGroundTaskRelated {
+  static const notificationChannelId = "background_notification";
+  static const foregroundServiceNotificationId = 888;
+  static const initialNotificationContent = "Background Service Initializing";
+  static const initialNotificationTitle = "MSM";
+  static const runningBody = "Background Service Running";
+  static const icon = "ic_bg_service_small";
+  static const stopActionId = "stop_service";
+  static const stopActionTitle = "Stop";
 }

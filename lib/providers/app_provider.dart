@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 
 // Project imports:
 import 'package:msm/models/commands/command_executer.dart';
@@ -16,11 +17,15 @@ class AppService with ChangeNotifier {
   bool _initialized = false;
   Storage storage;
   Server server;
+  FlutterBackgroundService backgroundService;
   KindleData kindleData = KindleData();
   late CommandExecuter commandExecuter;
   late Notifications notifications;
 
-  AppService({required this.storage, required this.server});
+  AppService(
+      {required this.storage,
+      required this.server,
+      required this.backgroundService});
 
   bool get connectionState => _connectionState;
   bool get initialized => _initialized;

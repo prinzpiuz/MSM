@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:io';
 
 // Flutter imports:
@@ -9,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:msm/models/background_tasks.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
@@ -155,6 +157,7 @@ void validateFolderName(GlobalKey<FormState> formKey) {
 }
 
 void uploadFiles(BuildContext context, UploadState uploadState) async {
+  BackgroundTasks.start();
   final AppService appService = Provider.of<AppService>(context, listen: false);
   final bool connected = appService.connectionState;
   if (connected) {
@@ -163,20 +166,34 @@ void uploadFiles(BuildContext context, UploadState uploadState) async {
     if (uploadState.toCustomFolder) {
       directory = uploadState.customPath;
     }
-    await appService.commandExecuter
-        .upload(
-            directory: directory!,
-            filePaths: uploadState.fileUploadData.localFilesPaths,
-            insidPath:
+    showMessage(context: context, text: AppMessages.uploadStarted, duration: 5);
+    Navigator.pop(context);
+    Timer(
+        //timer implemented because background service will take some time to start
+        const Duration(seconds: 3), () {
+      BackgroundTasks().task(
+          task: Task.upload,
+          data: {
+            "directory": directory!,
+            "filePaths": uploadState.fileUploadData.localFilesPaths,
+            "insidPath":
                 FileManager.pathBuilder(uploadState.traversedDirectories),
-            newFolders: uploadState.newFoldersToCreate)
-        .then((value) {
-      showMessage(
-          context: context, text: AppMessages.uploadStarted, duration: 5);
-      uploadState.fileUploadData.clear;
+            "newFolders": uploadState.newFoldersToCreate
+          },
+          appService: appService);
       uploadState.fileAddOrRemove;
-      Navigator.pop(context);
+      uploadState.fileUploadData.clear;
     });
+    //////////////////////
+    // final SftpClient sftpClient =
+    //     await appService.commandExecuter.client!.sftp();
+    // await upload(
+    //     directory: directory!,
+    //     filePaths: uploadState.fileUploadData.localFilesPaths,
+    //     sftp: sftpClient,
+    //     notifications: appService.commandExecuter.notifications);
+    ///////////////////
+    // });
   } else {
     showMessage(context: context, text: AppMessages.connectionLost);
   }
