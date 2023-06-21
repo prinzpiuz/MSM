@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -396,11 +398,15 @@ Widget moveLocations(
 void downloadFile(FileOrDirectory fileOrDirectory) async {
   BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
   final AppService appService = Provider.of<AppService>(context, listen: false);
-  BackgroundTasks().task(task: Task.download, appService: appService, data: {
-    "fullPath": fileOrDirectory.fullPath,
-    "name": fileOrDirectory.name
+  BackgroundTasks.start();
+  Timer(
+      //timer implemented because background service will take some time to start
+      const Duration(seconds: 3), () {
+    BackgroundTasks().task(task: Task.download, appService: appService, data: {
+      "fullPath": fileOrDirectory.fullPath,
+      "name": fileOrDirectory.name
+    });
   });
-  // await appService.commandExecuter.download(fileOrDirectory: fileOrDirectory);
 }
 
 void sendToKindle(FileOrDirectory fileOrDirectory) async {

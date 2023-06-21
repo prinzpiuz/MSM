@@ -7,6 +7,7 @@ import 'package:dartssh2/dartssh2.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:msm/initialization.dart';
 import 'package:msm/models/local_notification.dart';
 import 'package:msm/models/upload_and_download.dart';
@@ -18,10 +19,32 @@ import 'package:msm/providers/app_provider.dart';
 @pragma('vm:entry-point')
 void backGroundTaskDispatcher(ServiceInstance service) async {
   DartPluginRegistrant.ensureInitialized();
-  Notifications notifications = Notifications(
+  final FlutterLocalNotificationsPlugin backgroundNotifications =
+      FlutterLocalNotificationsPlugin();
+  Notifications localNotifications = Notifications(
       flutterLocalNotificationsPlugin: await Init.notificationIntialize());
   try {
     if (service is AndroidServiceInstance) {
+      if (await service.isForegroundService()) {
+        backgroundNotifications.show(
+          BackGroundTaskRelated.foregroundServiceNotificationId,
+          BackGroundTaskRelated.initialNotificationTitle,
+          BackGroundTaskRelated.runningBody,
+          const NotificationDetails(
+            android: AndroidNotificationDetails(
+              BackGroundTaskRelated.notificationChannelId,
+              BackGroundTaskRelated.initialNotificationTitle,
+              icon: BackGroundTaskRelated.icon,
+              playSound: false,
+              ongoing: true,
+              actions: <AndroidNotificationAction>[
+                AndroidNotificationAction(BackGroundTaskRelated.stopActionId,
+                    BackGroundTaskRelated.stopActionTitle),
+              ],
+            ),
+          ),
+        );
+      }
       service.on(Task.upload.uniqueName).listen((event) async {
         if (event != null) {
           final SftpClient sftpClient = await getSFTPClient(event);
@@ -30,7 +53,7 @@ void backGroundTaskDispatcher(ServiceInstance service) async {
               insidPath: event["insidPath"],
               directory: event["directory"],
               filePaths: event["filePaths"].cast<String>(),
-              notifications: notifications,
+              notifications: localNotifications,
               sftp: sftpClient);
         }
       });
@@ -38,7 +61,7 @@ void backGroundTaskDispatcher(ServiceInstance service) async {
         if (event != null) {
           final SftpClient sftpClient = await getSFTPClient(event);
           download(
-              notifications: notifications,
+              notifications: localNotifications,
               sftp: sftpClient,
               fullPath: event["fullPath"],
               name: event["name"]);
@@ -96,6 +119,14 @@ class BackgroundTasks {
       case Task.cleanServer:
         // TODO: Handle this case.
         break;
+    }
+  }
+
+  static void start() async {
+    final service = FlutterBackgroundService();
+    bool isRunning = await service.isRunning();
+    if (!isRunning) {
+      service.startService();
     }
   }
 

@@ -1,13 +1,16 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:filesize/filesize.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:msm/constants/constants.dart';
+import 'package:msm/models/background_tasks.dart';
 
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {
-  // handle action
+  if (notificationResponse.actionId == BackGroundTaskRelated.stopActionId) {
+    BackgroundTasks.cancel();
+  }
 }
 
 enum NotificationType {
@@ -33,14 +36,6 @@ enum NotificationType {
 class Notifications {
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   Notifications({required this.flutterLocalNotificationsPlugin});
-
-  static void onDidReceiveNotificationResponse(
-      NotificationResponse notificationResponse) async {
-    final String? payload = notificationResponse.payload;
-    if (notificationResponse.payload != null) {
-      debugPrint('notification payload: $payload');
-    }
-  }
 
   String _status(int? total, int? progress, NotificationType notificationType) {
     switch (notificationType) {

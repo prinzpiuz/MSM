@@ -34,7 +34,7 @@ Widget notifications(BuildContext context) {
                       context: context,
                       text: AppMessages.clearingTasks,
                       duration: 5);
-                  BackgroundTasks.cancel;
+                  BackgroundTasks.cancel();
                 },
                 icon: const Icon(FontAwesomeIcons.broom))
           ],
