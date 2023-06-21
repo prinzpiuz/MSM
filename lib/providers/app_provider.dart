@@ -1,6 +1,7 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:msm/initialization.dart';
 
 // Project imports:
 import 'package:msm/models/commands/command_executer.dart';
@@ -50,14 +51,17 @@ class AppService with ChangeNotifier {
 
   set updateServerDetails(ServerData serverData) {
     server.serverData = serverData;
+    Init.makeConnections(this);
   }
 
   set updateFolderConfigurations(FolderConfiguration folderConfiguration) {
     server.folderConfiguration = folderConfiguration;
+    commandExecuter.folderConfiguration = folderConfiguration;
   }
 
   set updateServerFunctions(ServerFunctionsData serverFunctionsData) {
     server.serverFunctionsData = serverFunctionsData;
+    commandExecuter.serverFunctionsData = serverFunctionsData;
   }
 
   set connectionState(bool state) {
