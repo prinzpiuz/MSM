@@ -66,8 +66,6 @@ Widget menuGrid(BuildContext context) {
 }
 
 Widget serverDetailsBuilder(BuildContext context) {
-  //TODO need to handle the condition if server is not online
-  //TODO implement a Icon button to show not online as well as clicking on it will send WOL signal or refresh connection
   final AppService appService = Provider.of<AppService>(context);
   final bool connected = appService.connectionState;
   if (connected) {
