@@ -2,7 +2,6 @@
 import 'package:msm/views/upload_pages/upload_page_utils.dart';
 
 class FolderConfiguration {
-  //TODO need to check folders exist before saving
   String movies;
   String tv;
   String books;
@@ -25,7 +24,6 @@ class FolderConfiguration {
   }
 
   String? pathToDirectory(UploadCatogories catogories) {
-    //TODO implement a logic to get the correct path to custom folders
     switch (catogories) {
       case UploadCatogories.movies:
         return movies;

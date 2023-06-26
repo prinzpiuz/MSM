@@ -63,18 +63,46 @@ void saveServerFunctions(
   showMessage(context: context, text: AppMessages.serverFunctionSaved);
 }
 
+String generateFolderConfigurationNotSavedMessage(List<String> folders) {
+  String msg = "Folder Configuration Not Saved\n";
+  String notSavedFolders = "These Folders Not Exist\n";
+  for (String folder in folders) {
+    notSavedFolders += "$folder\n";
+  }
+  return msg + notSavedFolders;
+}
+
 void saveFolderConfigurations(GlobalKey<FormState> formKey,
-    FolderConfiguration folderConfiguration, BuildContext context) {
+    FolderConfiguration folderConfiguration, BuildContext context) async {
   hideKeyboard(context);
   Provider.of<FolderConfigState>(context, listen: false).resetFolderCount();
   if (formKey.currentState!.validate()) {
     formKey.currentState!.save();
-    Provider.of<AppService>(context, listen: false)
-        .storage
-        .saveObject(StorageKeys.folderConfigurations.key, folderConfiguration);
-    Provider.of<AppService>(context, listen: false).updateFolderConfigurations =
-        folderConfiguration;
-    showMessage(context: context, text: AppMessages.folderConfigurationSaved);
+    final AppService appService =
+        Provider.of<AppService>(context, listen: false);
+    final bool connected = appService.connectionState;
+    if (connected) {
+      await appService.commandExecuter
+          .foldersExist(folderConfiguration)
+          .then((value) {
+        if (value.isNotEmpty) {
+          if (value["status"]) {
+            appService.storage.saveObject(
+                StorageKeys.folderConfigurations.key, folderConfiguration);
+            appService.updateFolderConfigurations = folderConfiguration;
+            showMessage(
+                context: context, text: AppMessages.folderConfigurationSaved);
+          } else {
+            showMessage(
+                duration: 10,
+                context: context,
+                multiline: true,
+                text: generateFolderConfigurationNotSavedMessage(
+                    value["notExist"]));
+          }
+        }
+      });
+    }
   }
 }
 

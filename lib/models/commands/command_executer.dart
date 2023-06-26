@@ -10,6 +10,7 @@ import 'package:msm/models/commands/basic_details.dart';
 import 'package:msm/models/commands/commands.dart';
 import 'package:msm/models/commands/services.dart';
 import 'package:msm/models/file_manager.dart';
+import 'package:msm/models/folder_configuration.dart';
 import 'package:msm/models/local_notification.dart';
 import 'package:msm/models/server.dart';
 import 'package:msm/models/storage.dart';
@@ -295,5 +296,46 @@ class CommandExecuter extends Server {
             notificationType: NotificationType.update);
       });
     } catch (_) {}
+  }
+
+  Future<Map> foldersExist(FolderConfiguration folderConfigurationObj) async {
+    Map status = {"status": "", "notExist": ""};
+    try {
+      List<String> allFolders = [];
+      List<bool> folderExistStatus = [];
+      List<String> foldersNotExist = [];
+      if (folderConfigurationObj.dataAvailable) {
+        allFolders.addAll([
+          folderConfigurationObj.movies,
+          folderConfigurationObj.tv,
+          folderConfigurationObj.books,
+        ]);
+      }
+      if (folderConfigurationObj.customFolders.isNotEmpty) {
+        allFolders
+            .addAll(folderConfigurationObj.customFolders as Iterable<String>);
+      }
+      for (String folder in allFolders) {
+        String command = Commands.folderExist(folder);
+        String existStatus = decodeOutput(await client!.run(command));
+        if (existStatus.contains("Not found")) {
+          folderExistStatus.add(false);
+          foldersNotExist.add(folder);
+        }
+        if (existStatus.contains("Exists")) {
+          folderExistStatus.add(true);
+        }
+      }
+      if (folderExistStatus.contains(false)) {
+        status.update("status", (value) => false);
+        status.update("notExist", (value) => foldersNotExist);
+      } else {
+        status.update("status", (value) => true);
+        status.update("notExist", (value) => foldersNotExist);
+      }
+      return status;
+    } catch (_) {
+      return status;
+    }
   }
 }

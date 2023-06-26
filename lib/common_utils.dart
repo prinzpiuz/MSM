@@ -97,6 +97,7 @@ void hideKeyboard(BuildContext ctx) {
 void showMessage(
     {required BuildContext context,
     required String text,
+    bool multiline = false,
     int duration = 3}) async {
   OverlayState overlayState = Overlay.of(context);
   OverlayEntry overlayEntry = OverlayEntry(builder: (context) {
@@ -112,7 +113,9 @@ void showMessage(
             child: DefaultTextStyle(
               style:
                   AppTextStyles.regular(CommonColors.commonBlackColor, 15.sp),
-              child: AppText.centerSingleLineText(text),
+              child: multiline
+                  ? AppText.text(text)
+                  : AppText.centerSingleLineText(text),
             ),
           ),
         ));
