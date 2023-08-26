@@ -6,11 +6,11 @@ import 'package:flutter/services.dart';
 import 'package:dartssh2/dartssh2.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:msm/constants/constants.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
+import 'package:msm/constants/constants.dart';
 import 'package:msm/models/background_tasks.dart';
 import 'package:msm/models/commands/command_executer.dart';
 import 'package:msm/models/local_notification.dart';

@@ -1,19 +1,23 @@
 // Flutter imports:
 // ignore_for_file: depend_on_referenced_packages
 
+// Dart imports:
 import 'dart:ui';
 
-import 'package:dartssh2/dartssh2.dart';
+// Flutter imports:
 import 'package:flutter/widgets.dart';
+
+// Package imports:
+import 'package:dartssh2/dartssh2.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:msm/initialization.dart';
-import 'package:msm/models/local_notification.dart';
-import 'package:msm/models/upload_and_download.dart';
 
 // Project imports:
 import 'package:msm/constants/constants.dart';
+import 'package:msm/initialization.dart';
+import 'package:msm/models/local_notification.dart';
+import 'package:msm/models/upload_and_download.dart';
 import 'package:msm/providers/app_provider.dart';
 
 @pragma('vm:entry-point')

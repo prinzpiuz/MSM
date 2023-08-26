@@ -3,9 +3,9 @@ import 'dart:io';
 
 // Package imports:
 import 'package:dartssh2/dartssh2.dart';
-import 'package:msm/common_utils.dart';
 
 // Project imports:
+import 'package:msm/common_utils.dart';
 import 'package:msm/models/commands/basic_details.dart';
 import 'package:msm/models/commands/commands.dart';
 import 'package:msm/models/commands/services.dart';
