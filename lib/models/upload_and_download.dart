@@ -80,7 +80,6 @@ Future<void> notify(
     required Notifications? notifications,
     required NotificationType notificationType}) async {
   await notifications!.uploadNotification(
-      id: fileName.hashCode.toString(),
       name: fileName,
       location: location,
       progress: progress,

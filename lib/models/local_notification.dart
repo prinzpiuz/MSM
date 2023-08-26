@@ -60,16 +60,15 @@ class Notifications {
   }
 
   Future<void> uploadNotification(
-      {required String id,
-      required String name,
+      {required String name,
       required String location,
       required int progress,
       required int fileSize,
       required NotificationType notificationType}) async {
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-      id,
-      'upload notification',
+      BackGroundTaskRelated.uploadChannelId,
+      BackGroundTaskRelated.uploadChannelName,
       importance: Importance.max,
       priority: Priority.high,
       playSound: true,
