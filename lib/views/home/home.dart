@@ -29,7 +29,7 @@ class HomePage extends StatelessWidget {
 
 Widget home(BuildContext context) {
   return GestureDetector(
-    onHorizontalDragUpdate: (details) => notificationsPage(context, details),
+    // onHorizontalDragUpdate: (details) => notificationsPage(context, details),
     child: Scaffold(
         backgroundColor: CommonColors.commonWhiteColor,
         body: SingleChildScrollView(
