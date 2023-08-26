@@ -1,8 +1,15 @@
+// Dart imports:
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:dio/dio.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+
+// Project imports:
 import 'package:msm/common_utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
@@ -14,7 +21,6 @@ import 'package:msm/models/storage.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
-import 'package:provider/provider.dart';
 
 Future<dynamic> speedTestOutput(BuildContext context) {
   return dailogBox(

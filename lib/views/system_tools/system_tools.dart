@@ -50,11 +50,11 @@ Widget systemToolsMenu(BuildContext context) {
           //     onTap: () {
           //       print("pressed2");
           //     }),
-          commonTile(
-              icon: FontAwesomeIcons.download,
-              title: 'System Upgrade',
-              subtitle: 'Commands to update system OS',
-              onTap: () => systemUpdate(context)),
+          // commonTile(
+          //     icon: FontAwesomeIcons.download,
+          //     title: 'System Upgrade',
+          //     subtitle: 'Commands to update system OS',
+          //     onTap: () => systemUpdate(context)),
           commonTile(
               icon: FontAwesomeIcons.gaugeHigh,
               title: 'Speed Test',

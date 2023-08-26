@@ -1,8 +1,8 @@
 // Package imports:
 import 'package:go_router/go_router.dart';
-import 'package:msm/models/server.dart';
 
 // Project imports:
+import 'package:msm/models/server.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/file_listing/file_listing.dart';

@@ -2,12 +2,12 @@
 import 'dart:convert';
 
 // Package imports:
-import 'package:msm/models/server.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:msm/models/folder_configuration.dart';
 import 'package:msm/models/send_to_kindle.dart';
+import 'package:msm/models/server.dart';
 import 'package:msm/models/server_details.dart';
 import 'package:msm/models/server_functions.dart';
 

@@ -1,9 +1,11 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:msm/initialization.dart';
 
 // Project imports:
+import 'package:msm/initialization.dart';
 import 'package:msm/models/commands/command_executer.dart';
 import 'package:msm/models/folder_configuration.dart';
 import 'package:msm/models/local_notification.dart';

@@ -1,8 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+
+// Project imports:
 import 'package:msm/common_utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
@@ -13,7 +19,6 @@ import 'package:msm/providers/app_provider.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
-import 'package:provider/provider.dart';
 
 class ServicesList extends StatelessWidget {
   const ServicesList({super.key});

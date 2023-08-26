@@ -1,5 +1,7 @@
+// Dart imports:
 import 'dart:convert';
 
+// Package imports:
 import 'package:filesize/filesize.dart';
 
 // Project imports:
@@ -14,10 +16,12 @@ class Disk {
 
   Disk(this.source) {
     if (source.isNotEmpty) {
-      size = _parseSource(source)[0];
-      used = _parseSource(source)[1];
-      available = _parseSource(source)[2];
-      usePercentage = _parseSource(source)[3];
+      try {
+        size = _parseSource(source)[0];
+        used = _parseSource(source)[1];
+        available = _parseSource(source)[2];
+        usePercentage = _parseSource(source)[3];
+      } catch (_) {}
     }
   }
 
@@ -44,9 +48,11 @@ class Ram {
 
   Ram(this.source) {
     if (source.isNotEmpty) {
-      size = _parseSource(source)[0];
-      used = _parseSource(source)[1];
-      free = _parseSource(source)[2];
+      try {
+        size = _parseSource(source)[0];
+        used = _parseSource(source)[1];
+        free = _parseSource(source)[2];
+      } catch (_) {}
     }
   }
 
@@ -72,11 +78,13 @@ class BasicDetails {
 
   BasicDetails(this.source) {
     if (source.isNotEmpty) {
-      user = _parseUser(source);
-      uptime = _parseUptime(source);
-      tempreture = _parseTemperature(source);
-      disk = _parseDisk(source);
-      ram = _parseRam(source);
+      try {
+        user = _parseUser(source);
+        uptime = _parseUptime(source);
+        tempreture = _parseTemperature(source);
+        disk = _parseDisk(source);
+        ram = _parseRam(source);
+      } catch (_) {}
     }
   }
 

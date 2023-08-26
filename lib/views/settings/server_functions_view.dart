@@ -48,10 +48,10 @@ Widget functions(BuildContext context, AppService appService) {
               text: 'Wake On Lan',
               value: serverFunctionsData.wakeOnLan,
               onChanged: (value) => serverFunctionsData.wakeOnLan = value),
-          CommonSwitch(
-              text: 'AutoUpdate Server',
-              value: serverFunctionsData.autoUpdate,
-              onChanged: (value) => serverFunctionsData.autoUpdate = value),
+          // CommonSwitch(
+          //     text: 'AutoUpdate Server',
+          //     value: serverFunctionsData.autoUpdate,
+          //     onChanged: (value) => serverFunctionsData.autoUpdate = value),
           serverFunctionsData.sendTokindle
               ? editSendToKindle(serverFunctionsData.sendTokindle)
               : CommonSwitch(
