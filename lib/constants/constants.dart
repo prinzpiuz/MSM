@@ -75,6 +75,7 @@ class AppMessages {
   static const serverDetailSaved = "Saved Server Details";
   static const folderConfigurationSaved = "Saved Folder Configurations";
   static const serverFunctionSaved = "Saved Server Functions";
+  static const addMacAddress = "Make Sure You Save \n MAC Address Also";
   static const selectFiles = "Select Files";
   static const connectionLost = "Connection Lost";
   static const uploadStarted = "Upload Will Start In Background";
