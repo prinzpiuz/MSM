@@ -1,11 +1,11 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:msm/common_utils.dart';
 
 // Package imports:
 import 'package:provider/provider.dart';
 
 // Project imports:
+import 'package:msm/common_utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
