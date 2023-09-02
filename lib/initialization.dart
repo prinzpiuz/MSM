@@ -8,6 +8,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wake_on_lan/wake_on_lan.dart';
 
 // Project imports:
 import 'package:msm/constants/constants.dart';
@@ -56,7 +57,7 @@ class Init {
         client: null,
         sftp: null,
         notifications: null);
-    await makeConnections(appService, uploadState: uploadService);
+    await makeConnections(appService);
     return {
       "appService": appService,
       "uploadService": uploadService,
@@ -72,7 +73,7 @@ class Init {
   }
 
   static Future<void> makeConnections(AppService appService,
-      {UploadState? uploadState}) async {
+      {bool wol = false}) async {
     try {
       appService.initialized = true;
       appService.server.state = ServerState.connecting;
@@ -81,6 +82,9 @@ class Init {
           const Duration(seconds: 5),
           onTimeout: () {
             appService.connectionState = false;
+            if (wol) {
+              _wakeOnLAN(appService: appService);
+            }
             return null;
           },
         );
@@ -111,6 +115,24 @@ class Init {
       Permission.accessNotificationPolicy,
       Permission.notification
     ].request();
+  }
+
+  static void _wakeOnLAN({required AppService appService}) async {
+    try {
+      MACAddress macAddress =
+          MACAddress(appService.server.serverData.macAddress);
+      IPv4Address iPv4Address =
+          IPv4Address(appService.server.serverData.serverHost);
+      if (macAddress.address.isNotEmpty && iPv4Address.address.isNotEmpty) {
+        WakeOnLAN wakeOnLan = WakeOnLAN(iPv4Address, macAddress);
+        await wakeOnLan.wake(
+          repeat: 5,
+        );
+        appService.server.state = ServerState.connecting;
+      }
+    } catch (_) {
+      appService.connectionState = false;
+    }
   }
 
   static void _setAppOrientation() async {

@@ -22,7 +22,6 @@ enum ServerState {
         return AppConstants.connected;
       case ServerState.disconnected:
         return AppConstants.disconnected;
-
       case ServerState.connecting:
         return AppConstants.connecting;
       case ServerState.failed:

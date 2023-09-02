@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
+import 'package:msm/common_utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
@@ -47,7 +48,13 @@ Widget functions(BuildContext context, AppService appService) {
           CommonSwitch(
               text: 'Wake On Lan',
               value: serverFunctionsData.wakeOnLan,
-              onChanged: (value) => serverFunctionsData.wakeOnLan = value),
+              onChanged: (value) {
+                serverFunctionsData.wakeOnLan = value;
+                if (value) {
+                  showMessage(
+                      context: context, text: AppMessages.addMacAddress);
+                }
+              }),
           // CommonSwitch(
           //     text: 'AutoUpdate Server',
           //     value: serverFunctionsData.autoUpdate,

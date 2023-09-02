@@ -21,7 +21,8 @@ Widget serverNotConnected(AppService appService, {bool text = true}) {
     children: [
       IconButton(
           iconSize: AppFontSizes.notConnectedIconSize.sp,
-          onPressed: () => Init.makeConnections(appService),
+          onPressed: () => Init.makeConnections(appService,
+              wol: appService.server.serverFunctionsData.wakeOnLan),
           icon: const Icon(
             Icons.cloud_off,
             color: CommonColors.commonGreyColor,

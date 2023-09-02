@@ -102,7 +102,6 @@ class AppRouter {
       }
       if (appService.commandExecuter.client == null ||
           appService.commandExecuter.client!.isClosed) {
-        appService.connectionState = false;
         appService.server.state = ServerState.disconnected;
         return null;
       }

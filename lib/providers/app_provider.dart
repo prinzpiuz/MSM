@@ -30,7 +30,8 @@ class AppService with ChangeNotifier {
       required this.server,
       required this.backgroundService});
 
-  bool get connectionState => _connectionState;
+  bool get connectionState =>
+      _connectionState && server.state == ServerState.connected;
   bool get initialized => _initialized;
 
   void get turnOffSendToKindle {
