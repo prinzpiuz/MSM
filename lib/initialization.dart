@@ -16,7 +16,6 @@ import 'package:msm/models/background_tasks.dart';
 import 'package:msm/models/commands/command_executer.dart';
 import 'package:msm/models/local_notification.dart';
 import 'package:msm/models/server.dart';
-import 'package:msm/models/server_details.dart';
 import 'package:msm/models/storage.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/file_listing_provider.dart';
