@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
@@ -93,16 +92,6 @@ Widget serverdetails(BasicDetails data, AppService appService) =>
         top: 15.h,
         left: 10.w,
         right: 10.w,
-        // child: CarouselSlider(
-        //     options: CarouselOptions(
-        //       height: 150.h,
-        //       autoPlay: true,
-        //       autoPlayInterval: const Duration(seconds: 5),
-        //     ),
-        //     items: [
-        //       RealTimeBasicDetails(appService: appService, basicDetails: data),
-        //       RealTimeBasicDetails(appService: appService, basicDetails: data)
-        //     ]),
         child: RealTimeBasicDetails(appService: appService, basicDetails: data),
       ),
       SizedBox(
