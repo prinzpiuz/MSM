@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:async';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -6,9 +9,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // Project imports:
+import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
 import 'package:msm/models/commands/basic_details.dart';
+import 'package:msm/providers/app_provider.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 
@@ -42,36 +47,53 @@ Widget serverStats(IconData icon, String text) {
   );
 }
 
-Widget serverDetails(BasicDetails data) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          homePageIcon(Icons.cloud, color: CommonColors.commonGreenColor),
-          Padding(
-            padding: EdgeInsets.only(bottom: 8.h),
-            child: AppText.centerSingleLineText(data.user,
-                style: AppTextStyles.bold(CommonColors.commonBlackColor,
-                    AppFontSizes.serverStatFontSize)),
-          )
-        ],
-      ),
-      serverStats(
-          FontAwesomeIcons.microchip, "${data.ram.used}/${data.ram.size}"),
-      Padding(
-        padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
-        child: serverStats(
-            Icons.sd_card_outlined, "${data.disk.used}/${data.disk.size}"),
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          serverStats(Icons.thermostat, data.tempreture),
-          serverStats(Icons.alarm, data.uptime)
-        ],
-      )
-    ],
-  );
+Widget serverDetails(BasicDetails? data) {
+  if (data != null) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            homePageIcon(Icons.cloud, color: CommonColors.commonGreenColor),
+            Padding(
+              padding: EdgeInsets.only(bottom: 8.h),
+              child: AppText.centerSingleLineText(data.user,
+                  style: AppTextStyles.bold(CommonColors.commonBlackColor,
+                      AppFontSizes.serverStatFontSize)),
+            )
+          ],
+        ),
+        serverStats(
+            FontAwesomeIcons.microchip, "${data.ram.used}/${data.ram.size}"),
+        // liveMemory(data.ram.size),
+        Padding(
+          padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
+          child: serverStats(
+              Icons.sd_card_outlined, "${data.disk.used}/${data.disk.size}"),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            serverStats(Icons.thermostat, data.tempreture),
+            serverStats(Icons.alarm, data.uptime)
+          ],
+        )
+      ],
+    );
+  }
+  return commonCircularProgressIndicator;
+}
+
+Stream<BasicDetails> fetchBasicDetailsLive(
+    StreamController<BasicDetails> controller, AppService appService) {
+  late Timer timer;
+  controller.onListen = () {
+    timer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+      BasicDetails basicDetails = await appService.commandExecuter.basicDetails;
+      controller.add(basicDetails);
+    });
+  };
+  controller.onCancel = () => timer.cancel();
+  return controller.stream;
 }

@@ -17,6 +17,7 @@ import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 import 'package:msm/views/home/home_common_widgets.dart';
 import 'package:msm/views/home/home_utils.dart';
+import 'package:msm/views/home/real_time_basic_details.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -76,7 +77,7 @@ Widget serverDetailsBuilder(BuildContext context) {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
-            return serverdetails(snapshot.data);
+            return serverdetails(snapshot.data, appService);
           } else {
             return fetchingData;
           }
@@ -85,7 +86,14 @@ Widget serverDetailsBuilder(BuildContext context) {
   return serverNotConnected(appService);
 }
 
-Widget serverdetails(BasicDetails data) => Stack(children: <Widget>[
+Widget serverdetails(BasicDetails data, AppService appService) =>
+    Stack(children: <Widget>[
+      Positioned(
+        top: 15.h,
+        left: 10.w,
+        right: 10.w,
+        child: RealTimeBasicDetails(appService: appService, basicDetails: data),
+      ),
       SizedBox(
         width: 225.w,
         height: 225.w,
@@ -101,12 +109,6 @@ Widget serverdetails(BasicDetails data) => Stack(children: <Widget>[
           ),
         ),
       ),
-      Positioned(
-        top: 15.h,
-        left: 10.w,
-        right: 10.w,
-        child: serverDetails(data),
-      )
     ]);
 
 Widget get fetchingData => Column(
