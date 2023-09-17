@@ -66,7 +66,6 @@ Widget serverDetails(BasicDetails? data) {
         ),
         serverStats(
             FontAwesomeIcons.microchip, "${data.ram.used}/${data.ram.size}"),
-        // liveMemory(data.ram.size),
         Padding(
           padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
           child: serverStats(
@@ -90,8 +89,15 @@ Stream<BasicDetails> fetchBasicDetailsLive(
   late Timer timer;
   controller.onListen = () {
     timer = Timer.periodic(const Duration(seconds: 5), (timer) async {
-      BasicDetails basicDetails = await appService.commandExecuter.basicDetails;
-      controller.add(basicDetails);
+      if (appService.connectionState) {
+        BasicDetails? basicDetails =
+            await appService.commandExecuter.basicDetails;
+        if (basicDetails != null) {
+          controller.add(basicDetails);
+        } else {
+          controller.close();
+        }
+      }
     });
   };
   controller.onCancel = () => timer.cancel();

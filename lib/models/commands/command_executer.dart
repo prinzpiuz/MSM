@@ -30,17 +30,17 @@ class CommandExecuter extends Server {
     required this.notifications,
   });
 
-  Future<BasicDetails> get basicDetails async {
+  Future<BasicDetails?> get basicDetails async {
     try {
       String command = CommandBuilder().andAll(Commands.basicDetailsGroup);
       if (client != null) {
         final basicDetails = decodeOutput(await client!.run(command));
         return BasicDetails(BasicDetails.mapSource(basicDetails));
       }
-      return BasicDetails({});
     } catch (_) {
-      return BasicDetails({});
+      super.state = ServerState.disconnected;
     }
+    return null;
   }
 
   Future<List<FileOrDirectory>?>? listRemoteDirectory(
