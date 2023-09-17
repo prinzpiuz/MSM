@@ -32,7 +32,7 @@ jobs:
           channel: "stable"
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter build apk --split-per-abi --no-shrink --build-name=${{ needs.tag.outputs.new_tag }}
+      - run: flutter build apk --split-per-abi --no-shrink --build-name=${{ needs.tag.outputs.new_tag }} --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }}
       - run: flutter pub get
       - run: flutter build appbundle
       - uses: softprops/action-gh-release@v1
