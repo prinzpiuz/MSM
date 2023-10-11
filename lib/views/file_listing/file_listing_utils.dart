@@ -446,7 +446,7 @@ void get sortOnDate {
   BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
   FileListingState listingState =
       Provider.of<FileListingState>(context, listen: false);
-  listingState.originalList.sort((a, b) => a.date.compareTo(b.date));
+  listingState.originalList.sort((a, b) => b.date.compareTo(a.date));
   listingState.applyFilter = true;
 }
 
