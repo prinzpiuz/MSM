@@ -246,7 +246,8 @@ void deleteSingleFile(FileOrDirectory fileOrDirectory) {
             context: context, text: AppMessages.filesDeletedSuccesfully);
         FileListingState fileListState =
             Provider.of<FileListingState>(context, listen: false);
-        fileListState.clearSelection;
+        fileListState.currentList.remove(fileOrDirectory);
+        fileListState.selectedList.remove(fileOrDirectory);
       });
     },
     title: AppConstants.deleteFilesTitle,
@@ -289,8 +290,12 @@ void deletedSelected(FileListingState listingState) {
         LoadingOverlay.of(context).hide();
         showMessage(
             context: context, text: AppMessages.filesDeletedSuccesfully);
-        listingState.clearSelection;
       });
+      for (FileOrDirectory fileOrDirectory in listingState.selectedList) {
+        listingState.currentList.remove(fileOrDirectory);
+        listingState.selectedList.remove(fileOrDirectory);
+      }
+      listingState.clearSelection;
     },
     title: AppConstants.deleteFilesTitle,
   );

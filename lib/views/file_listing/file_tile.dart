@@ -28,60 +28,73 @@ class FileTile extends StatefulWidget {
 }
 
 class FileTileState extends State<FileTile> {
+  bool showTile = true;
   @override
   Widget build(BuildContext context) {
     FileListingState listingState = Provider.of<FileListingState>(context);
-    return ListTile(
-      onLongPress: (() {
-        setState(() {
-          listingState.selectOrRemoveItems(widget.fileOrDirectory);
-          widget.selected = !widget.selected;
-        });
-      }),
-      onTap: () {
-        if (widget.selected) {
-          setState(() {
-            widget.selected = !widget.selected;
-            listingState.selectOrRemoveItems(widget.fileOrDirectory);
-          });
-        } else {
-          if (!widget.fileOrDirectory.isFile) {
-            listingState.setSearchMode = false;
-            listingState.clearSearchText;
-            listingState.addPath = listingState.setNextPage =
-                "${widget.fileOrDirectory.location}/${widget.fileOrDirectory.name}";
-          }
-        }
-      },
-      selected: widget.selected,
-      dense: true,
-      visualDensity: const VisualDensity(horizontal: -4.0, vertical: -2),
-      horizontalTitleGap: 20,
-      leading: widget.fileOrDirectory.isFile
-          ? widget.fileOrDirectory.category!.categoryIcon(widget.selected)
-          : leadingIcon(FontAwesomeIcons.folder, widget.selected),
-      title: AppText.singleLineText(widget.fileOrDirectory.name,
-          style: AppTextStyles.medium(
-              widget.selected
-                  ? CommonColors.commonGreenColor
-                  : CommonColors.commonBlackColor,
-              AppFontSizes.fileListTitleFontSize.sp)),
-      subtitle: AppText.text(generateSubtitle(widget.fileOrDirectory),
-          style: AppTextStyles.regular(
-              widget.selected
-                  ? CommonColors.commonGreenColor
-                  : CommonColors.commonBlackColor,
-              AppFontSizes.fileListSubtitleFontSize.sp)),
-      trailing: commonPopUpMenu(
-          disabledItem: !FileManager.allowedDocumentExtentions
-                  .contains(widget.fileOrDirectory.extention)
-              ? FileActionMenu.sendKindle
-              : null,
-          onSelected: (selectedMenu) {
-            selectedMenu.executeAction(widget.fileOrDirectory);
+    return Visibility(
+      visible: showTile,
+      child: SizedBox(
+        height: 55.h,
+        child: ListTile(
+          onLongPress: (() {
+            setState(() {
+              listingState.selectOrRemoveItems(widget.fileOrDirectory);
+              widget.selected = !widget.selected;
+            });
+          }),
+          onTap: () {
+            if (widget.selected) {
+              setState(() {
+                widget.selected = !widget.selected;
+                listingState.selectOrRemoveItems(widget.fileOrDirectory);
+              });
+            } else {
+              if (!widget.fileOrDirectory.isFile) {
+                listingState.setSearchMode = false;
+                listingState.clearSearchText;
+                listingState.addPath = listingState.setNextPage =
+                    "${widget.fileOrDirectory.location}/${widget.fileOrDirectory.name}";
+              }
+            }
           },
-          menuListValues: FileActionMenu.values,
-          size: AppFontSizes.fileMenuIconSize),
+          selected: widget.selected,
+          dense: true,
+          visualDensity: const VisualDensity(horizontal: -4.0, vertical: -2),
+          horizontalTitleGap: 20,
+          leading: widget.fileOrDirectory.isFile
+              ? widget.fileOrDirectory.category!.categoryIcon(widget.selected)
+              : leadingIcon(FontAwesomeIcons.folder, widget.selected),
+          title: AppText.singleLineText(
+              "${listingState.currentList.indexOf(widget.fileOrDirectory) + 1}. ${widget.fileOrDirectory.name}",
+              style: AppTextStyles.medium(
+                  widget.selected
+                      ? CommonColors.commonGreenColor
+                      : CommonColors.commonBlackColor,
+                  AppFontSizes.fileListTitleFontSize.sp)),
+          subtitle: AppText.text(generateSubtitle(widget.fileOrDirectory),
+              style: AppTextStyles.regular(
+                  widget.selected
+                      ? CommonColors.commonGreenColor
+                      : CommonColors.commonBlackColor,
+                  AppFontSizes.fileListSubtitleFontSize.sp)),
+          trailing: commonPopUpMenu(
+              disabledItem: !FileManager.allowedDocumentExtentions
+                      .contains(widget.fileOrDirectory.extention)
+                  ? FileActionMenu.sendKindle
+                  : null,
+              onSelected: (selectedMenu) {
+                selectedMenu.executeAction(widget.fileOrDirectory);
+                if (selectedMenu == FileActionMenu.delete) {
+                  setState(() {
+                    showTile = false;
+                  });
+                }
+              },
+              menuListValues: FileActionMenu.values,
+              size: AppFontSizes.fileMenuIconSize),
+        ),
+      ),
     );
   }
 }

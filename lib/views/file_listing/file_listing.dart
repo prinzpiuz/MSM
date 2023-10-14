@@ -175,8 +175,7 @@ Widget fileListView(
     {required List<FileOrDirectory>? fileOrDirectoryList,
     required FileListingState listingState}) {
   listingState.turnOffFilter;
-  return ListView.separated(
-      separatorBuilder: (context, index) => commonDivider,
+  return ListView.builder(
       itemCount: fileOrDirectoryList!.length,
       itemBuilder: (context, i) {
         return FileTile(
