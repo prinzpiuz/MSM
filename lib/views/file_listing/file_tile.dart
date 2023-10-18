@@ -1,4 +1,3 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -29,9 +28,14 @@ class FileTile extends StatefulWidget {
 
 class FileTileState extends State<FileTile> {
   bool showTile = true;
+  bool updated = false;
+  final TextEditingController controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     FileListingState listingState = Provider.of<FileListingState>(context);
+    final reNameFormKey = GlobalKey<FormState>();
+    !updated ? controller.text = widget.fileOrDirectory.name : updated = false;
     return Visibility(
       visible: showTile,
       child: SizedBox(
@@ -65,8 +69,7 @@ class FileTileState extends State<FileTile> {
           leading: widget.fileOrDirectory.isFile
               ? widget.fileOrDirectory.category!.categoryIcon(widget.selected)
               : leadingIcon(FontAwesomeIcons.folder, widget.selected),
-          title: AppText.singleLineText(
-              "${listingState.currentList.indexOf(widget.fileOrDirectory) + 1}. ${widget.fileOrDirectory.name}",
+          title: AppText.singleLineText(controller.text,
               style: AppTextStyles.medium(
                   widget.selected
                       ? CommonColors.commonGreenColor
@@ -86,9 +89,25 @@ class FileTileState extends State<FileTile> {
               onSelected: (selectedMenu) {
                 selectedMenu.executeAction(widget.fileOrDirectory);
                 if (selectedMenu == FileActionMenu.delete) {
-                  setState(() {
-                    showTile = false;
+                  deleteSingleFile(context, widget.fileOrDirectory,
+                      extraFunctionCallback: () {
+                    setState(() {
+                      showTile = false;
+                    });
                   });
+                }
+                if (selectedMenu == FileActionMenu.rename) {
+                  renameFile(context, widget.fileOrDirectory, reNameFormKey,
+                      renameField: reNameField(
+                          key: reNameFormKey,
+                          context: context,
+                          fileOrDirectory: widget.fileOrDirectory,
+                          controller: controller,
+                          extraFunctionCallback: () {
+                            setState(() {
+                              updated = true;
+                            });
+                          }));
                 }
               },
               menuListValues: FileActionMenu.values,
