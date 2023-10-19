@@ -69,6 +69,7 @@ abstract class FileOrDirectory {
   bool get remote => false;
   FileCategory? category;
   int get date => 0;
+  int get sizeInInt => 0;
 
   @override
   bool operator ==(other) {
@@ -128,6 +129,9 @@ class FileObject extends FileOrDirectory {
 
   @override
   int get date => _date;
+
+  @override
+  int get sizeInInt => _size;
 }
 
 class DirectoryObject extends FileOrDirectory {
@@ -180,6 +184,9 @@ class DirectoryObject extends FileOrDirectory {
 
   @override
   int get date => _date;
+
+  @override
+  int get sizeInInt => _size;
 }
 
 class FileManager {

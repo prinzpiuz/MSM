@@ -1,5 +1,6 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:io';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -128,9 +129,9 @@ enum FileActionMenu {
   void executeAction(FileOrDirectory fileOrDirectory) {
     switch (this) {
       case FileActionMenu.rename:
-        return renameFile(fileOrDirectory);
+        break;
       case FileActionMenu.delete:
-        return deleteSingleFile(fileOrDirectory);
+        break;
       case FileActionMenu.move:
         return moveFile(fileOrDirectory);
       case FileActionMenu.download:
@@ -226,34 +227,6 @@ void filterCustomFolders(FileListingState listingState) {
   listingState.applyFilter = true;
 }
 
-void deleteSingleFile(FileOrDirectory fileOrDirectory) {
-  BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
-  final AppService appService = Provider.of<AppService>(context, listen: false);
-  dailogBox(
-    context: context,
-    content: Text(
-      fileOrDirectory.name,
-      style: AppTextStyles.regular(
-          CommonColors.commonBlackColor, AppFontSizes.dailogBoxTextFontSize.sp),
-    ),
-    okOnPressed: () async {
-      Navigator.pop(context, "OK");
-      LoadingOverlay.of(context).show();
-      await appService.commandExecuter
-          .delete(fileOrDirectories: [fileOrDirectory]).then((value) {
-        LoadingOverlay.of(context).hide();
-        showMessage(
-            context: context, text: AppMessages.filesDeletedSuccesfully);
-        FileListingState fileListState =
-            Provider.of<FileListingState>(context, listen: false);
-        fileListState.currentList.remove(fileOrDirectory);
-        fileListState.selectedList.remove(fileOrDirectory);
-      });
-    },
-    title: AppConstants.deleteFilesTitle,
-  );
-}
-
 void deletedSelected(FileListingState listingState) {
   BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
   if (listingState.selectedList.isEmpty) {
@@ -298,51 +271,6 @@ void deletedSelected(FileListingState listingState) {
       listingState.clearSelection;
     },
     title: AppConstants.deleteFilesTitle,
-  );
-}
-
-void renameFile(FileOrDirectory fileOrDirectory) {
-  BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
-  final reNameFormKey = GlobalKey<FormState>();
-  dailogBox(
-    context: context,
-    content: reNameField(reNameFormKey, context, fileOrDirectory),
-    okOnPressed: () {
-      hideKeyboard(context);
-      if (reNameFormKey.currentState!.validate()) {
-        reNameFormKey.currentState!.save();
-      }
-    },
-    title: AppConstants.renameFile,
-  );
-}
-
-Widget reNameField(
-    Key key, BuildContext context, FileOrDirectory fileOrDirectory) {
-  return Form(
-    key: key,
-    child: AppTextField.commonTextFeild(
-      initialValue: fileOrDirectory.name,
-      onsaved: (data) async {
-        final AppService appService =
-            Provider.of<AppService>(context, listen: false);
-        Navigator.pop(context, "OK");
-        LoadingOverlay.of(context).show();
-        await appService.commandExecuter
-            .rename(fileOrDirectory: fileOrDirectory, newName: data)
-            .then((value) {
-          LoadingOverlay.of(context).hide();
-          showMessage(context: context, text: AppMessages.fileRename);
-          FileListingState fileListState =
-              Provider.of<FileListingState>(context, listen: false);
-          fileListState.clearSelection;
-        });
-      },
-      validator: valueNeeded,
-      keyboardType: TextInputType.text,
-      labelText: "New File Name",
-      hintText: "File Rename",
-    ),
   );
 }
 
@@ -469,4 +397,114 @@ void get sortOnName {
       Provider.of<FileListingState>(context, listen: false);
   listingState.originalList.sort((a, b) => a.name.compareTo(b.name));
   listingState.applyFilter = true;
+}
+
+void deleteSingleFile(BuildContext context, FileOrDirectory fileOrDirectory,
+    {Function? extraFunctionCallback}) async {
+  final AppService appService = Provider.of<AppService>(context, listen: false);
+  dailogBox(
+    context: context,
+    content: Text(
+      fileOrDirectory.name,
+      style: AppTextStyles.regular(
+          CommonColors.commonBlackColor, AppFontSizes.dailogBoxTextFontSize.sp),
+    ),
+    okOnPressed: () async {
+      Navigator.pop(context, "OK");
+      LoadingOverlay.of(context).show();
+      await appService.commandExecuter
+          .delete(fileOrDirectories: [fileOrDirectory]).then((value) {
+        LoadingOverlay.of(context).hide();
+        showMessage(
+            context: context, text: AppMessages.filesDeletedSuccesfully);
+        FileListingState fileListState =
+            Provider.of<FileListingState>(context, listen: false);
+        fileListState.currentList.remove(fileOrDirectory);
+        extraFunctionCallback?.call();
+      });
+    },
+    title: AppConstants.deleteFilesTitle,
+  );
+}
+
+void renameFile(BuildContext context, FileOrDirectory fileOrDirectory,
+    GlobalKey<FormState> reNameFormKey,
+    {Widget? renameField}) {
+  dailogBox(
+    context: context,
+    content: renameField,
+    // content: reNameField(reNameFormKey, context, fileOrDirectory),
+    okOnPressed: () {
+      hideKeyboard(context);
+      if (reNameFormKey.currentState!.validate()) {
+        reNameFormKey.currentState!.save();
+      }
+    },
+    title: AppConstants.renameFile,
+  );
+}
+
+Widget reNameField(
+    {required Key key,
+    required BuildContext context,
+    required FileOrDirectory fileOrDirectory,
+    required TextEditingController controller,
+    Function? extraFunctionCallback}) {
+  return Form(
+    key: key,
+    child: AppTextField.commonTextFeild(
+      initialValue: fileOrDirectory.name,
+      onsaved: (data) async {
+        controller.text = data;
+        FileListingState fileListState =
+            Provider.of<FileListingState>(context, listen: false);
+        if (fileOrDirectory.isFile) {
+          FileOrDirectory updatedFile = FileObject(
+              File(fileOrDirectory.fullPath),
+              data,
+              fileOrDirectory.sizeInInt,
+              fileOrDirectory.extention,
+              fileOrDirectory.location,
+              fileOrDirectory.type,
+              fileOrDirectory.fullPath,
+              fileOrDirectory.remote,
+              fileOrDirectory.category,
+              fileOrDirectory.date);
+          int currentListIndex =
+              fileListState.currentList.indexOf(fileOrDirectory);
+          fileListState.currentList[currentListIndex] = updatedFile;
+        } else {
+          FileOrDirectory updatedFile = DirectoryObject(
+              Directory(fileOrDirectory.fullPath),
+              data,
+              fileOrDirectory.sizeInInt,
+              fileOrDirectory.type,
+              fileOrDirectory.fileCount,
+              fileOrDirectory.location,
+              fileOrDirectory.fullPath,
+              fileOrDirectory.remote,
+              fileOrDirectory.category,
+              fileOrDirectory.date);
+          int currentListIndex =
+              fileListState.currentList.indexOf(fileOrDirectory);
+          fileListState.currentList[currentListIndex] = updatedFile;
+        }
+        extraFunctionCallback?.call();
+        final AppService appService =
+            Provider.of<AppService>(context, listen: false);
+        Navigator.pop(context, "OK");
+        LoadingOverlay.of(context).show();
+        await appService.commandExecuter
+            .rename(fileOrDirectory: fileOrDirectory, newName: data)
+            .then((value) {
+          LoadingOverlay.of(context).hide();
+          showMessage(context: context, text: AppMessages.fileRename);
+        });
+      },
+      validator: valueNeeded,
+      keyboardType: TextInputType.text,
+      labelText: "New File Name",
+      hintText: "File Rename",
+    ),
+  );
 }
