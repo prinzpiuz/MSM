@@ -5,7 +5,7 @@ class FolderConfiguration {
   String movies;
   String tv;
   String books;
-  List<dynamic> customFolders;
+  List<String> customFolders;
 
   FolderConfiguration(
       {this.movies = "",
@@ -47,7 +47,7 @@ class FolderConfiguration {
       : movies = json['movies'],
         tv = json['tv'],
         books = json['books'],
-        customFolders = json['customFolders'];
+        customFolders = json['customFolders'].cast<String>();
 
   Map<String, dynamic> toJson() => {
         'movies': movies,
