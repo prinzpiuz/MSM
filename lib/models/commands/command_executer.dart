@@ -312,8 +312,7 @@ class CommandExecuter extends Server {
         ]);
       }
       if (folderConfigurationObj.customFolders.isNotEmpty) {
-        allFolders
-            .addAll(folderConfigurationObj.customFolders as Iterable<String>);
+        allFolders.addAll(folderConfigurationObj.customFolders);
       }
       for (String folder in allFolders) {
         String command = Commands.folderExist(folder);
