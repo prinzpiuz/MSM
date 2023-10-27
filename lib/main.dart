@@ -10,7 +10,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 // Project imports:
 import 'package:msm/initialization.dart';
-import 'package:msm/views/splash/splash.dart';
+import 'package:msm/views/splash/init_screen.dart';
 import 'config.dart';
 
 Future<void> main() async {
@@ -53,7 +53,7 @@ class _MSMState extends State<MSM> {
               folderConfigState: data["folderConfigState"]);
         } else {
           //TODO make splash screen neat
-          return const SplashScreen();
+          return const InitScreen();
         }
       },
     );

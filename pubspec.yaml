@@ -50,6 +50,7 @@ dependencies:
   flutter_background_service: ^5.0.1
   wake_on_lan: ^3.2.0+1
   sentry_flutter: ^7.10.1
+  flutter_native_splash: ^2.3.4
 
 dev_dependencies:
   flutter_test:
@@ -62,5 +63,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/msm.png
+    - assets/images/splash.png
     - assets/svgs/msm.svg
+    - assets/images/app_icon.png
