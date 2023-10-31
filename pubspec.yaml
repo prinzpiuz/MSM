@@ -47,7 +47,7 @@ dependencies:
   dio: ^5.1.1
   xterm: ^3.5.0
   flutter_pty: ^0.3.1
-  flutter_background_service: ^5.0.1
+  flutter_background_service: ^5.0.2
   wake_on_lan: ^3.2.0+1
   sentry_flutter: ^7.10.1
   flutter_native_splash: ^2.3.4
