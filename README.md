@@ -24,7 +24,7 @@ MSM works as a wrapper around your Media server(Emby, Jellyfin, Kodi, Plex ... e
 
 ### Features
 
-- works on top of SSH connection to server, no need to expose server ports
+- Works on top of SSH connection to server
 - CRUD options on files
 - Send To Kindle for e-books
 - Uploads/downloads run as background tasks
