@@ -15,8 +15,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Check typos
-        uses: crate-ci/typos@master
       - name: Generate a changelog
         uses: orhun/git-cliff-action@main
         id: git-cliff
@@ -25,10 +23,12 @@ jobs:
           args: -vv --latest --strip header
         env:
           OUTPUT: CHANGES.md
+      - name: Generate Changelog
+        run: echo ${{ steps.git-cliff.outputs.content }} > ${{ github.workspace }}-CHANGELOG.md
   tag:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: "0"
       - name: Bump version and push tag
@@ -44,7 +44,7 @@ jobs:
   build_and_release:
     needs: tag
     runs-on: ubuntu-latest
-    name: Build and Release App
+    name: Build and Release Apps
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
@@ -58,7 +58,7 @@ jobs:
       - run: flutter build appbundle
       - uses: softprops/action-gh-release@v1
         with:
-          generate_release_notes: true
+          body_path: ${{ github.workspace }}-CHANGELOG.md
           tag_name: ${{ needs.tag.outputs.new_tag }}
           prerelease: true
           name: msm-${{ needs.tag.outputs.new_tag }}
