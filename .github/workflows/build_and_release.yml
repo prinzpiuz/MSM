@@ -29,10 +29,10 @@ jobs:
         if: ${{ success() }}
         uses: EndBug/add-and-commit@v9
         with:
-            add: CHANGELOG.md
-            pull: "--rebase --autostash ."
-            message: "chore(generated): changelog generated automatically"
-            default_author: github_actions
+          add: CHANGELOG.md
+          pull: "--rebase --autostash ."
+          message: "chore(generated): changelog generated automatically"
+          default_author: github_actions
   tag:
     runs-on: ubuntu-latest
     steps:
@@ -53,7 +53,29 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Release Apps
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Generate a changelog
+        uses: orhun/git-cliff-action@main
+        id: git-cliff
+        with:
+          config: cliff.toml
+          args: -vv --latest --strip header
+        env:
+          OUTPUT: CHANGES.md
+      - name: Copy changelog to workspace
+        run: echo "${{ steps.git-cliff.outputs.content }}" > CHANGELOG.md
+      - name: Commit changes
+        if: ${{ success() }}
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: CHANGELOG.md
+          pull: "--rebase --autostash ."
+          message: "chore(generated): changelog generated automatically"
+          default_author: github_actions
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.13.9"
