@@ -24,7 +24,7 @@ jobs:
         env:
           OUTPUT: CHANGES.md
       - name: Generate Changelog
-        run: echo ${{ steps.git-cliff.outputs.content }} > ${{ github.workspace }}-CHANGELOG.md
+        run: echo "${{ steps.git-cliff.outputs.content }}" > ${{ github.workspace }}-CHANGELOG.md
   tag:
     runs-on: ubuntu-latest
     steps:
