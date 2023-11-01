@@ -23,8 +23,8 @@ jobs:
           args: -vv --latest --strip header
         env:
           OUTPUT: CHANGES.md
-      - name: Generate Changelog
-        run: echo "${{ steps.git-cliff.outputs.content }}" > ${{ github.workspace }}-CHANGELOG.md
+      - name: Copy changelog to workspace
+        run: echo "${{ steps.git-cliff.outputs.content }}" > CHANGELOG.md
   tag:
     runs-on: ubuntu-latest
     steps:
@@ -36,7 +36,7 @@ jobs:
         uses: anothrNick/github-tag-action@1.64.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          INITIAL_VERSION: 1.1.4
+          INITIAL_VERSION: 2.0.0
           WITH_V: true
           DRY_RUN: true
     outputs:
@@ -58,7 +58,7 @@ jobs:
       - run: flutter build appbundle
       - uses: softprops/action-gh-release@v1
         with:
-          body_path: ${{ github.workspace }}-CHANGELOG.md
+          body_path: CHANGELOG.md
           tag_name: ${{ needs.tag.outputs.new_tag }}
           prerelease: true
           name: msm-${{ needs.tag.outputs.new_tag }}
