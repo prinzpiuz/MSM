@@ -36,7 +36,6 @@ jobs:
         uses: anothrNick/github-tag-action@1.64.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          INITIAL_VERSION: 2.0.0
           WITH_V: true
           DRY_RUN: true
     outputs:
