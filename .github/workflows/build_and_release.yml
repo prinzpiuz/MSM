@@ -33,9 +33,10 @@ jobs:
           fetch-depth: "0"
       - name: Bump version and push tag
         id: autoversion
-        uses: moble/github-tag-action@main
+        uses: anothrNick/github-tag-action@1.64.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INITIAL_VERSION: 1.1.4
           WITH_V: true
           DRY_RUN: true
     outputs:
