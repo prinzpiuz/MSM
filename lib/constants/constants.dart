@@ -131,7 +131,7 @@ class BackGroundTaskRelated {
   static const runningBody = "Background Service Running";
   static const icon = "ic_bg_service_small";
   static const stopActionId = "stop_service";
-  static const stopActionTitle = "Stop";
+  static const stopActionTitle = "Stop Service";
   static const uploadChannelId = "upload";
   static const uploadChannelName = "upload channel";
   static const uploadNotificationId = 123;

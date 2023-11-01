@@ -158,7 +158,8 @@ class Init {
     await backgroundService.configure(
       androidConfiguration: AndroidConfiguration(
           onStart: backGroundTaskDispatcher,
-          autoStart: true,
+          autoStart: false,
+          autoStartOnBoot: false,
           isForegroundMode: true,
           notificationChannelId: BackGroundTaskRelated.notificationChannelId,
           foregroundServiceNotificationId:
@@ -169,7 +170,6 @@ class Init {
               BackGroundTaskRelated.initialNotificationTitle),
       iosConfiguration: IosConfiguration(),
     );
-    backgroundService.startService();
   }
 
   static Future<FlutterLocalNotificationsPlugin> notificationIntialize() async {
@@ -181,6 +181,7 @@ class Init {
         InitializationSettings(android: initializationSettingsAndroid);
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
+      onDidReceiveNotificationResponse: notificationTapBackground,
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
     return flutterLocalNotificationsPlugin;
