@@ -25,6 +25,14 @@ jobs:
           OUTPUT: CHANGES.md
       - name: Copy changelog to workspace
         run: echo "${{ steps.git-cliff.outputs.content }}" > CHANGELOG.md
+      - name: Commit changes
+        if: ${{ success() }}
+        uses: EndBug/add-and-commit@v9
+        with:
+            add: CHANGELOG.md
+            pull: "--rebase --autostash ."
+            message: "chore(generated): changelog generated automatically"
+            default_author: github_actions
   tag:
     runs-on: ubuntu-latest
     steps:
@@ -52,7 +60,7 @@ jobs:
           channel: "stable"
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter build apk --split-per-abi --no-shrink --no-tree-shake-icons --build-name=${{ needs.tag.outputs.new_tag }} --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }}
+      - run: flutter build apk --split-per-abi --no-shrink --no-tree-shake-icons --build-name=MSM-${{ needs.tag.outputs.new_tag }} --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }}
       - run: flutter pub get
       - run: flutter build appbundle
       - uses: softprops/action-gh-release@v1
@@ -60,6 +68,6 @@ jobs:
           body_path: CHANGELOG.md
           tag_name: ${{ needs.tag.outputs.new_tag }}
           prerelease: true
-          name: msm-${{ needs.tag.outputs.new_tag }}
+          name: MSM-${{ needs.tag.outputs.new_tag }}
           files: build/app/outputs/flutter-apk/*.apk, build/app/outputs/bundle/release/app-release.aab
           token: ${{ secrets.GITHUB_TOKEN }}
