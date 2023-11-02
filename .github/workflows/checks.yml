@@ -1,11 +1,13 @@
-on: push
+on:
+  pull_request:
+    types: [opened, reopened]
 name: Pre-Merging checks
 jobs:
   pre-commit:
     name: Run Pre-commit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v3
       - uses: subosito/flutter-action@v2
       - uses: pre-commit/action@v3.0.0
@@ -13,7 +15,7 @@ jobs:
     name: Sort Analyze Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.13.9"

@@ -2,8 +2,8 @@ name: Build And Release
 
 on:
   push:
-    # branches:
-    #   - release
+    branches:
+      - "release"
 jobs:
   tag:
     runs-on: ubuntu-latest

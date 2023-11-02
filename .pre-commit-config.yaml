@@ -1,13 +1,16 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: check-yaml
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: check-merge-conflict
-  # - repo: https://github.com/Cretezy/dart-format-pre-commit
-  #   rev: "fa83c73f40014f9e268bd0e62374eaa581fe3540"
-  #   hooks:
-  #     - id: dart-format
-  #       files: lib/* # Only format source files
+  - repo: https://github.com/crate-ci/typos
+    rev: typos-dict-v0.11.3
+    hooks:
+      - id: typos
+  - repo: https://github.com/fluttercommunity/import_sorter
+    rev: "f350497a11b1285c695595049e95a420068e7a9f"
+    hooks:
+      - id: dart-import-sorter
