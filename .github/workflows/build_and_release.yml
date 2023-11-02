@@ -3,17 +3,17 @@ name: Build And Release
 on:
   push:
     branches:
-      - release
+      - "release"
 jobs:
   tag:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: "0"
       - name: Bump version and push tag
         id: autoversion
-        uses: moble/github-tag-action@main
+        uses: anothrNick/github-tag-action@1.64.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
@@ -23,23 +23,46 @@ jobs:
   build_and_release:
     needs: tag
     runs-on: ubuntu-latest
-    name: Build and Release App
+    name: Build and Release Apps
     steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          flutter-version: "3.13.6"
+          fetch-depth: 0
+      - name: Generate a changelog
+        uses: orhun/git-cliff-action@main
+        id: git-cliff
+        with:
+          config: cliff.toml
+          args: -vv --latest --strip header
+        env:
+          OUTPUT: CHANGES.md
+      - name: Copy changelog to workspace
+        run: echo "${{ steps.git-cliff.outputs.content }}" >> CHANGELOG.md
+      - name: Commit changes
+        if: ${{ success() }}
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: CHANGELOG.md
+          pull: "--rebase --autostash ."
+          message: "chore(generated): changelog generated automatically"
+          default_author: github_actions
+      - name: Build
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.13.9"
           channel: "stable"
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter build apk --split-per-abi --no-shrink --build-name=${{ needs.tag.outputs.new_tag }} --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }}
+      - run: flutter build apk --split-per-abi --no-shrink --no-tree-shake-icons --build-name=MSM-${{ needs.tag.outputs.new_tag }} --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }}
       - run: flutter pub get
       - run: flutter build appbundle
-      - uses: softprops/action-gh-release@v1
+      - name: Release
+        uses: softprops/action-gh-release@v1
         with:
-          generate_release_notes: true
+          body_path: CHANGELOG.md
           tag_name: ${{ needs.tag.outputs.new_tag }}
-          prerelease: true
-          name: msm-${{ needs.tag.outputs.new_tag }}
+          prerelease: false
+          name: MSM-${{ needs.tag.outputs.new_tag }}
           files: build/app/outputs/flutter-apk/*.apk, build/app/outputs/bundle/release/app-release.aab
           token: ${{ secrets.GITHUB_TOKEN }}
