@@ -44,11 +44,11 @@ class CommandExecuter extends Server {
   }
 
   Future<List<FileOrDirectory>?>? listRemoteDirectory(
-      UploadCatogories catogory, String? insidPath,
+      UploadCatogories catogory, String? insidePath,
       {bool empty = false, String customPath = ""}) async {
-    List<FileOrDirectory> direcories = [];
+    List<FileOrDirectory> directories = [];
     if (empty) {
-      return direcories;
+      return directories;
     } else {
       try {
         String? directory = super.folderConfiguration.pathToDirectory(catogory);
@@ -56,8 +56,8 @@ class CommandExecuter extends Server {
           directory = customPath;
         }
         if (directory != null && sftp != null) {
-          if (insidPath != null) {
-            directory = "$directory/$insidPath";
+          if (insidePath != null) {
+            directory = "$directory/$insidePath";
           }
           final items = await sftp!.listdir(directory);
           for (final item in items) {
@@ -65,7 +65,7 @@ class CommandExecuter extends Server {
                 (item.filename != "." && item.filename != "..")) {
               String filepath = FileManager.linuxCompatibleNameString(
                   "$directory/${item.filename}");
-              direcories.add(DirectoryObject(
+              directories.add(DirectoryObject(
                   Directory(filepath),
                   item.filename,
                   item.attr.size ?? 0,
@@ -80,7 +80,7 @@ class CommandExecuter extends Server {
             }
           }
         }
-        return direcories;
+        return directories;
       } catch (_) {
         return null;
       }
@@ -89,7 +89,7 @@ class CommandExecuter extends Server {
 
   Future<List<FileOrDirectory>?>? listAllRemoteDirectories(
       {required String path}) async {
-    List<FileOrDirectory> direcories = [];
+    List<FileOrDirectory> directories = [];
     try {
       List<dynamic> pathsToList = [];
       if (path.isNotEmpty) {
@@ -102,7 +102,7 @@ class CommandExecuter extends Server {
             super.folderConfiguration.books,
           ]);
         } else {
-          return direcories;
+          return directories;
         }
         if (super.folderConfiguration.customFolders.isNotEmpty) {
           pathsToList.addAll(super.folderConfiguration.customFolders);
@@ -116,7 +116,7 @@ class CommandExecuter extends Server {
                 String filepath = FileManager.linuxCompatibleNameString(
                     "$path/${item.filename}");
                 if (item.attr.isDirectory) {
-                  direcories.add(DirectoryObject(
+                  directories.add(DirectoryObject(
                       Directory(filepath),
                       item.filename,
                       item.attr.size ?? 0,
@@ -125,11 +125,11 @@ class CommandExecuter extends Server {
                       path,
                       filepath,
                       true,
-                      FileCategory.getCategoryFromExtention(
+                      FileCategory.getCategoryFromExtension(
                           item.filename.split(".").last),
                       item.attr.modifyTime ?? 0));
                 } else {
-                  direcories.add(FileObject(
+                  directories.add(FileObject(
                       File(filepath),
                       item.filename,
                       item.attr.size ?? 0,
@@ -138,7 +138,7 @@ class CommandExecuter extends Server {
                       FileType.file,
                       filepath,
                       true,
-                      FileCategory.getCategoryFromExtention(
+                      FileCategory.getCategoryFromExtension(
                           item.filename.split(".").last),
                       item.attr.modifyTime ?? 0));
                 }
@@ -146,7 +146,7 @@ class CommandExecuter extends Server {
             }
           });
         }
-        return direcories.toSet().toList(); //to remove duplicates
+        return directories.toSet().toList(); //to remove duplicates
       } else {
         return null;
       }
@@ -166,7 +166,7 @@ class CommandExecuter extends Server {
         }
       }
     } catch (_) {
-      //this is implemented because for avoid delete errror `SftpStatusError`
+      //this is implemented because for avoid delete error `SftpStatusError`
       // in some files with spaces or special chars in file name
       List<String> pathList = [];
       for (FileOrDirectory fileOrDirectory in fileOrDirectories) {
@@ -186,7 +186,7 @@ class CommandExecuter extends Server {
     try {
       await sftp!.rename(fileOrDirectory.fullPath, newPath);
     } catch (_) {
-      //this is implemented because for avoid delete errror `SftpStatusError`
+      //this is implemented because for avoid delete error `SftpStatusError`
       // in some files with spaces or special chars in file name
       String command = CommandBuilder()
           .addArguments(Commands.rename, [fileOrDirectory.fullPath, newPath]);

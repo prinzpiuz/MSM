@@ -62,7 +62,7 @@ Widget serverDetailsForm(BuildContext context) {
       ));
 }
 
-Widget nameField(ServerData serverData) => AppTextField.commonTextFeild(
+Widget nameField(ServerData serverData) => AppTextField.commonTextField(
       onsaved: (data) {
         serverData.serverName = data;
       },
@@ -76,7 +76,7 @@ Widget nameField(ServerData serverData) => AppTextField.commonTextFeild(
       hintText: "Name Of Your Server",
     );
 
-Widget usernameField(ServerData serverData) => AppTextField.commonTextFeild(
+Widget usernameField(ServerData serverData) => AppTextField.commonTextField(
       onsaved: (data) {
         serverData.username = data;
       },
@@ -87,7 +87,7 @@ Widget usernameField(ServerData serverData) => AppTextField.commonTextFeild(
       hintText: "User Name Of Server",
     );
 
-Widget hostField(ServerData serverData) => AppTextField.commonTextFeild(
+Widget hostField(ServerData serverData) => AppTextField.commonTextField(
       onsaved: (data) {
         serverData.serverHost = data;
       },
@@ -103,7 +103,7 @@ Widget hostField(ServerData serverData) => AppTextField.commonTextFeild(
       hintText: "IP Address Of The Server",
     );
 
-Widget passwordField(ServerData serverData) => AppTextField.commonTextFeild(
+Widget passwordField(ServerData serverData) => AppTextField.commonTextField(
     onsaved: (data) {
       serverData.rootPassword = data;
     },
@@ -114,7 +114,7 @@ Widget passwordField(ServerData serverData) => AppTextField.commonTextFeild(
     hintText: "Root Password Of The Server",
     obscureText: true);
 
-Widget portField(ServerData serverData) => AppTextField.commonTextFeild(
+Widget portField(ServerData serverData) => AppTextField.commonTextField(
       onsaved: (data) {
         serverData.portNumber = data;
       },
@@ -128,7 +128,7 @@ Widget portField(ServerData serverData) => AppTextField.commonTextFeild(
       hintText: "SSH Port Number Of The Server",
     );
 
-Widget macField(ServerData serverData) => AppTextField.commonTextFeild(
+Widget macField(ServerData serverData) => AppTextField.commonTextField(
       onsaved: (data) {
         serverData.macAddress = data;
       },

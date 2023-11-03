@@ -25,14 +25,14 @@ Future<SftpClient> getSFTPClient(dynamic event) async {
 
 Future<void> upload(
     {List<String> newFolders = const [],
-    String insidPath = "",
+    String insidePath = "",
     required String directory,
     required List<String> filePaths,
     required SftpClient? sftp,
     required Notifications? notifications}) async {
   if (filePaths.isNotEmpty) {
-    if (insidPath.isNotEmpty) {
-      directory = "$directory/$insidPath";
+    if (insidePath.isNotEmpty) {
+      directory = "$directory/$insidePath";
     }
     if (newFolders.isEmpty) {
       loopAndSend(

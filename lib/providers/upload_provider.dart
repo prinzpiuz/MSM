@@ -11,7 +11,7 @@ import 'package:msm/views/upload_pages/upload_page_utils.dart';
 
 class UploadState with ChangeNotifier {
   UploadCatogories _category = UploadCatogories.movies;
-  List<String> _categoryExtentions = FileManager.allowedMovieExtentions;
+  List<String> _categoryExtensions = FileManager.allowedMovieExtensions;
   String _currentListing = UploadCatogories.movies.getTitle;
   bool _recursive = false;
   String newFolderName = "";
@@ -27,7 +27,7 @@ class UploadState with ChangeNotifier {
   UploadState();
 
   UploadCatogories get getCategory => _category;
-  List<String> get getCategoryExtentions => _categoryExtentions;
+  List<String> get getCategoryExtensions => _categoryExtensions;
   List<Directory> get getCategoryDirectories => _directories;
   String get getCurrentListing => _currentListing;
   bool get getRecursive => _recursive;
@@ -40,8 +40,8 @@ class UploadState with ChangeNotifier {
     notifyListeners();
   }
 
-  set setCategoryExtentions(List<String> currentCategoryExtentions) {
-    _categoryExtentions = currentCategoryExtentions;
+  set setCategoryExtensions(List<String> currentCategoryExtensions) {
+    _categoryExtensions = currentCategoryExtensions;
     notifyListeners();
   }
 

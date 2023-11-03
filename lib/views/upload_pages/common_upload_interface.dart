@@ -150,7 +150,7 @@ Widget fileMetaData(FileOrDirectory data) {
           style: AppTextStyles.medium(CommonColors.commonGreyColor, 10)),
       AppText.text(
           data.isFile
-              ? "${data.extention}, ${data.size}"
+              ? "${data.extension}, ${data.size}"
               : "Files: ${data.fileCount}",
           style: AppTextStyles.medium(CommonColors.commonGreyColor, 10))
     ],

@@ -91,7 +91,7 @@ class Init {
         if (client != null) {
           final SftpClient sftpClient = await client.sftp();
           Notifications notifications = Notifications(
-              flutterLocalNotificationsPlugin: await notificationIntialize());
+              flutterLocalNotificationsPlugin: await notificationInitialize());
           appService.notifications = notifications;
           appService.commandExecuter = CommandExecuter(
               serverData: appService.server.serverData,
@@ -172,7 +172,7 @@ class Init {
     );
   }
 
-  static Future<FlutterLocalNotificationsPlugin> notificationIntialize() async {
+  static Future<FlutterLocalNotificationsPlugin> notificationInitialize() async {
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
     const AndroidInitializationSettings initializationSettingsAndroid =

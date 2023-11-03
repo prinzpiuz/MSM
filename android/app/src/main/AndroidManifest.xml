@@ -15,7 +15,7 @@
     <uses-permission
         android:name="android.permission.USE_EXACT_ALARM"/>
     <application
-        android:label="msm"
+        android:label="MSM"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
         android:requestLegacyExternalStorage="true">

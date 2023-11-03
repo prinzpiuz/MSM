@@ -31,7 +31,7 @@ import 'package:msm/ui_components/textfield/validators.dart';
 
 enum UploadCatogories { movies, tvShows, books, custom }
 
-extension UploadCategoriesExtention on UploadCatogories {
+extension UploadCategoriesExtension on UploadCatogories {
   String get getTitle {
     switch (this) {
       case UploadCatogories.movies:
@@ -54,22 +54,22 @@ void goToPage(UploadCatogories catogories, BuildContext context,
   switch (catogories) {
     case UploadCatogories.movies:
       uploadState.setCategory = UploadCatogories.movies;
-      uploadState.setCategoryExtentions = FileManager.allowedMovieExtentions;
+      uploadState.setCategoryExtensions = FileManager.allowedMovieExtensions;
       uploadState.setCurrentListing = UploadCatogories.movies.getTitle;
       break;
     case UploadCatogories.tvShows:
       uploadState.setCategory = UploadCatogories.tvShows;
-      uploadState.setCategoryExtentions = FileManager.allowedMovieExtentions;
+      uploadState.setCategoryExtensions = FileManager.allowedMovieExtensions;
       uploadState.setCurrentListing = UploadCatogories.tvShows.getTitle;
       break;
     case UploadCatogories.books:
       uploadState.setCategory = UploadCatogories.books;
-      uploadState.setCategoryExtentions = FileManager.allowedDocumentExtentions;
+      uploadState.setCategoryExtensions = FileManager.allowedDocumentExtensions;
       uploadState.setCurrentListing = UploadCatogories.books.getTitle;
       break;
     case UploadCatogories.custom:
       uploadState.setCategory = UploadCatogories.custom;
-      uploadState.setCategoryExtentions = FileManager.allAllowedExtentions;
+      uploadState.setCategoryExtensions = FileManager.allAllowedExtensions;
       uploadState.toCustomFolder = true;
       if (path.isNotEmpty) {
         uploadState.customPath = path;
@@ -137,7 +137,7 @@ void createNewFolder(BuildContext context, UploadState uploadState) {
 Widget newFolderNameField(Key key, UploadState uploadState) {
   return Form(
     key: key,
-    child: AppTextField.commonTextFeild(
+    child: AppTextField.commonTextField(
       onsaved: (data) {
         uploadState.newFolderName = data;
         uploadState.addNewFolderName(data);
@@ -176,7 +176,7 @@ void uploadFiles(BuildContext context, UploadState uploadState) async {
           data: {
             "directory": directory!,
             "filePaths": uploadState.fileUploadData.localFilesPaths,
-            "insidPath":
+            "insidePath":
                 FileManager.pathBuilder(uploadState.traversedDirectories),
             "newFolders": uploadState.newFoldersToCreate
           },

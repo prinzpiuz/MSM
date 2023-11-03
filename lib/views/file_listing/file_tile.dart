@@ -1,3 +1,4 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -82,8 +83,8 @@ class FileTileState extends State<FileTile> {
                       : CommonColors.commonBlackColor,
                   AppFontSizes.fileListSubtitleFontSize.sp)),
           trailing: commonPopUpMenu(
-              disabledItem: !FileManager.allowedDocumentExtentions
-                      .contains(widget.fileOrDirectory.extention)
+              disabledItem: !FileManager.allowedDocumentExtensions
+                      .contains(widget.fileOrDirectory.extension)
                   ? FileActionMenu.sendKindle
                   : null,
               onSelected: (selectedMenu) {

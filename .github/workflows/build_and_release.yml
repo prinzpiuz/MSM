@@ -54,7 +54,7 @@ jobs:
           channel: "stable"
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter build apk --split-per-abi --no-shrink --no-tree-shake-icons --build-name=MSM-${{ needs.tag.outputs.new_tag }} --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }}
+      - run: flutter build apk --split-per-abi --no-shrink --no-tree-shake-icons --build-name=${{ needs.tag.outputs.new_tag }} --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --release
       - run: flutter pub get
       - run: flutter build appbundle
       - name: Release

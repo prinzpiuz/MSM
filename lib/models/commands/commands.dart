@@ -2,7 +2,7 @@
 import 'package:msm/constants/constants.dart';
 
 class Commands {
-  //added echo -n '<identifier>:' to prepand and identifier with the command output
+  //added echo -n '<identifier>:' to prepend and identifier with the command output
   static const whoAmI = "whoami";
   static const uptime = "uptime -p";
   static const linuxDistribution = "lsb_release -i -s";
@@ -16,7 +16,7 @@ class Commands {
   static const deleteFileOrFolders = "rm -rf";
   static const rename = "mv";
   static const base64 = "base64 --wrap=0";
-  // added `end` at the end for identification it also used for spliting output string
+  // added `end` at the end for identification it also used for splitting output string
   static const getServices =
       r"""systemctl --type=service -a --plain | awk '{ print $1,"," $3,"," $4,",", $5,$6,$7,$8,$9,"end"}'""";
   static const serviceStart = "systemctl start";
