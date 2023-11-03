@@ -1,0 +1,24 @@
+[files]
+extend-exclude = ["CHANGELOG.md", "ios/Runner/Base.lproj/Main.storyboard", "ios/*", "android/*"]
+ignore-hidden = true
+ignore-files = true
+ignore-dot = true
+ignore-vcs = true
+ignore-global = true
+ignore-parent = true
+
+[default]
+binary = false
+check-filename = true
+check-file = true
+unicode = true
+ignore-hex = true
+identifier-leading-digits = false
+locale = "en"
+extend-ignore-identifiers-re = []
+extend-ignore-words-re = []
+extend-ignore-re = []
+
+[default.extend-identifiers]
+
+[default.extend-words]
