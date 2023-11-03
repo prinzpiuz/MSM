@@ -2,8 +2,8 @@ name: Build And Release
 
 on:
   push:
-    # branches:
-    #   - "release"
+    branches:
+      - "release"
 jobs:
   tag:
     runs-on: ubuntu-latest
@@ -71,10 +71,8 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          photo: assets/images/splash.png
           message: |
-            Alert for new release!
+            Alert For New Release!
             MSM-${{ needs.tag.outputs.new_tag }}
-            Repository: ${{ github.repository }}
             See changes: https://github.com/prinzpiuz/MSM/blob/master/CHANGELOG.md
             See release: https://github.com/prinzpiuz/MSM/releases/tag/${{ needs.tag.outputs.new_tag }}
