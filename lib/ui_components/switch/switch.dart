@@ -25,13 +25,13 @@ class CommonSwitch extends StatefulWidget {
 }
 
 class _CommonSwitchState extends State<CommonSwitch> {
-  bool intial = true;
+  bool initial = true;
   late bool switchValue;
   @override
   Widget build(BuildContext context) {
-    if (intial) {
+    if (initial) {
       switchValue = widget.value;
-      intial = false;
+      initial = false;
     }
     return Padding(
       padding: EdgeInsets.only(left: 18.w, right: 18.w),

@@ -63,7 +63,7 @@ Widget systemToolsMenu(BuildContext context) {
           // commonTile(
           //     icon: FontAwesomeIcons.chartColumn,
           //     title: 'Charts',
-          //     subtitle: 'See your system perfomance in graphs',
+          //     subtitle: 'See your system performance in graphs',
           //     onTap: () {
           //       print("pressed2");
           //     })

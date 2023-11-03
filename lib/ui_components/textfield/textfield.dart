@@ -22,7 +22,7 @@ class AppTextField {
         decoration: AppTextFieldDecoratoion.simpleTextFieldDecoration());
   }
 
-  static Widget commonTextFeild(
+  static Widget commonTextField(
       {required TextInputType keyboardType,
       required String labelText,
       required String hintText,

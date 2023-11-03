@@ -46,7 +46,7 @@ class AppConstants {
   static const appIssueFeatureReport = "Click Here To Submit Bugs";
   static const issueReportUrl = "https://github.com/prinzpiuz/MSM/issues";
   static const homPage = "Home Page";
-  static const homePageUrl = "https://github.com/prinzpiuz/MSM";
+  static const homePageUrl = "https://prinzpiuz.in/MSM/";
   static const license = "License";
   static const licenseUrl =
       "https://github.com/prinzpiuz/MSM/blob/refactored/LICENSE";
@@ -79,15 +79,15 @@ class AppMessages {
   static const selectFiles = "Select Files";
   static const connectionLost = "Connection Lost";
   static const uploadStarted = "Upload Will Start In Background";
-  static const errorOccured = "Error While Uploading";
+  static const errorOccurred = "Error While Uploading";
   static const clearingTasks = "All Background Tasks Cleared";
-  static const folderCreationError = "Error Occured While Creating Folders";
+  static const folderCreationError = "Error Occurred While Creating Folders";
   static const serverNotAvailable = "Server Not Available";
   static const filesNotSelected = "Files Not Selected";
-  static const filesDeletedSuccesfully = "Files Deleted Succesfully";
-  static const fileRename = "File Renamed Succesfully";
-  static const moveFile = "File Moved Succesfully";
-  static const sendToKindle = "File Succesfully Sent To Kindle";
+  static const filesDeletedSuccessfully = "Files Deleted Successfully";
+  static const fileRename = "File Renamed Successfully";
+  static const moveFile = "File Moved Successfully";
+  static const sendToKindle = "File Successfully Sent To Kindle";
   static const sendToKindleError = "File Sending To Kindle Failed \n Try Again";
   static const setupKindleDetails = "Please Add Required Kindle Details";
 }

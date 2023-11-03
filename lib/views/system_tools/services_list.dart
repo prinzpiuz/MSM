@@ -217,7 +217,7 @@ Widget actionContent(String content) {
 
 String actionStatus(Services service, String action, bool status) {
   if (status) {
-    return "${service.serviceName} ${action}ed succesfully";
+    return "${service.serviceName} ${action}ed successfully";
   }
   return "${service.serviceName} ${action}ing failed";
 }

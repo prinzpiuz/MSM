@@ -36,14 +36,14 @@ enum FileCategory {
     }
   }
 
-  static FileCategory getCategoryFromExtention(String extention) {
-    if (FileManager.allowedMovieExtentions.contains(extention)) {
+  static FileCategory getCategoryFromExtension(String extension) {
+    if (FileManager.allowedMovieExtensions.contains(extension)) {
       return movieOrTv;
-    } else if (FileManager.allowedDocumentExtentions.contains(extention)) {
+    } else if (FileManager.allowedDocumentExtensions.contains(extension)) {
       return book;
-    } else if (FileManager.allowedPictureExtentions.contains(extention)) {
+    } else if (FileManager.allowedPictureExtensions.contains(extension)) {
       return image;
-    } else if (FileManager.allowedSubtitlesExtentions.contains(extention)) {
+    } else if (FileManager.allowedSubtitlesExtensions.contains(extension)) {
       return subtitle;
     }
     return unknown;
@@ -61,7 +61,7 @@ abstract class FileOrDirectory {
   String get name => '';
   String get location => '';
   String get size => '';
-  String get extention => '';
+  String get extension => '';
   FileType get type => FileType.file;
   bool get isFile => type == FileType.file;
   int get fileCount => 0;
@@ -92,7 +92,7 @@ class FileObject extends FileOrDirectory {
   final File file;
   final String _name;
   final int _size;
-  final String _extention;
+  final String _extension;
   final String _location;
   final FileType _type;
   final String _fullPath;
@@ -100,7 +100,7 @@ class FileObject extends FileOrDirectory {
   final FileCategory? _category;
   final int _date;
 
-  FileObject(this.file, this._name, this._size, this._extention, this._location,
+  FileObject(this.file, this._name, this._size, this._extension, this._location,
       this._type, this._fullPath, this._remoteFile, this._category, this._date);
 
   @override
@@ -110,7 +110,7 @@ class FileObject extends FileOrDirectory {
   String get location => _location;
 
   @override
-  String get extention => _extention;
+  String get extension => _extension;
 
   @override
   FileType get type => _type;
@@ -211,16 +211,16 @@ class FileManager {
     documentDir,
     telegramDir
   ];
-  static const List<String> allowedMovieExtentions = [
+  static const List<String> allowedMovieExtensions = [
     'avi',
     'mkv',
     'mp4',
-    ...allowedSubtitlesExtentions
+    ...allowedSubtitlesExtensions
   ];
 
-  static const List<String> allowedSubtitlesExtentions = ["srt"];
+  static const List<String> allowedSubtitlesExtensions = ["srt"];
 
-  static const List<String> allowedDocumentExtentions = [
+  static const List<String> allowedDocumentExtensions = [
     'pdf',
     'html',
     'azw',
@@ -229,7 +229,7 @@ class FileManager {
     'epub'
   ];
 
-  static const List<String> allowedPictureExtentions = [
+  static const List<String> allowedPictureExtensions = [
     'jpeg',
     'jpg',
     'png',
@@ -241,10 +241,10 @@ class FileManager {
     'raw'
   ];
 
-  static const List<String> allAllowedExtentions = [
-    ...allowedDocumentExtentions,
-    ...allowedMovieExtentions,
-    ...allowedPictureExtentions
+  static const List<String> allAllowedExtensions = [
+    ...allowedDocumentExtensions,
+    ...allowedMovieExtensions,
+    ...allowedPictureExtensions
   ];
 
   static String getFileName(FileSystemEntity file) {
@@ -255,7 +255,7 @@ class FileManager {
     return directory.path.split('/').last.toString();
   }
 
-  static String getExtention(FileSystemEntity file) {
+  static String getExtension(FileSystemEntity file) {
     return getFileName(file).split('.').last.toUpperCase();
   }
 
@@ -267,8 +267,8 @@ class FileManager {
     return directory.stat();
   }
 
-  static bool checkExtention(File file, List<String> extentionList) {
-    return extentionList.contains(getExtention(file).toLowerCase());
+  static bool checkExtension(File file, List<String> extensionList) {
+    return extensionList.contains(getExtension(file).toLowerCase());
   }
 
   static String getFileLocation(Directory directory) {
@@ -300,7 +300,7 @@ class FileManager {
     if (directory.existsSync()) {
       final List<FileSystemEntity> fileEntities = directory.listSync().toList();
       final Iterable<File> filesIterable = fileEntities.whereType<File>().where(
-          (file) => checkExtention(file, uploadState.getCategoryExtentions));
+          (file) => checkExtension(file, uploadState.getCategoryExtensions));
       final Iterable<Directory> directoryIterables =
           fileEntities.whereType<Directory>();
       for (Directory directory in directoryIterables) {
@@ -321,7 +321,7 @@ class FileManager {
             file,
             getFileName(file),
             getFileSize(file),
-            getExtention(file),
+            getExtension(file),
             getFileLocation(directory),
             FileType.file,
             "${directory.path}/${getFileName(file)}",

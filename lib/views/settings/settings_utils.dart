@@ -133,7 +133,7 @@ void getFoldersList(
 ) {
   FolderConfigState folderConfigState = Provider.of<FolderConfigState>(context);
   List<Widget> folders = [
-    AppTextField.commonTextFeild(
+    AppTextField.commonTextField(
       onsaved: (data) {
         folderConfiguration.movies = data;
       },
@@ -142,7 +142,7 @@ void getFoldersList(
       labelText: "Movies",
       hintText: "Path To Your Movies Folder",
     ),
-    AppTextField.commonTextFeild(
+    AppTextField.commonTextField(
       onsaved: (data) {
         folderConfiguration.tv = data;
       },
@@ -151,7 +151,7 @@ void getFoldersList(
       labelText: "TV Shows",
       hintText: "Path To Your Movies Folder",
     ),
-    AppTextField.commonTextFeild(
+    AppTextField.commonTextField(
         onsaved: (data) {
           folderConfiguration.books = data;
         },
@@ -162,7 +162,7 @@ void getFoldersList(
   ];
   if (folderConfiguration.customFolders.isNotEmpty) {
     for (int i = 0; i < folderConfiguration.customFolders.length; i++) {
-      folders.add(AppTextField.commonTextFeild(
+      folders.add(AppTextField.commonTextField(
         initialValue: folderConfiguration.customFolders[i],
         keyboardType: TextInputType.text,
         labelText: "Custom",
@@ -179,7 +179,7 @@ void getFoldersList(
   }
   if (folderConfigState.addNewPath) {
     for (int j = 0; j < folderConfigState.foldersCount; j++) {
-      folders.add(AppTextField.commonTextFeild(
+      folders.add(AppTextField.commonTextField(
         onsaved: (data) {
           folderConfiguration.addExtraFolder(data);
         },
@@ -302,7 +302,7 @@ void kindleDataForm(ServerFunctionsData serverFunctionsData) {
       ]);
 }
 
-Widget fromEmail(KindleData kindleData) => AppTextField.commonTextFeild(
+Widget fromEmail(KindleData kindleData) => AppTextField.commonTextField(
       disableLeftRightPadding: true,
       onsaved: (data) {
         kindleData.fromEmail = data;
@@ -311,10 +311,10 @@ Widget fromEmail(KindleData kindleData) => AppTextField.commonTextFeild(
       validator: validateEmail,
       keyboardType: TextInputType.emailAddress,
       labelText: "From Email",
-      hintText: "Email Adress You Want To Send From",
+      hintText: "Email Address You Want To Send From",
     );
 
-Widget kindleEmail(KindleData kindleData) => AppTextField.commonTextFeild(
+Widget kindleEmail(KindleData kindleData) => AppTextField.commonTextField(
       disableLeftRightPadding: true,
       onsaved: (data) {
         kindleData.kindleMailAddress = data;
@@ -323,10 +323,10 @@ Widget kindleEmail(KindleData kindleData) => AppTextField.commonTextFeild(
       validator: validateEmail,
       keyboardType: TextInputType.emailAddress,
       labelText: "Kindle Email",
-      hintText: "Email Adress Of Your Kindle",
+      hintText: "Email Address Of Your Kindle",
     );
 
-Widget apikey(KindleData kindleData) => AppTextField.commonTextFeild(
+Widget apikey(KindleData kindleData) => AppTextField.commonTextField(
       disableLeftRightPadding: true,
       onsaved: (data) {
         kindleData.apiKey = data;

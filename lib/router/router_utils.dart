@@ -85,7 +85,7 @@ extension AppPageExtension on Pages {
   }
 }
 
-extension SettingSubRouteExtention on SettingsSubRoute {
+extension SettingSubRouteExtension on SettingsSubRoute {
   String get toPath {
     switch (this) {
       case SettingsSubRoute.serverDetails:
@@ -126,7 +126,7 @@ extension SettingSubRouteExtention on SettingsSubRoute {
   }
 }
 
-extension SystemToolsSubRouteExtention on SystemToolsSubRoute {
+extension SystemToolsSubRouteExtension on SystemToolsSubRoute {
   String get toPath {
     switch (this) {
       case SystemToolsSubRoute.liveTerminal:

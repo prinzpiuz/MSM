@@ -113,7 +113,7 @@ class Notifications {
     await flutterLocalNotificationsPlugin.show(
         name.hashCode,
         name,
-        'Succesfully ${_status(total, progress, notificationType)} To ${notificationType.getString} \n ${filesize(progress)}/${filesize(total)}',
+        'Successfully ${_status(total, progress, notificationType)} To ${notificationType.getString} \n ${filesize(progress)}/${filesize(total)}',
         notificationDetails);
   }
 
@@ -138,7 +138,7 @@ class Notifications {
     await flutterLocalNotificationsPlugin.show(
         name.hashCode,
         name,
-        'Succesfully ${_status(null, null, notificationType)} System',
+        'Successfully ${_status(null, null, notificationType)} System',
         notificationDetails);
   }
 

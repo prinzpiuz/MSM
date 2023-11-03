@@ -26,7 +26,7 @@ void backGroundTaskDispatcher(ServiceInstance service) async {
   final FlutterLocalNotificationsPlugin backgroundNotifications =
       FlutterLocalNotificationsPlugin();
   Notifications localNotifications = Notifications(
-      flutterLocalNotificationsPlugin: await Init.notificationIntialize());
+      flutterLocalNotificationsPlugin: await Init.notificationInitialize());
   try {
     if (service is AndroidServiceInstance) {
       if (await service.isForegroundService()) {
@@ -54,7 +54,7 @@ void backGroundTaskDispatcher(ServiceInstance service) async {
           final SftpClient sftpClient = await getSFTPClient(event);
           upload(
               newFolders: event["newFolders"].cast<String>(),
-              insidPath: event["insidPath"],
+              insidePath: event["insidePath"],
               directory: event["directory"],
               filePaths: event["filePaths"].cast<String>(),
               notifications: localNotifications,

@@ -151,7 +151,7 @@ Widget updateProcess(BuildContext context) {
                       onPressed: () async {
                         Navigator.pop(context);
                         showMessage(
-                            context: context, text: "Sytem Upgrade Started");
+                            context: context, text: "System Upgrade Started");
                         await commandExecuter.systemUpgrade();
                       },
                       child: AppText.centerSingleLineText("Upgrade",

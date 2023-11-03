@@ -161,10 +161,10 @@ enum FileSorting {
 
 String generateSubtitle(FileOrDirectory fileOrDirectory) {
   String size = fileOrDirectory.size;
-  String extention = fileOrDirectory.extention.toUpperCase();
+  String extension = fileOrDirectory.extension.toUpperCase();
   String date = fileOrDirectory.dateInFormat;
   String location = fileOrDirectory.location;
-  return "$size, $extention, $date \n $location";
+  return "$size, $extension, $date \n $location";
 }
 
 List<FileOrDirectory>? filterBasedOnSearchText(FileListingState listingState) {
@@ -213,8 +213,8 @@ void filterBooksOnly(FileListingState listingState) {
 void filterSubtitleOnly(FileListingState listingState) {
   listingState.currentList = listingState.originalList
       .where((fileOrDirectory) =>
-          fileOrDirectory.extention ==
-          FileManager.allowedSubtitlesExtentions.first)
+          fileOrDirectory.extension ==
+          FileManager.allowedSubtitlesExtensions.first)
       .toList();
   listingState.applyFilter = true;
 }
@@ -262,7 +262,7 @@ void deletedSelected(FileListingState listingState) {
         listingState.cancelModes;
         LoadingOverlay.of(context).hide();
         showMessage(
-            context: context, text: AppMessages.filesDeletedSuccesfully);
+            context: context, text: AppMessages.filesDeletedSuccessfully);
       });
       for (FileOrDirectory fileOrDirectory in listingState.selectedList) {
         listingState.currentList.remove(fileOrDirectory);
@@ -416,7 +416,7 @@ void deleteSingleFile(BuildContext context, FileOrDirectory fileOrDirectory,
           .delete(fileOrDirectories: [fileOrDirectory]).then((value) {
         LoadingOverlay.of(context).hide();
         showMessage(
-            context: context, text: AppMessages.filesDeletedSuccesfully);
+            context: context, text: AppMessages.filesDeletedSuccessfully);
         FileListingState fileListState =
             Provider.of<FileListingState>(context, listen: false);
         fileListState.currentList.remove(fileOrDirectory);
@@ -452,7 +452,7 @@ Widget reNameField(
     Function? extraFunctionCallback}) {
   return Form(
     key: key,
-    child: AppTextField.commonTextFeild(
+    child: AppTextField.commonTextField(
       initialValue: fileOrDirectory.name,
       onsaved: (data) async {
         controller.text = data;
@@ -463,7 +463,7 @@ Widget reNameField(
               File(fileOrDirectory.fullPath),
               data,
               fileOrDirectory.sizeInInt,
-              fileOrDirectory.extention,
+              fileOrDirectory.extension,
               fileOrDirectory.location,
               fileOrDirectory.type,
               fileOrDirectory.fullPath,

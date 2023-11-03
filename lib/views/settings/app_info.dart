@@ -67,7 +67,7 @@ List<Widget> dataWidget({required PackageInfo? data}) {
     AppText.centerSingleLineText(AppConstants.appFullName,
         style: AppTextStyles.medium(CommonColors.commonBlackColor,
             AppFontSizes.appLongNameFontSize.sp)),
-    AppText.centerSingleLineText("${data.version}.${data.buildNumber}",
+    AppText.centerSingleLineText(data.version,
         style: AppTextStyles.medium(CommonColors.commonBlackColor,
             AppFontSizes.appLongNameFontSize.sp)),
   ];
