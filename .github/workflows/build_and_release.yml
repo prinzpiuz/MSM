@@ -2,8 +2,8 @@ name: Build And Release
 
 on:
   push:
-    branches:
-      - "release"
+    # branches:
+    #   - "release"
 jobs:
   tag:
     runs-on: ubuntu-latest
@@ -66,3 +66,15 @@ jobs:
           name: MSM-${{ needs.tag.outputs.new_tag }}
           files: build/app/outputs/flutter-apk/*.apk, build/app/outputs/bundle/release/app-release.aab
           token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Notify Telegram
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          photo: assets/images/splash.png
+          message: |
+            Alert for new release!
+            MSM-${{ needs.tag.outputs.new_tag }}
+            Repository: ${{ github.repository }}
+            See changes: https://github.com/prinzpiuz/MSM/blob/master/CHANGELOG.md
+            See release: https://github.com/prinzpiuz/MSM/releases/tag/${{ needs.tag.outputs.new_tag }}
