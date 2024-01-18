@@ -17,9 +17,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
-          DRY_RUN: true
+          DRY_RUN: false
     outputs:
-      new_tag: ${{ steps.autoversion.outputs.new_tag }}
+      new_tag: ${{ steps.autoversion.outputs.tag }}
   build_and_release:
     needs: tag
     runs-on: ubuntu-latest
@@ -34,11 +34,10 @@ jobs:
         id: git-cliff
         with:
           config: cliff.toml
-          args: -vv --latest --strip header
         env:
           OUTPUT: CHANGES.md
       - name: Copy changelog to workspace
-        run: echo "${{ steps.git-cliff.outputs.content }}" >> CHANGELOG.md
+        run: echo "${{ steps.git-cliff.outputs.content }}" > CHANGELOG.md
       - name:  Retrieve base64 keystore and decode it to a file
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_FILE_BASE64 }}
@@ -51,13 +50,16 @@ jobs:
           echo 'keyAlias=${{ secrets.KEYSTORE_KEY_ALIAS }}' >> $KEYSTORE_PROPERTIES_PATH
           echo 'storePassword=${{ secrets.KEYSTORE_PASSWORD }}' >> $KEYSTORE_PROPERTIES_PATH
           echo 'keyPassword=${{ secrets.KEYSTORE_KEY_PASSWORD }}' >> $KEYSTORE_PROPERTIES_PATH
+      - name: Edit pubspec version
+        run: |
+            sed -Ei "s/^version: (.*)/version: ${{ needs.tag.outputs.new_tag }}/" app/pubspec.yaml
       - name: Commit changes
         if: ${{ success() }}
         uses: EndBug/add-and-commit@v9
         with:
-          add: CHANGELOG.md
+          add: '["CHANGELOG.md", "pubspec.yaml"]'
           pull: "--rebase --autostash ."
-          message: "chore(generated): changelog generated automatically"
+          message: "chore(generated): changelog generated & version updated automatically"
           default_author: github_actions
       - name: Build
         uses: subosito/flutter-action@v2
