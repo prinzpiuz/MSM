@@ -53,6 +53,10 @@ doc/api/
 **/android/gradlew
 **/android/gradlew.bat
 **/android/local.properties
+**/android/key.properties
+.gradle/
+android/keystore.properties
+pubspec.lock
 **/android/**/GeneratedPluginRegistrant.java
 
 # iOS/XCode related
