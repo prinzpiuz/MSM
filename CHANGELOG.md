@@ -2,10 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.8.0](https://github.com/orhun/git-cliff/compare/v1.7.0..v1.8.0) - 2024-01-18
 
 ### ⚙️ Miscellaneous Tasks
 
+- *(generated)* Changelog generated & version updated automatically - ([be6e09d](https://github.com/orhun/git-cliff/commit/be6e09d7cea9d536f5a4138397cb8da41b83a7b0))
 - *(pubspec)* Automatic version upgrade (#124) - ([b661f4d](https://github.com/orhun/git-cliff/commit/b661f4d0fd63e942883b8969b11bcf5f98531615))
 
 ## [1.7.0](https://github.com/orhun/git-cliff/compare/v1.6.0..v1.7.0) - 2024-01-18
