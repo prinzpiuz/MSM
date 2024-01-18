@@ -52,7 +52,7 @@ jobs:
           echo 'keyPassword=${{ secrets.KEYSTORE_KEY_PASSWORD }}' >> $KEYSTORE_PROPERTIES_PATH
       - name: Edit pubspec version
         run: |
-            sed -Ei "s/^version: (.*)/version: ${{ needs.tag.outputs.new_tag }}/" app/pubspec.yaml
+            sed -Ei "s/^version: (.*)/version: ${{ needs.tag.outputs.new_tag }}/" pubspec.yaml
       - name: Commit changes
         if: ${{ success() }}
         uses: EndBug/add-and-commit@v9
