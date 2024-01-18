@@ -39,6 +39,18 @@ jobs:
           OUTPUT: CHANGES.md
       - name: Copy changelog to workspace
         run: echo "${{ steps.git-cliff.outputs.content }}" >> CHANGELOG.md
+      - name: 🔐 Retrieve base64 keystore and decode it to a file
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_FILE_BASE64 }}
+        run: echo $KEYSTORE_BASE64 | base64 --decode > "${{ github.workspace }}/android-keystore.jks"
+      - name: 📝🔐 Create keystore.properties file
+        env:
+          KEYSTORE_PROPERTIES_PATH: ${{ github.workspace }}/app/android/keystore.properties
+        run: |
+          echo 'storeFile=${{ github.workspace }}/android-keystore.jks' > $KEYSTORE_PROPERTIES_PATH
+          echo 'keyAlias=${{ secrets.KEYSTORE_KEY_ALIAS }}' >> $KEYSTORE_PROPERTIES_PATH
+          echo 'storePassword=${{ secrets.KEYSTORE_PASSWORD }}' >> $KEYSTORE_PROPERTIES_PATH
+          echo 'keyPassword=${{ secrets.KEYSTORE_KEY_PASSWORD }}' >> $KEYSTORE_PROPERTIES_PATH
       - name: Commit changes
         if: ${{ success() }}
         uses: EndBug/add-and-commit@v9
