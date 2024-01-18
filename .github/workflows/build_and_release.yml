@@ -3,7 +3,7 @@ name: Build And Release
 on:
   push:
     branches:
-      - "release"
+      - "master"
 jobs:
   tag:
     runs-on: ubuntu-latest
