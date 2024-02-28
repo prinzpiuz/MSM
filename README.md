@@ -19,7 +19,7 @@ MSM works as a wrapper around your Media server(Emby, Jellyfin, Kodi, Plex ... e
 
 ## Screenshots
 
-- [latest](screenshots/latest)
+- [latest](screenshots/)
 - [V 1.1.4](screenshots/version_1.1.4)
 
 ### Features
@@ -36,6 +36,6 @@ MSM works as a wrapper around your Media server(Emby, Jellyfin, Kodi, Plex ... e
 
 ## Contribution
 
-Whether you have ideas, translations, design changes, code cleaning, or real heavy code changes,
+Whether you have ideas, design changes, code cleaning, or real heavy code changes,
 Help is always welcome.
-Please join [Telegram](https://t.me/joinchat/FDVzK06Rt7vsNQLBLi2icw) for further discussion
+Please join this [Telegram](https://t.me/joinchat/FDVzK06Rt7vsNQLBLi2icw) group for further discussion
