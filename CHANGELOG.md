@@ -1,12 +1,13 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
-
 
 ### ⚙️ Miscellaneous Tasks
 
+- *(generated)* Changelog generated & version updated automatically - ([2524a24](https://github.com/orhun/git-cliff/commit/2524a2486dc3b5cc7ba90891fb7e7e265602193b))
 - *(generated)* Changelog generated & version updated automatically - ([be6e09d](https://github.com/orhun/git-cliff/commit/be6e09d7cea9d536f5a4138397cb8da41b83a7b0))
+- *(github action)* Avoided taging in main branch (#128) - ([2f36d90](https://github.com/orhun/git-cliff/commit/2f36d9095e457ba437c4b09cb7be0e897c0bd184))
 - *(pubspec)* Automatic version upgrade (#124) - ([b661f4d](https://github.com/orhun/git-cliff/commit/b661f4d0fd63e942883b8969b11bcf5f98531615))
+- *(repo cleaning)* Action files modified and screen shot folder updated (#127) - ([d724822](https://github.com/orhun/git-cliff/commit/d72482262699966b94bf265e41d2017d0cbe36bf))
 
 ## [1.7.0](https://github.com/orhun/git-cliff/compare/v1.6.0..v1.7.0) - 2024-01-18
 
@@ -119,28 +120,28 @@ All notable changes to this project will be documented in this file.
 - *(deps)* Bump flutter_local_notifications from 15.1.2 to 16.1.0 - ([c67533c](https://github.com/orhun/git-cliff/commit/c67533c5dce206b573af0beef5b59662d4f1222b))
 - *(deps)* Bump go_router from 10.2.0 to 11.1.2 - ([8a906e5](https://github.com/orhun/git-cliff/commit/8a906e52849717cf3b1604513e61c41e4925b4e4))
 - *(deps)* Bump permission_handler from 10.4.5 to 11.0.0 - ([fc152a0](https://github.com/orhun/git-cliff/commit/fc152a078c0071474a4bcc2603b69c99adee1a5b))
-- *(deps)* Bump go_router from 8.2.0 to 10.1.0 - ([0504f92](https://github.com/orhun/git-cliff/commit/0504f920d931159d1ac55bd8e92c6051ff0c6c98))
-- *(deps)* Bump flutter_background_service from 3.0.2 to 5.0.1 - ([13e7571](https://github.com/orhun/git-cliff/commit/13e7571aec8bdd6e40273547e7ef609990490e21))
-- *(deps)* Bump flutter_staggered_grid_view from 0.6.2 to 0.7.0 - ([2391170](https://github.com/orhun/git-cliff/commit/2391170261fa5b043e01738320afae93c56937d6))
 - *(deps)* Bump flutter_local_notifications from 14.1.2 to 15.1.0+1 - ([355ce7b](https://github.com/orhun/git-cliff/commit/355ce7bbf709ff16ce52bf15165c4a82b149fd6f))
+- *(deps)* Bump flutter_staggered_grid_view from 0.6.2 to 0.7.0 - ([2391170](https://github.com/orhun/git-cliff/commit/2391170261fa5b043e01738320afae93c56937d6))
+- *(deps)* Bump flutter_background_service from 3.0.2 to 5.0.1 - ([13e7571](https://github.com/orhun/git-cliff/commit/13e7571aec8bdd6e40273547e7ef609990490e21))
+- *(deps)* Bump go_router from 8.2.0 to 10.1.0 - ([0504f92](https://github.com/orhun/git-cliff/commit/0504f920d931159d1ac55bd8e92c6051ff0c6c98))
 - *(deps)* Bump go_router from 7.1.1 to 8.0.1 - ([1e6bb4d](https://github.com/orhun/git-cliff/commit/1e6bb4df58130ba3c7703a800a93f0163fb0bd62))
 - *(deps)* Bump package_info_plus from 3.1.2 to 4.0.2 - ([b8c3306](https://github.com/orhun/git-cliff/commit/b8c3306b4a84d0eed095e8c9810c4269276388cf))
 - *(deps)* Bump flutter_local_notifications from 13.0.0 to 14.0.0+1 - ([2b024ce](https://github.com/orhun/git-cliff/commit/2b024ce3fe28172567eda43ce44b6820c1c1a645))
 - *(deps)* Bump go_router from 6.5.9 to 7.0.0 - ([3d957f8](https://github.com/orhun/git-cliff/commit/3d957f837246d71b45cbe72102a3583f14932f25))
 - *(deps)* Bump flutter_svg from 2.0.4 to 2.0.5 - ([97e97b5](https://github.com/orhun/git-cliff/commit/97e97b53b7fb54111e5a20d019fa3ceadddc708e))
-- *(deps)* Bump package_info_plus from 3.0.3 to 3.1.0 - ([1bc6af0](https://github.com/orhun/git-cliff/commit/1bc6af0af5da29dee1a227543b24b505a1025515))
 - *(deps)* Bump go_router from 6.5.5 to 6.5.6 - ([d135a46](https://github.com/orhun/git-cliff/commit/d135a46acab1000d41bef5ab30226def14bc2461))
-- *(deps)* Bump flutter_launcher_icons from 0.12.0 to 0.13.0 - ([9908a35](https://github.com/orhun/git-cliff/commit/9908a35e493f7990e6188668a265fa259cdf3d7d))
-- *(deps)* Bump go_router from 6.5.0 to 6.5.5 - ([f69b2e0](https://github.com/orhun/git-cliff/commit/f69b2e045c3cf9e25774d6bfdbba4c8d0e4aed88))
+- *(deps)* Bump package_info_plus from 3.0.3 to 3.1.0 - ([1bc6af0](https://github.com/orhun/git-cliff/commit/1bc6af0af5da29dee1a227543b24b505a1025515))
 - *(deps)* Bump shared_preferences from 2.0.20 to 2.1.0 - ([cb0e4f7](https://github.com/orhun/git-cliff/commit/cb0e4f7b43e84f34b8308aa5b919a28699e8e316))
+- *(deps)* Bump go_router from 6.5.0 to 6.5.5 - ([f69b2e0](https://github.com/orhun/git-cliff/commit/f69b2e045c3cf9e25774d6bfdbba4c8d0e4aed88))
+- *(deps)* Bump flutter_launcher_icons from 0.12.0 to 0.13.0 - ([9908a35](https://github.com/orhun/git-cliff/commit/9908a35e493f7990e6188668a265fa259cdf3d7d))
 - *(deps)* Bump shared_preferences from 2.0.18 to 2.0.20 - ([8dea07a](https://github.com/orhun/git-cliff/commit/8dea07abde2017d91bc3d5db83c03ed9ea253e7b))
 - *(deps)* Bump go_router from 6.2.0 to 6.5.0 - ([0cc5edf](https://github.com/orhun/git-cliff/commit/0cc5edf00ad1aa309e636f6dd08c844b550dc93d))
 - *(deps)* Bump flutter_svg from 2.0.3 to 2.0.4 - ([0b27ec6](https://github.com/orhun/git-cliff/commit/0b27ec664f57836037214c616426afd7ac8497a3))
 - *(deps)* Bump google_fonts from 3.0.1 to 4.0.3 - ([4d97666](https://github.com/orhun/git-cliff/commit/4d97666e7d4dd186963c7fdb32a3f791a7f8c780))
 - *(deps)* Bump flutter_launcher_icons from 0.11.0 to 0.12.0 - ([ff01507](https://github.com/orhun/git-cliff/commit/ff0150796701e35c4c1a79a90063436f757e1b9a))
-- *(deps)* Bump flutter_screenutil from 5.6.0 to 5.7.0 - ([dc5ee36](https://github.com/orhun/git-cliff/commit/dc5ee36bac436e5fcd1a9440383f147d28e6d96b))
-- *(deps)* Bump url_launcher from 6.1.8 to 6.1.10 - ([67722e4](https://github.com/orhun/git-cliff/commit/67722e4a9ebdded3db4335d75b146fd2e53c8ebc))
 - *(deps)* Bump shared_preferences from 2.0.17 to 2.0.18 - ([f6d419a](https://github.com/orhun/git-cliff/commit/f6d419a15c510e3404fa4b1f47595fd3042c28b3))
+- *(deps)* Bump url_launcher from 6.1.8 to 6.1.10 - ([67722e4](https://github.com/orhun/git-cliff/commit/67722e4a9ebdded3db4335d75b146fd2e53c8ebc))
+- *(deps)* Bump flutter_screenutil from 5.6.0 to 5.7.0 - ([dc5ee36](https://github.com/orhun/git-cliff/commit/dc5ee36bac436e5fcd1a9440383f147d28e6d96b))
 - *(file listing)* File listing page design - ([ed9eb99](https://github.com/orhun/git-cliff/commit/ed9eb99543f3b68864379009ef04a7a834b3cf47))
 - *(file listing implemented)* File listing implemented - ([051800a](https://github.com/orhun/git-cliff/commit/051800af66de032877e66802852c766050892f1c))
 - *(flutter analysis)* Correction for flutter analysis outputs - ([5a7e8da](https://github.com/orhun/git-cliff/commit/5a7e8da2a6c021cb586d8e92e1661bc1bed82fda))
