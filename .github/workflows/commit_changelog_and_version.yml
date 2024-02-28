@@ -19,7 +19,7 @@ jobs:
           WITH_V: false
           DRY_RUN: true
     outputs:
-      new_tag: ${{ steps.autoversion.outputs.tag }}
+      new_tag: ${{ steps.autoversion.outputs.new_tag }}
   commit_changelog_and_version:
     needs: tag
     runs-on: ubuntu-latest
