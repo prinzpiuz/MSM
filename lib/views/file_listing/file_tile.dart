@@ -20,8 +20,7 @@ import 'package:msm/views/file_listing/file_listing_utils.dart';
 class FileTile extends StatefulWidget {
   final FileOrDirectory fileOrDirectory;
   bool selected;
-  FileTile({Key? key, required this.fileOrDirectory, required this.selected})
-      : super(key: key);
+  FileTile({super.key, required this.fileOrDirectory, required this.selected});
 
   @override
   FileTileState createState() => FileTileState();

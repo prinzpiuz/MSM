@@ -29,7 +29,7 @@ Future<void> main() async {
 }
 
 class MSM extends StatefulWidget {
-  const MSM({Key? key}) : super(key: key);
+  const MSM({super.key});
 
   @override
   State<MSM> createState() => _MSMState();
@@ -52,7 +52,6 @@ class _MSMState extends State<MSM> {
               fileListingService: data["fileListingService"],
               folderConfigState: data["folderConfigState"]);
         } else {
-          //TODO make splash screen neat
           return const InitScreen();
         }
       },

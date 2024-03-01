@@ -19,7 +19,7 @@ import 'package:msm/views/upload_pages/upload_item_card.dart';
 import 'package:msm/views/upload_pages/upload_page_utils.dart';
 
 class CommonUploadPage extends StatefulWidget {
-  const CommonUploadPage({Key? key}) : super(key: key);
+  const CommonUploadPage({super.key});
 
   @override
   CommonUploadPageState createState() => CommonUploadPageState();

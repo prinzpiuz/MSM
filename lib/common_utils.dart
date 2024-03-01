@@ -24,20 +24,20 @@ bool get appENV {
   return isProd;
 }
 
-WillPopScope handleBackButton(
-    {String? backRoute,
-    required Widget child,
-    required BuildContext context,
-    UploadState? uploadState,
-    FileListingState? fileListState,
-    bool pop = false}) {
+PopScope handleBackButton({
+  String? backRoute,
+  required Widget child,
+  required BuildContext context,
+  UploadState? uploadState,
+  FileListingState? fileListState,
+}) {
   // to handle the backroutes of the app
-  return WillPopScope(
-    onWillPop: () async {
+  return PopScope(
+    onPopInvoked: (bool pop) async {
       if (backRoute != null) {
         handleBack(context, uploadState, fileListState, backRoute);
       }
-      return pop;
+      return;
     },
     child: child,
   );
