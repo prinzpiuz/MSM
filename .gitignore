@@ -97,3 +97,4 @@ package.json
 .flutter-plugins
 .gradle/
 pubspec.lock
+flutter_export_environment.sh
