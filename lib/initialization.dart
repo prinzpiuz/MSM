@@ -121,8 +121,8 @@ class Init {
     try {
       MACAddress macAddress =
           MACAddress(appService.server.serverData.macAddress);
-      IPv4Address iPv4Address =
-          IPv4Address(appService.server.serverData.serverHost);
+      IPAddress iPv4Address =
+          IPAddress(appService.server.serverData.serverHost);
       if (macAddress.address.isNotEmpty && iPv4Address.address.isNotEmpty) {
         WakeOnLAN wakeOnLan = WakeOnLAN(iPv4Address, macAddress);
         await wakeOnLan.wake(
@@ -172,7 +172,8 @@ class Init {
     );
   }
 
-  static Future<FlutterLocalNotificationsPlugin> notificationInitialize() async {
+  static Future<FlutterLocalNotificationsPlugin>
+      notificationInitialize() async {
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
     const AndroidInitializationSettings initializationSettingsAndroid =

@@ -12,10 +12,10 @@ import 'package:msm/common_widgets.dart';
 
 class LoadingOverlay extends StatefulWidget {
   const LoadingOverlay({
-    Key? key,
+    super.key,
     required this.child,
     this.delay = const Duration(milliseconds: 500),
-  }) : super(key: key);
+  });
 
   final Widget child;
   final Duration delay;

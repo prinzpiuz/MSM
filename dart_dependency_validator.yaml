@@ -1,0 +1,14 @@
+# dart_dependency_validator.yaml
+
+# Set true if you allow pinned packages in your project.
+allow_pins: true
+# Exclude one or more paths from being scanned. Supports glob syntax.
+exclude:
+  - "app/**"
+# Ignore one or more packages.
+ignore:
+  - flutter_background_service_android
+  - flutter_web_plugins
+  - shared_preferences_web
+  - flutter_launcher_icons
+  - flutter_native_splash
