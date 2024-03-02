@@ -1,8 +1,13 @@
 # Changelog
 
 
+### 🐛 Bug Fixes
+
+- *(file listing)* Fix for multiple select and delete function (#131) - ([09ea943](https://github.com/orhun/git-cliff/commit/09ea943af5ca82f273bc3134f134d34f776685ba))
+
 ### ⚙️ Miscellaneous Tasks
 
+- *(generated)* Changelog generated & version updated automatically - ([75b3256](https://github.com/orhun/git-cliff/commit/75b3256f3dc7c69cdc7e0b7e2f2306ce1f4f1825))
 - *(generated)* Changelog generated & version updated automatically - ([d14e019](https://github.com/orhun/git-cliff/commit/d14e019e4b3ab86dedca0e53f3df982ee04cfed8))
 - *(generated)* Changelog generated & version updated automatically - ([8613950](https://github.com/orhun/git-cliff/commit/861395065a52c49afb931afdea95fb9713ba019b))
 - *(generated)* Changelog generated & version updated automatically - ([2524a24](https://github.com/orhun/git-cliff/commit/2524a2486dc3b5cc7ba90891fb7e7e265602193b))
