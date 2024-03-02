@@ -13,8 +13,7 @@ class UploadItemCard extends StatefulWidget {
   final FileOrDirectory data;
   final FileUploadData fileUploadData;
   const UploadItemCard(
-      {Key? key, required this.data, required this.fileUploadData})
-      : super(key: key);
+      {super.key, required this.data, required this.fileUploadData});
 
   @override
   UploadItemCardState createState() => UploadItemCardState();

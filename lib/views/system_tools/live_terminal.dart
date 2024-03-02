@@ -25,7 +25,7 @@ class LiveTerminalPage extends StatelessWidget {
 class LiveTerminal extends StatefulWidget {
   final AppService appService;
 
-  const LiveTerminal({Key? key, required this.appService}) : super(key: key);
+  const LiveTerminal({super.key, required this.appService});
   @override
   LiveTerminalState createState() => LiveTerminalState();
 }
@@ -52,7 +52,7 @@ class LiveTerminalState extends State<LiveTerminal> {
       terminal.buffer.setCursor(0, 0);
 
       terminal.onOutput = (data) {
-        session.write(utf8.encode(data) as Uint8List);
+        session.write(utf8.encode(data));
       };
 
       _listen(session.stdout);

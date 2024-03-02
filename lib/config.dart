@@ -40,6 +40,7 @@ MultiProvider materialApp(
               routeInformationParser: goRouter.routeInformationParser,
               routerDelegate: goRouter.routerDelegate,
               theme: ThemeData(
+                useMaterial3: false,
                 textTheme:
                     Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
               ),

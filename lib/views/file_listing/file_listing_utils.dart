@@ -264,10 +264,6 @@ void deletedSelected(FileListingState listingState) {
         showMessage(
             context: context, text: AppMessages.filesDeletedSuccessfully);
       });
-      for (FileOrDirectory fileOrDirectory in listingState.selectedList) {
-        listingState.currentList.remove(fileOrDirectory);
-        listingState.selectedList.remove(fileOrDirectory);
-      }
       listingState.clearSelection;
     },
     title: AppConstants.deleteFilesTitle,

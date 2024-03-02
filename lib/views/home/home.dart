@@ -20,7 +20,7 @@ import 'package:msm/views/home/home_utils.dart';
 import 'package:msm/views/home/real_time_basic_details.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {

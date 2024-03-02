@@ -12,7 +12,7 @@ import 'package:msm/router/router_utils.dart';
 import 'package:msm/views/upload_pages/upload_page_utils.dart';
 
 class UploadMenuPage extends StatefulWidget {
-  const UploadMenuPage({Key? key}) : super(key: key);
+  const UploadMenuPage({super.key});
 
   @override
   UploadMenuPageState createState() => UploadMenuPageState();

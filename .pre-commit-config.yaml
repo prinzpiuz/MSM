@@ -14,3 +14,12 @@ repos:
     rev: "f350497a11b1285c695595049e95a420068e7a9f"
     hooks:
       - id: dart-import-sorter
+  - repo: https://github.com/guid-empty/flutter-dependency-validation-pre-commit
+    rev: "master"
+    hooks:
+      - id: flutter-dependency-validation
+  - repo: https://github.com/dluksza/flutter-analyze-pre-commit
+    rev: "master"
+    hooks:
+      - id: flutter-analyze
+        args: [lib/*]

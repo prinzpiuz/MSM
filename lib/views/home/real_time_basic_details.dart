@@ -14,8 +14,7 @@ class RealTimeBasicDetails extends StatefulWidget {
   final AppService appService;
   final BasicDetails basicDetails;
   const RealTimeBasicDetails(
-      {Key? key, required this.appService, required this.basicDetails})
-      : super(key: key);
+      {super.key, required this.appService, required this.basicDetails});
 
   @override
   RealTimeBasicDetailsState createState() => RealTimeBasicDetailsState();
