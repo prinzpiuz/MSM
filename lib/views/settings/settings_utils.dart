@@ -116,9 +116,9 @@ Widget addCustomPathButton({required void Function()? onPressed}) {
     padding: EdgeInsets.only(top: 20.h, left: 18.w, right: 18.w),
     child: OutlinedButton(
         style: ButtonStyle(
-            shape: MaterialStateProperty.all(RoundedRectangleBorder(
+            shape: WidgetStateProperty.all(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0.r))),
-            side: MaterialStateProperty.all(
+            side: WidgetStateProperty.all(
                 const BorderSide(color: CommonColors.commonBlackColor))),
         onPressed: onPressed,
         child: AppText.centerSingleLineText("Add Custom Path",
