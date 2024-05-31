@@ -1,25 +1,25 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       - id: check-yaml
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: check-merge-conflict
   - repo: https://github.com/crate-ci/typos
-    rev: typos-dict-v0.11.3
+    rev: v1.21.0
     hooks:
       - id: typos
   - repo: https://github.com/fluttercommunity/import_sorter
-    rev: "f350497a11b1285c695595049e95a420068e7a9f"
+    rev: "641f363d40a4ffb42ab577a43433fc48c5059b19"
     hooks:
       - id: dart-import-sorter
   - repo: https://github.com/guid-empty/flutter-dependency-validation-pre-commit
-    rev: "master"
+    rev: "4663b743f807eaa0ee1309016f5a6d20b9bb1b13"
     hooks:
       - id: flutter-dependency-validation
   - repo: https://github.com/dluksza/flutter-analyze-pre-commit
-    rev: "master"
+    rev: "4afcaa82fc368d40d486256bf4edba329bf667bb"
     hooks:
       - id: flutter-analyze
         args: [lib/*]
