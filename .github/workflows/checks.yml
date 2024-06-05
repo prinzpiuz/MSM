@@ -22,5 +22,6 @@ jobs:
       - run: flutter --version
       - run: flutter pub get
       - run: flutter pub run import_sorter:main
+      - run: flutter pub run dependency_validator
       - run: flutter analyze
       - run: flutter test

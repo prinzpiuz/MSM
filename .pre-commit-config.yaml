@@ -10,12 +10,3 @@ repos:
     rev: v1.22.0
     hooks:
       - id: typos
-  - repo: https://github.com/guid-empty/flutter-dependency-validation-pre-commit
-    rev: "4663b743f807eaa0ee1309016f5a6d20b9bb1b13"
-    hooks:
-      - id: flutter-dependency-validation
-  - repo: https://github.com/dluksza/flutter-analyze-pre-commit
-    rev: "4afcaa82fc368d40d486256bf4edba329bf667bb"
-    hooks:
-      - id: flutter-analyze
-        args: [lib/*]
