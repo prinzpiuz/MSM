@@ -7,13 +7,9 @@ repos:
       - id: trailing-whitespace
       - id: check-merge-conflict
   - repo: https://github.com/crate-ci/typos
-    rev: v1.21.0
+    rev: v1.22.0
     hooks:
       - id: typos
-  - repo: https://github.com/fluttercommunity/import_sorter
-    rev: "641f363d40a4ffb42ab577a43433fc48c5059b19"
-    hooks:
-      - id: dart-import-sorter
   - repo: https://github.com/guid-empty/flutter-dependency-validation-pre-commit
     rev: "4663b743f807eaa0ee1309016f5a6d20b9bb1b13"
     hooks:
