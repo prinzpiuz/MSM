@@ -13,13 +13,13 @@ jobs:
           fetch-depth: "0"
       - name: Bump version and push tag
         id: autoversion
-        uses: anothrNick/github-tag-action@1.64.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: false
-          DRY_RUN: false
+        uses: ietf-tools/semver-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+          skipInvalidTags: true
     outputs:
-      new_tag: ${{ steps.autoversion.outputs.tag }}
+      new_tag: ${{ steps.autoversion.outputs.nextStrict }}
   build_and_release:
     needs: tag
     runs-on: ubuntu-latest
