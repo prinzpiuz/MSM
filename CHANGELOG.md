@@ -8,7 +8,9 @@
 
 ### ⚙️ Miscellaneous Tasks
 
+- *(generated)* Changelog generated & version updated automatically - ([ce42630](https://github.com/orhun/git-cliff/commit/ce4263068753bd74057498d810d5b8a048250645))
 - *(generated)* Changelog generated & version updated automatically - ([d9f3969](https://github.com/orhun/git-cliff/commit/d9f396952cfc09b363d75e97144dfc856557527a))
+- *(generated)* Changelog generated & version updated automatically - ([ab9a902](https://github.com/orhun/git-cliff/commit/ab9a9022848c2573baa29b2a203563c8bb8a9f5c))
 - *(generated)* Changelog generated & version updated automatically - ([eb71bbe](https://github.com/orhun/git-cliff/commit/eb71bbe1c574c2314ec6124d4043d0f18705cf9d))
 - *(generated)* Changelog generated & version updated automatically - ([2d40027](https://github.com/orhun/git-cliff/commit/2d40027dfe4d9fc84a0424bdadd172dbf6ee4b10))
 - *(generated)* Changelog generated & version updated automatically - ([75b3256](https://github.com/orhun/git-cliff/commit/75b3256f3dc7c69cdc7e0b7e2f2306ce1f4f1825))
