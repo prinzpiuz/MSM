@@ -73,7 +73,7 @@ class UploadState with ChangeNotifier {
 
   void get clearPaths => _trackRemoteDirectory.clear();
 
-  popLastDirectory() {
+  void popLastDirectory() {
     if (_nextFilesDirectory.isNotEmpty) {
       _nextFilesDirectory.removeLast();
     } else {

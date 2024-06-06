@@ -87,7 +87,8 @@ Widget fileList(BuildContext context, TextEditingController searchController,
             context: context,
             fileListState: listingState),
     backgroundColor: CommonColors.commonWhiteColor,
-    floatingActionButton: floatingActionButton(),
+    resizeToAvoidBottomInset: false,
+    floatingActionButton: floatingActionButton(listingState),
     body: listings(context, listingState),
   );
 }
@@ -105,8 +106,9 @@ Widget actionIconButton(
       ));
 }
 
-Widget floatingActionButton() {
+Widget floatingActionButton(FileListingState fileListingState) {
   return ExpandableFab(
+    fileListingState: fileListingState,
     distance: 112.0,
     children: [
       ActionButton(

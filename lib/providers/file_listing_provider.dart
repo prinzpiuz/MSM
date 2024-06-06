@@ -15,6 +15,8 @@ class FileListingState with ChangeNotifier {
   List<FileOrDirectory> currentList = [];
   List<FileOrDirectory> selectedList = [];
   late FolderConfiguration folderConfiguration;
+  late GestureDetector fabGestureDetector;
+  late bool fabOpen;
 
   FileListingState();
 

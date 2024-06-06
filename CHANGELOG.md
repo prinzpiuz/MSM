@@ -4,9 +4,12 @@
 ### 🐛 Bug Fixes
 
 - *(file listing)* Fix for multiple select and delete function (#131) - ([09ea943](https://github.com/orhun/git-cliff/commit/09ea943af5ca82f273bc3134f134d34f776685ba))
+- *(upload,listing)* FAB auto close & upload page redesign - ([b390286](https://github.com/orhun/git-cliff/commit/b3902865e4f6732d0a2ed0f8a708e3c7a9c5f715))
 
 ### ⚙️ Miscellaneous Tasks
 
+- *(generated)* Changelog generated & version updated automatically - ([eb71bbe](https://github.com/orhun/git-cliff/commit/eb71bbe1c574c2314ec6124d4043d0f18705cf9d))
+- *(generated)* Changelog generated & version updated automatically - ([2d40027](https://github.com/orhun/git-cliff/commit/2d40027dfe4d9fc84a0424bdadd172dbf6ee4b10))
 - *(generated)* Changelog generated & version updated automatically - ([75b3256](https://github.com/orhun/git-cliff/commit/75b3256f3dc7c69cdc7e0b7e2f2306ce1f4f1825))
 - *(generated)* Changelog generated & version updated automatically - ([d14e019](https://github.com/orhun/git-cliff/commit/d14e019e4b3ab86dedca0e53f3df982ee04cfed8))
 - *(generated)* Changelog generated & version updated automatically - ([8613950](https://github.com/orhun/git-cliff/commit/861395065a52c49afb931afdea95fb9713ba019b))
@@ -32,7 +35,7 @@
 - *(generated)* Changelog generated automatically - ([f5d37f6](https://github.com/orhun/git-cliff/commit/f5d37f679a43861fb48b73ad614a48213f022e0e))
 - *(github workflow)* Release doing through master (#119) - ([3741f9a](https://github.com/orhun/git-cliff/commit/3741f9ab56e1646bc3cc1e46233b4a4cc4faff45))
 
-## [1.6.0](https://github.com/orhun/git-cliff/compare/v1.2.0-new-Design.1..v1.6.0) - 2023-11-03
+## [1.6.0](https://github.com/orhun/git-cliff/compare/v0.8.3..v1.6.0) - 2023-11-03
 
 ### ⛰️  Features
 
@@ -44,6 +47,7 @@
 - *(file_list)* Filters on file list and UI for delete selected - ([bf10746](https://github.com/orhun/git-cliff/commit/bf1074636c13c1c0621a828e5b9c8e46d24cbe1b))
 - *(folder configuration)* Implemented adding custom path - ([ec5d802](https://github.com/orhun/git-cliff/commit/ec5d802baf541f65d2e51e75dc43b1d8568b204e))
 - *(folder_configuration)* Delete extra path - ([4d8a72c](https://github.com/orhun/git-cliff/commit/4d8a72cf7620440cdd632e26e87a5bb1e11e2f0b))
+- *(github)* Testing - ([7284d92](https://github.com/orhun/git-cliff/commit/7284d921b232e924627d217484c04048c457e66d))
 - *(listing)* Improvements in file deletion flow - ([437a0dd](https://github.com/orhun/git-cliff/commit/437a0dda056706a6aafebe02f107b57fb1240415))
 - *(listing)* Download file and sorting based on size, data, name implemented - ([7caf027](https://github.com/orhun/git-cliff/commit/7caf027cf9394f57478431198cb76aa99126731c))
 - *(listing)* File menu, rename and single file delete implemented - ([07e05c2](https://github.com/orhun/git-cliff/commit/07e05c222b3d0852ada5214ed15d2ab4eb42513b))
@@ -73,6 +77,7 @@
 - *(upload page)* Final design with folder selection option for tv shows upload page - ([6b8a019](https://github.com/orhun/git-cliff/commit/6b8a019d05c624fea2833df3665ea1714cd4600d))
 - *(wake on lan)* Implemented wake lan - ([57b293e](https://github.com/orhun/git-cliff/commit/57b293e62bed9b6f264699463998fa4c8cd98e9f))
 - Server details saving to shared preference - ([75dde04](https://github.com/orhun/git-cliff/commit/75dde04432ea1feedbfeb77819a48ee98bf61d69))
+- Testing - ([ba91783](https://github.com/orhun/git-cliff/commit/ba917830e1b5cb8aa83ab69f86458f12755e0252))
 
 ### 🐛 Bug Fixes
 
@@ -83,6 +88,7 @@
 - *(custom folder)* Bug with saving custom folder resolved - ([e022b17](https://github.com/orhun/git-cliff/commit/e022b17483519f914f9fd1f5425b1558c7a75156))
 - *(download)* Bug in offset fixed - ([37a312c](https://github.com/orhun/git-cliff/commit/37a312c36db8214763f5c6fda4f5f8afa17aa9d7))
 - *(file listing)* Date sorting changed from latest to oldest - ([de57a11](https://github.com/orhun/git-cliff/commit/de57a118cb4b4138934578f2a6a00c555f063b9c))
+- *(github)* Bug in release file fixed - ([c752a5a](https://github.com/orhun/git-cliff/commit/c752a5ab754063d512ce3ddceb812f9f51f3dafb))
 - *(home)* Handled case of connection termination while comming to home page - ([2dbb15d](https://github.com/orhun/git-cliff/commit/2dbb15d59af51f86a2cfd2c806cbcb2f081fc71c))
 - *(intialization)* App orientation changing is fixed - ([ae1fb23](https://github.com/orhun/git-cliff/commit/ae1fb2328f098be086e80df3351ae2d8d8242c49))
 - *(listing)* Deletion and renamae functionlity bugs fixed - ([a031994](https://github.com/orhun/git-cliff/commit/a031994921a3c5269bc7fb17e384b5eab3ef3533))
@@ -99,12 +105,14 @@
 - *(appname)* App name changed to upper case from lower - ([25866ae](https://github.com/orhun/git-cliff/commit/25866aeea775a094b7a34e4902710b06b939e88f))
 - *(background tasks)* Background task code refactor - ([5ef5074](https://github.com/orhun/git-cliff/commit/5ef507425bd546f68f97c7687434efacd445af10))
 - *(file listing)* New design for file listing page - ([d6f022b](https://github.com/orhun/git-cliff/commit/d6f022b5edea56065f90867348594bc1e7e69ba7))
+- *(home)* Design refactored in home page - ([c1ba05c](https://github.com/orhun/git-cliff/commit/c1ba05c1746cc0bebd47a83608a3e42d73ab8ef1))
 - *(home page)* Intial connection implemented - ([0d7af38](https://github.com/orhun/git-cliff/commit/0d7af38c659c9652d214d5206f51621076b4cd69))
 - *(imports)* Imports sorted - ([0ef67d7](https://github.com/orhun/git-cliff/commit/0ef67d70e21842612f0b8079aa6fe558c08ce621))
 - *(initialization,connection)* Refactored logic for connection management - ([50d664f](https://github.com/orhun/git-cliff/commit/50d664f7079f2c51ddae2f860be0264cd2544c22))
 - *(msm)* Removed some buggy and not complete features - ([5e8078d](https://github.com/orhun/git-cliff/commit/5e8078d1cdd88ddb985c8439c5e2a08f9e591d0f))
 - *(settings)* New design for setting page and also updated new icon - ([406d94f](https://github.com/orhun/git-cliff/commit/406d94fe90d73ab08e877d37c803a82397715e7f))
 - *(typos)* Typos in code fixed - ([a1556c9](https://github.com/orhun/git-cliff/commit/a1556c9caffaa35acba57b6cf6b2a1c3c9aa4ca1))
+- *(workflow file)* Upated github workflow file - ([934e423](https://github.com/orhun/git-cliff/commit/934e4235e576a7412dabfb0ceb4c9a419f7a923d))
 
 ### 📚 Documentation
 
@@ -120,6 +128,10 @@
 - *(icons)* Updated splash app icon - ([9834c14](https://github.com/orhun/git-cliff/commit/9834c14f9a2655ace0e490dc53edad185008e3bc))
 - *(router)* Removed unwanted imports - ([10bdd5f](https://github.com/orhun/git-cliff/commit/10bdd5f2a0107444257493863f64d17d2780f61e))
 - *(system tools)* New design for system tools page - ([fef8139](https://github.com/orhun/git-cliff/commit/fef8139125e4499b4d0bc107f6238d708c27eb14))
+
+### 🧪 Testing
+
+- Test - ([8442c90](https://github.com/orhun/git-cliff/commit/8442c90c10d1c8d58ad38a6d3e49b874a27c6b9c))
 
 ### ⚙️ Miscellaneous Tasks
 
@@ -171,8 +183,30 @@
 - *(github)* Testing - ([14fffd7](https://github.com/orhun/git-cliff/commit/14fffd77d7cf7d303bcc3f0d5af338934e0f4a3c))
 - *(github)* Testing - ([c0a52e8](https://github.com/orhun/git-cliff/commit/c0a52e8c46548b022fde24d1d17e6f976d84f4b0))
 - *(github)* Testing - ([1353b0f](https://github.com/orhun/git-cliff/commit/1353b0f2d4471c9d52d8cc7d9624c6cf2d1e84e2))
+- *(github)* Testing - ([45f79b6](https://github.com/orhun/git-cliff/commit/45f79b669f02c3015e4aa40df30cfa054713e50d))
+- *(github)* Testing - ([d913fb0](https://github.com/orhun/git-cliff/commit/d913fb02f0f005f82e35d7f21dd335e4b1cd99a1))
+- *(github)* Testing - ([ad566c9](https://github.com/orhun/git-cliff/commit/ad566c97c6f9715b7d95c63a0ee941b6d769fddb))
+- *(github)* Testing - ([dcd0561](https://github.com/orhun/git-cliff/commit/dcd05611919966d1e96ae397cece3d7dbf713a6e))
+- *(github)* Testing - ([f21c599](https://github.com/orhun/git-cliff/commit/f21c5993ad4920e7c1fcb0aafef34dc53fe58855))
+- *(github)* Testing - ([270028b](https://github.com/orhun/git-cliff/commit/270028b972b768e037e4c8548c5c2e4814bc2965))
+- *(github)* Testing - ([1dc6e69](https://github.com/orhun/git-cliff/commit/1dc6e69413615cdfc656d77996243c994487d195))
+- *(github)* Testing - ([90793b2](https://github.com/orhun/git-cliff/commit/90793b2930d5e08252be12bd5d59632ecf8cd631))
+- *(github)* Testing - ([01b7ee2](https://github.com/orhun/git-cliff/commit/01b7ee24b63b68d27cb2ae25990210801ec0c142))
+- *(github)* Testing - ([9b3fe2b](https://github.com/orhun/git-cliff/commit/9b3fe2b68db4fe4c63102f2725bca60522c8f276))
+- *(github)* Testing - ([dfe2d56](https://github.com/orhun/git-cliff/commit/dfe2d56d913d2ebb30507c78d3c87c2e015f4d1e))
+- *(github)* Testing - ([bc4522e](https://github.com/orhun/git-cliff/commit/bc4522e7fdbc0f3ccb022d05f76642e67d4125b4))
+- *(github)* Testing - ([ca12ca4](https://github.com/orhun/git-cliff/commit/ca12ca4d7e6d998b85ae5e1272ee0b2496ceecaa))
+- *(github)* Testing - ([343f74f](https://github.com/orhun/git-cliff/commit/343f74fdb3d17120a7f7baa6a218b06ba7a96c19))
+- *(github)* Testing - ([16d9c0a](https://github.com/orhun/git-cliff/commit/16d9c0a9775cf81b541ef9e3e10f4d72fbbf0c7f))
+- *(github)* Testing github action - ([bbc5ac3](https://github.com/orhun/git-cliff/commit/bbc5ac369916c9ae0d8bb62307f7423c400fef88))
+- *(github)* Testing build and release action flow - ([12b15fc](https://github.com/orhun/git-cliff/commit/12b15fc62835cb85bf3f1b21674ab0948c8a9aa3))
+- *(github action updated)* Pre-commit added to github actions - ([be7af00](https://github.com/orhun/git-cliff/commit/be7af00a56b31e01b3c3f3a8a66fb300ffa456ae))
+- *(github actions)* Github action for versioning and release added - ([583657f](https://github.com/orhun/git-cliff/commit/583657fd94106d4cc1c010ae8e64ce15cfd3b98b))
+- *(github actions)* Github actions modified - ([4a2f613](https://github.com/orhun/git-cliff/commit/4a2f6137328114987f8cefc45a02526611bce326))
+- *(gitignore)* Npm related files added to gitignore - ([c98564c](https://github.com/orhun/git-cliff/commit/c98564c7d845d6c7bd95919dc0677aaa6a194ce0))
 - *(imports sorting)* Flutter analyse fixes - ([4aeae3a](https://github.com/orhun/git-cliff/commit/4aeae3acbfd4c3cd4c66403a6cff6e5de08113c9))
 - *(intial)* File listing based on extention - ([4ac1c45](https://github.com/orhun/git-cliff/commit/4ac1c45d862e4ee083b2b09d3d78e6a96e588eb1))
+- *(precommit config)* Added pre-commit configuration - ([7ba13fd](https://github.com/orhun/git-cliff/commit/7ba13fd2569fe79effd7d2587219354aef28a7a3))
 - *(pubfile)* Resolving conflicts - ([77868ca](https://github.com/orhun/git-cliff/commit/77868ca549c3d81921cc37580e3d0bbe14b8cfc4))
 - *(telegram)* Telegram notifications to channels - ([033fbde](https://github.com/orhun/git-cliff/commit/033fbde4dc6a7209e692774c7211045cfd153ed1))
 - *(telegram notify)* Removed image from telegram message - ([d84a84c](https://github.com/orhun/git-cliff/commit/d84a84cd13a99b123501e166980d314748b89aaf))
@@ -191,6 +225,17 @@
 - *(upload page draft)* Draft for upload page - ([eaf9c4e](https://github.com/orhun/git-cliff/commit/eaf9c4e63de50288c5b80dd5a4070e34564151db))
 - Test - ([dd7b21a](https://github.com/orhun/git-cliff/commit/dd7b21a4a9e021813fb8f8b54d98ee5935c7cc0d))
 - Draft for migrating from old version - ([ed1c4c2](https://github.com/orhun/git-cliff/commit/ed1c4c286dbeb3797c7d7f2d0c08548c8b0c5e50))
+- Testing - ([a184c1c](https://github.com/orhun/git-cliff/commit/a184c1c7f6ca697702263dd24f6891c9e504d5e6))
+- Test - ([b242f22](https://github.com/orhun/git-cliff/commit/b242f22f74d2ba708d5119558f1b8f6f9942092a))
+- Test - ([9189575](https://github.com/orhun/git-cliff/commit/9189575984e8ae82e41357315f89fe4b1f2d2e66))
+- Test - ([f6b244d](https://github.com/orhun/git-cliff/commit/f6b244dfd9ddee42840259f4283efdf8eb40cb90))
+- Test - ([341d620](https://github.com/orhun/git-cliff/commit/341d620e6707251badb7a09c3c610aa0d2f3a258))
+- Test - ([13b361a](https://github.com/orhun/git-cliff/commit/13b361ac09a4d7bb011c95ec6df45821f1f7cc3f))
+- Testing - ([001c979](https://github.com/orhun/git-cliff/commit/001c9793650e39264f8c662c3db4ce011f42ff78))
+- Testing - ([1cc1afa](https://github.com/orhun/git-cliff/commit/1cc1afa3ad164342a644f71fa7bff32c8ecc7b21))
+- Testing - ([8c4315f](https://github.com/orhun/git-cliff/commit/8c4315f9ce1cb873b7d56393e57fa34dbda87e79))
+- Testing - ([a732809](https://github.com/orhun/git-cliff/commit/a7328097ce5b8a28494b6b4586e2ca2baa541652))
+- Build and release action fixes - ([3e8b48a](https://github.com/orhun/git-cliff/commit/3e8b48a635cde4eed865d0916bf82755264158ac))
 
 ### ◀️ Revert
 
@@ -199,19 +244,14 @@
 ### Build
 
 - *(github)* Sentry dsn added and seceret in github action - ([e95a9b6](https://github.com/orhun/git-cliff/commit/e95a9b6a9495989cc8c89dffdbd436b93728d2fd))
+- *(github)* Testing - ([595754e](https://github.com/orhun/git-cliff/commit/595754e3c59c503810d985fb630813ff5a23507f))
+- *(github)* Testing - ([eb1e4a9](https://github.com/orhun/git-cliff/commit/eb1e4a95e1217a5587e7944d22183011d344a93e))
+- *(github)* Error in build and release fixing - ([1b3258d](https://github.com/orhun/git-cliff/commit/1b3258d53991ac1f7e266c2446be63ea4cf74800))
+- *(github)* Build system modified - ([34ddc8d](https://github.com/orhun/git-cliff/commit/34ddc8d4df8890c9ed67e737f4e4be86b339f3f5))
+- *(github)* Build error fixes - ([91f356b](https://github.com/orhun/git-cliff/commit/91f356b60e024c1d1d3917905df9b692a2c3e726))
+- *(github)* Added pubspec.lock also in versioning - ([98c3b06](https://github.com/orhun/git-cliff/commit/98c3b065d604c31e8efb757dbc6ea2ed43b7a8f1))
+- *(github)* Fix for errors in CI - ([db19de3](https://github.com/orhun/git-cliff/commit/db19de3779893bc2d2eb1f4191bf9e80285ed3d9))
+- *(github action)* Fixes error in github action file - ([054895d](https://github.com/orhun/git-cliff/commit/054895d5dc586bd9710e3dc3ca5f83afb7725e21))
 - *(typos)* Exclued CHANGELOG file from typo checking - ([fcc6c8c](https://github.com/orhun/git-cliff/commit/fcc6c8ca0b820f878b0f2750e2fabbbc9ba7cc6b))
-
-## [1.2.0-new-Design.1](https://github.com/orhun/git-cliff/compare/v1.2.0-new-Design.0..v1.2.0-new-Design.1) - 2022-09-09
-
-### ⚙️ Miscellaneous Tasks
-
-- *(github)* Testing - ([45f79b6](https://github.com/orhun/git-cliff/commit/45f79b669f02c3015e4aa40df30cfa054713e50d))
-
-## [1.2.0-new-Design.0] - 2022-09-09
-
-### ⚙️ Miscellaneous Tasks
-
-- *(github)* Testing - ([d913fb0](https://github.com/orhun/git-cliff/commit/d913fb02f0f005f82e35d7f21dd335e4b1cd99a1))
-- *(github)* Testing - ([ad566c9](https://github.com/orhun/git-cliff/commit/ad566c97c6f9715b7d95c63a0ee941b6d769fddb))
 
 <!-- generated by git-cliff -->

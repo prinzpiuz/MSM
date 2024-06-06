@@ -79,7 +79,7 @@ Widget get links => Wrap(
         direction: Axis.vertical,
         children: [
           InkWell(
-              child: AppText.centerSingleLineText(AppConstants.homPage,
+              child: AppText.centerSingleLineText(AppConstants.homePage,
                   style: linkStyle),
               onTap: () => launchUrl(Uri.parse(AppConstants.homePageUrl))),
           InkWell(
