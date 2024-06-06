@@ -63,8 +63,8 @@ class Services {
       String command =
           CommandBuilder().addArguments(Commands.serviceStatus, [unit]);
       return decodeOutput(await client.run(command));
-    } catch (_) {
-      return _.toString();
+    } catch (e) {
+      return e.toString();
     }
   }
 }

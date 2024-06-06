@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -336,66 +334,39 @@ Widget sendMenu(BuildContext context, UploadState uploadState,
   }
 }
 
-Widget menuBox(
-    {IconData? icon,
-    String? folderName,
-    required Function onPressed,
-    required double iconSize}) {
-  return Container(
-    color: CommonColors.commonGreenColor,
-    child: OutlinedButton(
-        onPressed: () => onPressed(),
-        child: Center(
-            child: icon != null
-                ? Icon(icon,
-                    color: CommonColors.commonWhiteColor, size: iconSize)
-                : AppText.centerText(folderName!.toUpperCase(),
-                    style: AppTextStyles.bold(
-                        CommonColors.commonWhiteColor, iconSize)))),
-  );
-}
-
-List<StaggeredGridTile> tiles(BuildContext context) {
-  List<StaggeredGridTile> allTiles = [
-    //default tiles
-    StaggeredGridTile.count(
-      crossAxisCellCount: 2,
-      mainAxisCellCount: 2,
-      child: menuBox(
-          icon: Icons.movie_filter_outlined,
-          onPressed: () => goToPage(UploadCatogories.movies, context),
-          iconSize: AppFontSizes.homePageIconFontSize.h),
-    ),
-    StaggeredGridTile.count(
-      crossAxisCellCount: 2,
-      mainAxisCellCount: 4,
-      child: menuBox(
-          icon: Icons.tv,
-          onPressed: () => goToPage(UploadCatogories.tvShows, context),
-          iconSize: AppFontSizes.homePageIconFontSize.h),
-    ),
-    StaggeredGridTile.count(
-      crossAxisCellCount: 2,
-      mainAxisCellCount: 2,
-      child: menuBox(
-          icon: FontAwesomeIcons.bookOpen,
-          onPressed: () => goToPage(UploadCatogories.books, context),
-          iconSize: AppFontSizes.homePageIconFontSize.h),
-    ),
-  ];
+List<Widget> locations(BuildContext context) {
   final AppService appService = Provider.of<AppService>(context);
   final FolderConfiguration folderConfiguration =
       appService.server.folderConfiguration;
+  List<Widget> allTiles = [
+    //default tiles
+    commonTile(
+      icon: Icons.movie_filter_outlined,
+      title: UploadCatogories.movies.getTitle,
+      subtitle: folderConfiguration.pathToDirectory(UploadCatogories.movies),
+      onTap: () => goToPage(UploadCatogories.movies, context),
+    ),
+    commonTile(
+      icon: Icons.tv_sharp,
+      title: UploadCatogories.tvShows.getTitle,
+      subtitle: folderConfiguration.pathToDirectory(UploadCatogories.tvShows),
+      onTap: () => goToPage(UploadCatogories.tvShows, context),
+    ),
+    commonTile(
+      icon: Icons.menu_book_sharp,
+      title: UploadCatogories.books.getTitle,
+      subtitle: folderConfiguration.pathToDirectory(UploadCatogories.books),
+      onTap: () => goToPage(UploadCatogories.books, context),
+    )
+  ];
   if (folderConfiguration.customFolders.isNotEmpty) {
     for (var customFolder in folderConfiguration.customFolders) {
-      allTiles.add(StaggeredGridTile.count(
-        crossAxisCellCount: 4,
-        mainAxisCellCount: 1,
-        child: menuBox(
-            folderName: fileNameFromPath(customFolder),
-            onPressed: () =>
-                goToPage(UploadCatogories.custom, context, path: customFolder),
-            iconSize: AppFontSizes.customFolderNameSize.h),
+      allTiles.add(commonTile(
+        icon: Icons.folder,
+        title: fileNameFromPath(customFolder),
+        subtitle: customFolder,
+        onTap: () =>
+            goToPage(UploadCatogories.custom, context, path: customFolder),
       ));
     }
   }

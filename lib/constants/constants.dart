@@ -45,7 +45,7 @@ class AppConstants {
   static const appFullName = "Media Server Manager";
   static const appIssueFeatureReport = "Click Here To Submit Bugs";
   static const issueReportUrl = "https://github.com/prinzpiuz/MSM/issues";
-  static const homPage = "Home Page";
+  static const homePage = "Home Page";
   static const homePageUrl = "https://prinzpiuz.in/MSM/";
   static const license = "License";
   static const licenseUrl =

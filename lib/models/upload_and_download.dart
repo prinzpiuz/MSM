@@ -130,8 +130,8 @@ Future<void> sendFile(
     } else {
       notifications!.uploadError(error: AppMessages.serverNotAvailable);
     }
-  } catch (_) {
-    notifications!.uploadError(error: _.toString());
+  } catch (e) {
+    notifications!.uploadError(error: e.toString());
   }
 }
 

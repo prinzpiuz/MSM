@@ -53,8 +53,8 @@ Widget commonSwitch(
                 AppFontSizes.systemToolsTittleFontSize.sp)),
         Switch(
           value: value,
-          trackColor: const MaterialStatePropertyAll<Color>(Colors.grey),
-          thumbColor: const MaterialStatePropertyAll<Color>(Colors.black),
+          trackColor: const WidgetStatePropertyAll<Color>(Colors.grey),
+          thumbColor: const WidgetStatePropertyAll<Color>(Colors.black),
           onChanged: onChange,
         )
       ],
