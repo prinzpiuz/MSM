@@ -48,6 +48,9 @@ class FileTileState extends State<FileTile> {
             });
           }),
           onTap: () {
+            if (listingState.fabOpen) {
+              listingState.fabGestureDetector.onTap!();
+            }
             if (widget.selected) {
               setState(() {
                 widget.selected = !widget.selected;

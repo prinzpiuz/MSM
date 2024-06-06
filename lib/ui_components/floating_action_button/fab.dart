@@ -6,16 +6,19 @@ import 'package:flutter/material.dart';
 
 // Project imports:
 import 'package:msm/constants/colors.dart';
+import 'package:msm/providers/file_listing_provider.dart';
 
 @immutable
 class ExpandableFab extends StatefulWidget {
   const ExpandableFab({
     super.key,
     this.initialOpen,
+    this.fileListingState,
     required this.distance,
     required this.children,
   });
 
+  final FileListingState? fileListingState;
   final bool? initialOpen;
   final double distance;
   final List<Widget> children;
@@ -39,6 +42,13 @@ class _ExpandableFabState extends State<ExpandableFab>
       duration: const Duration(milliseconds: 250),
       vsync: this,
     );
+    GestureDetector gestureDetector = GestureDetector(
+      onTap: _toggle,
+    );
+    if (widget.fileListingState != null) {
+      widget.fileListingState!.fabOpen = _open;
+      widget.fileListingState!.fabGestureDetector = gestureDetector;
+    }
     _expandAnimation = CurvedAnimation(
       curve: Curves.fastOutSlowIn,
       reverseCurve: Curves.easeOutQuad,
@@ -55,6 +65,9 @@ class _ExpandableFabState extends State<ExpandableFab>
   void _toggle() {
     setState(() {
       _open = !_open;
+      if (widget.fileListingState != null) {
+        widget.fileListingState!.fabOpen = _open;
+      }
       if (_open) {
         _controller.forward();
       } else {
