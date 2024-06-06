@@ -8,6 +8,7 @@
 
 ### ⚙️ Miscellaneous Tasks
 
+- *(generated)* Changelog generated & version updated automatically - ([d9f3969](https://github.com/orhun/git-cliff/commit/d9f396952cfc09b363d75e97144dfc856557527a))
 - *(generated)* Changelog generated & version updated automatically - ([ab9a902](https://github.com/orhun/git-cliff/commit/ab9a9022848c2573baa29b2a203563c8bb8a9f5c))
 - *(generated)* Changelog generated & version updated automatically - ([eb71bbe](https://github.com/orhun/git-cliff/commit/eb71bbe1c574c2314ec6124d4043d0f18705cf9d))
 - *(generated)* Changelog generated & version updated automatically - ([2d40027](https://github.com/orhun/git-cliff/commit/2d40027dfe4d9fc84a0424bdadd172dbf6ee4b10))
@@ -21,6 +22,7 @@
 - *(github action)* Avoided taging in main branch (#128) - ([2f36d90](https://github.com/orhun/git-cliff/commit/2f36d9095e457ba437c4b09cb7be0e897c0bd184))
 - *(pubspec)* Automatic version upgrade (#124) - ([b661f4d](https://github.com/orhun/git-cliff/commit/b661f4d0fd63e942883b8969b11bcf5f98531615))
 - *(repo cleaning)* Action files modified and screen shot folder updated (#127) - ([d724822](https://github.com/orhun/git-cliff/commit/d72482262699966b94bf265e41d2017d0cbe36bf))
+- Pre-commit fixes - ([354d6f3](https://github.com/orhun/git-cliff/commit/354d6f3dc799500bdf6f8fe19bf3d69f72690c4f))
 
 ### Build
 
