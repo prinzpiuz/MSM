@@ -41,7 +41,7 @@ jobs:
         run: echo "${{ steps.git-cliff.outputs.content }}" > CHANGELOG.md
       - name: Edit pubspec version
         run: |
-          sed -Ei "s/^version: (.*)/version: ${{ needs.tag.outputs.new_tag }}/" pubspec.yaml
+          ./update_version.sh ${{ needs.tag.outputs.new_tag }}
       - name: Commit changes
         if: ${{ success() }}
         uses: EndBug/add-and-commit@v9
