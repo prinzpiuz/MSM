@@ -6,10 +6,8 @@
 <a href="https://www.gnu.org/licenses/gpl-3.0" alt="License: GPLv3"><img src="https://img.shields.io/badge/License-GPL%20v3-blue.svg"></a>
 <a href="https://t.me/joinchat/FDVzK06Rt7vsNQLBLi2icw" alt="telegram: #msm"><img src="https://img.shields.io/badge/chat-Telegram-brightgreen"></a>
 </br>
-<a href="https://apt.izzysoft.de/fdroid/index/apk/com.example.msm">
-    <img src="https://f-droid.org/badge/get-it-on.png"
-    alt="Get it on F-Droid"
-    height="80">
+<a href="https://apt.izzysoft.de/fdroid/index/apk/com.prinzpiuz.msm" alt="Get it on IzzyOnDroid">
+<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on F-Droid" height="80">
 </a>
 
 </p>

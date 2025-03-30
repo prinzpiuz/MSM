@@ -54,6 +54,8 @@ doc/api/
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
+**/android/app/.cxx/*
+android/app/.cxx
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
