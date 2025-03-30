@@ -10,10 +10,10 @@ CURRENT_VERSION=$(grep "^version:" "$PUBSPEC_FILE" | awk '{print $2}')
 
 echo "Current version: $CURRENT_VERSION"
 
-# Extract the build number from the current version 
+# Extract the build number from the current version
 CURRENT_BUILD_NUMBER=$(echo "$CURRENT_VERSION" | cut -d'+' -f2)
 
-# Increment the build number (or use GITHUB_RUN_ID)
+# Increment the build number
 NEW_BUILD_NUMBER=$((CURRENT_BUILD_NUMBER+=1))
 # CURRENT_BUILD_NUMBER++
 
