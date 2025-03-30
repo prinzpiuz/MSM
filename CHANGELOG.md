@@ -6,8 +6,13 @@
 - *(file listing)* Fix for multiple select and delete function (#131) - ([09ea943](https://github.com/orhun/git-cliff/commit/09ea943af5ca82f273bc3134f134d34f776685ba))
 - *(upload,listing)* FAB auto close & upload page redesign - ([b390286](https://github.com/orhun/git-cliff/commit/b3902865e4f6732d0a2ed0f8a708e3c7a9c5f715))
 
+### 🚜 Refactor
+
+- Build error fixes - ([c2484c4](https://github.com/orhun/git-cliff/commit/c2484c407ac0583599fcc74c9d2c871cb3c79a69))
+
 ### ⚙️ Miscellaneous Tasks
 
+- *(generated)* Changelog generated & version updated automatically - ([4b7e259](https://github.com/orhun/git-cliff/commit/4b7e2593be0f65c7dbd575f9c3030e3d68ffef8f))
 - *(generated)* Changelog generated & version updated automatically - ([ce42630](https://github.com/orhun/git-cliff/commit/ce4263068753bd74057498d810d5b8a048250645))
 - *(generated)* Changelog generated & version updated automatically - ([d9f3969](https://github.com/orhun/git-cliff/commit/d9f396952cfc09b363d75e97144dfc856557527a))
 - *(generated)* Changelog generated & version updated automatically - ([ab9a902](https://github.com/orhun/git-cliff/commit/ab9a9022848c2573baa29b2a203563c8bb8a9f5c))
@@ -28,6 +33,7 @@
 ### Build
 
 - *(pubspec.yaml)* Package upgrade related changes (#130) - ([603ad69](https://github.com/orhun/git-cliff/commit/603ad69a7e7ddb09bb9bf9c6045d76eb81650d1d))
+- Added script to update version and version code while building - ([9dbb6f9](https://github.com/orhun/git-cliff/commit/9dbb6f97c7dfb7a49c60e6745f5b9dbe6021033c))
 
 ## [1.7.0](https://github.com/orhun/git-cliff/compare/v1.6.0..v1.7.0) - 2024-01-18
 
