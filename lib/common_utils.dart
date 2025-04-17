@@ -33,11 +33,11 @@ PopScope handleBackButton({
 }) {
   // to handle the backroutes of the app
   return PopScope(
-    onPopInvoked: (bool pop) async {
-      if (backRoute != null) {
+    canPop: false,
+    onPopInvokedWithResult: (bool didPop, dynamic result) async {
+      if (didPop && backRoute != null) {
         handleBack(context, uploadState, fileListState, backRoute);
       }
-      return;
     },
     child: child,
   );

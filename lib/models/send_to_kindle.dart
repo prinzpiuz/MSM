@@ -21,8 +21,6 @@ class KindleData {
   static SupportedMailers _getMailer(String mailerName) {
     if (mailerName == SupportedMailers.sendgrid.name) {
       return SupportedMailers.sendgrid;
-    } else if (mailerName == SupportedMailers.mailchimp.name) {
-      return SupportedMailers.mailchimp;
     }
     return SupportedMailers.sendgrid;
   }
@@ -42,15 +40,12 @@ class KindleData {
 }
 
 enum SupportedMailers {
-  sendgrid,
-  mailchimp;
+  sendgrid;
 
   String get getName {
     switch (this) {
       case SupportedMailers.sendgrid:
         return "Sendgrid";
-      case SupportedMailers.mailchimp:
-        return "Mailchimp";
     }
   }
 
@@ -58,8 +53,6 @@ enum SupportedMailers {
     switch (this) {
       case SupportedMailers.sendgrid:
         return "https://api.sendgrid.com/v3/mail/send";
-      case SupportedMailers.mailchimp:
-        return "";
     }
   }
 }
@@ -129,10 +122,6 @@ class SendTokindle {
           } catch (_) {
             return null;
           }
-
-        case SupportedMailers.mailchimp:
-          // TODO: Handle this case.
-          break;
       }
     }
     return null;
