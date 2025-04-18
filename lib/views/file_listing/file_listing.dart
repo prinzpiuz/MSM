@@ -153,9 +153,11 @@ Widget listings(BuildContext context, FileListingState listingState) {
             if (snapshot.data!.isNotEmpty) {
               List<FileOrDirectory>? fileOrDirectoryList = listingState
                   .originalList = listingState.currentList = snapshot.data!;
-              return fileListView(
-                  fileOrDirectoryList: fileOrDirectoryList,
-                  listingState: listingState);
+              return listingState.isLoading
+                  ? commonCircularProgressIndicator
+                  : fileListView(
+                      fileOrDirectoryList: fileOrDirectoryList,
+                      listingState: listingState);
             }
             return Center(
               child: AppText.centerSingleLineText("No Files",
@@ -180,11 +182,9 @@ Widget fileListView(
   return ListView.builder(
       itemCount: fileOrDirectoryList!.length,
       itemBuilder: (context, i) {
-        return listingState.isLoading
-            ? commonCircularProgressIndicator
-            : FileTile(
-                fileOrDirectory: fileOrDirectoryList[i],
-                selected:
-                    listingState.selectedList.contains(fileOrDirectoryList[i]));
+        return FileTile(
+            fileOrDirectory: fileOrDirectoryList[i],
+            selected:
+                listingState.selectedList.contains(fileOrDirectoryList[i]));
       });
 }
