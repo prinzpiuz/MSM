@@ -1,7 +1,15 @@
 ## What's Changed
+* fix(connection issue): connection issue in the earlier release fixed by @prinzpiuz in [#147](https://github.com/prinzpiuz/MSM/pull/147)
+* Merge branch 'main' of github.com:prinzpiuz/MSM into prinz/send_to_kindle_via_native_email by @prinzpiuz
+
+## What's Changed in 1.9.0
+* chore(generated): changelog generated & version updated automatically by @github-actions[bot]
 * feat(send to kindle): send to kindle implemented via native email app by @prinzpiuz in [#145](https://github.com/prinzpiuz/MSM/pull/145)
+* fix(connection issue): connection issue in the earlier release fixed by @prinzpiuz
 * feat(send to kindle): send to kindle implemented via native email sending app by @prinzpiuz
 * build(flutter version upgrade): upgrade flutter version to 3.29.2 by @prinzpiuz in [#141](https://github.com/prinzpiuz/MSM/pull/141)
+
+**Full Changelog**: https://github.com/prinzpiuz/MSM/compare/1.8.2...1.9.0
 
 ## What's Changed in 1.8.2
 * chore(generated): changelog generated & version updated automatically by @github-actions[bot]
