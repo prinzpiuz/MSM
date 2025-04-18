@@ -1,6 +1,7 @@
 // Flutter imports:
 // ignore_for_file: use_build_context_synchronously
 
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -217,49 +218,7 @@ void setKindleDetails(bool value) {
   ServerFunctionsData serverFunctionsData =
       appService.storage.getServerFunctions;
   serverFunctionsData.sendTokindle = value;
-  dailogBox(
-      context: context,
-      title: "Select Default Mailer",
-      content: SizedBox(
-        height: (AppMeasurements.deleteFileDailogBoxHeight *
-                SupportedMailers.values.length)
-            .h,
-        child: ListView.separated(
-          separatorBuilder: (context, index) => commonDivider,
-          itemCount: SupportedMailers.values.length,
-          itemBuilder: (BuildContext context, int index) {
-            return TextButton(
-              onPressed: () {
-                appService.kindleData.mailer = SupportedMailers.values[index];
-                Navigator.pop(context);
-                kindleDataForm(serverFunctionsData);
-              },
-              child: Text(
-                SupportedMailers.values[index].getName,
-                style: AppTextStyles.regular(CommonColors.commonBlackColor,
-                    AppFontSizes.dailogBoxTextFontSize.sp),
-              ),
-            );
-          },
-        ),
-      ),
-      actions: [
-        if (serverFunctionsData.sendTokindle)
-          TextButton(
-            onPressed: () {
-              serverFunctionsData.sendTokindle = false;
-              appService.turnOffSendToKindle;
-              saveServerFunctions(serverFunctionsData, context);
-              Navigator.pop(context);
-            },
-            child: Text(
-              "Turn Off",
-              style: AppTextStyles.regular(CommonColors.commonBlackColor,
-                  AppFontSizes.dialogBoxactionFontSixe.sp),
-            ),
-          ),
-        dialogCancelButton(context),
-      ]);
+  kindleDataForm(serverFunctionsData);
 }
 
 void kindleDataForm(ServerFunctionsData serverFunctionsData) {
@@ -276,8 +235,7 @@ void kindleDataForm(ServerFunctionsData serverFunctionsData) {
           key: kindleformKey,
           child: Column(children: [
             fromEmail(appService.kindleData),
-            kindleEmail(appService.kindleData),
-            apikey(appService.kindleData)
+            kindleEmail(appService.kindleData)
           ]),
         ),
       ),
@@ -326,18 +284,6 @@ Widget kindleEmail(KindleData kindleData) => AppTextField.commonTextField(
       keyboardType: TextInputType.emailAddress,
       labelText: "Kindle Email",
       hintText: "Email Address Of Your Kindle",
-    );
-
-Widget apikey(KindleData kindleData) => AppTextField.commonTextField(
-      disableLeftRightPadding: true,
-      onsaved: (data) {
-        kindleData.apiKey = data;
-      },
-      initialValue: kindleData.apiKey,
-      validator: valueNeeded,
-      keyboardType: const TextInputType.numberWithOptions(),
-      labelText: "${kindleData.mailer.getName} API KEY",
-      hintText: "API Key of ${kindleData.mailer.getName}",
     );
 
 Widget editSendToKindle(bool value) {

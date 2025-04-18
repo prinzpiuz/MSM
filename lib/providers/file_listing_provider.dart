@@ -8,6 +8,7 @@ import 'package:msm/models/folder_configuration.dart';
 class FileListingState with ChangeNotifier {
   bool _searchMode = false;
   bool _applyFilter = false;
+  bool _isLoading = false;
   String _nextPage = "";
   String _searchText = "";
   List<String> pathTraversed = [];
@@ -22,11 +23,17 @@ class FileListingState with ChangeNotifier {
 
   bool get isInSearchMode => _searchMode;
   bool get filterApplied => _applyFilter;
+  bool get isLoading => _isLoading;
   String get nextPage => _nextPage;
   String get searchText => _searchText;
 
   set setSearchMode(bool searchMode) {
     _searchMode = searchMode;
+    notifyListeners();
+  }
+
+  set setIsLoading(bool isLoading) {
+    _isLoading = isLoading;
     notifyListeners();
   }
 
