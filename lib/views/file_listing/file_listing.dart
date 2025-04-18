@@ -180,9 +180,11 @@ Widget fileListView(
   return ListView.builder(
       itemCount: fileOrDirectoryList!.length,
       itemBuilder: (context, i) {
-        return FileTile(
-            fileOrDirectory: fileOrDirectoryList[i],
-            selected:
-                listingState.selectedList.contains(fileOrDirectoryList[i]));
+        return listingState.isLoading
+            ? commonCircularProgressIndicator
+            : FileTile(
+                fileOrDirectory: fileOrDirectoryList[i],
+                selected:
+                    listingState.selectedList.contains(fileOrDirectoryList[i]));
       });
 }

@@ -1,5 +1,14 @@
 // Package imports:
-import 'package:dio/dio.dart';
+// import 'package:dio/dio.dart';
+
+// Dart imports:
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
+// Package imports:
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:path_provider/path_provider.dart';
 
 // Project imports:
 import 'package:msm/models/local_notification.dart';
@@ -7,61 +16,37 @@ import 'package:msm/models/local_notification.dart';
 class KindleData {
   String fromEmail = "";
   String kindleMailAddress = "";
-  String apiKey = "";
-  SupportedMailers mailer = SupportedMailers.sendgrid;
 
   KindleData();
 
   bool get dataAvailable {
-    return fromEmail.isNotEmpty &&
-        kindleMailAddress.isNotEmpty &&
-        apiKey.isNotEmpty;
-  }
-
-  static SupportedMailers _getMailer(String mailerName) {
-    if (mailerName == SupportedMailers.sendgrid.name) {
-      return SupportedMailers.sendgrid;
-    }
-    return SupportedMailers.sendgrid;
+    return fromEmail.isNotEmpty && kindleMailAddress.isNotEmpty;
   }
 
   KindleData.fromJson(Map<String, dynamic> json)
       : fromEmail = json['fromEmail'],
-        kindleMailAddress = json['kindleMailAddress'],
-        apiKey = json['apiKey'],
-        mailer = _getMailer(json['mailer']);
+        kindleMailAddress = json['kindleMailAddress'];
 
-  Map<String, dynamic> toJson() => {
-        'fromEmail': fromEmail,
-        'kindleMailAddress': kindleMailAddress,
-        'apiKey': apiKey,
-        'mailer': mailer.name
-      };
+  Map<String, dynamic> toJson() =>
+      {'fromEmail': fromEmail, 'kindleMailAddress': kindleMailAddress};
 }
 
-enum SupportedMailers {
-  sendgrid;
+Future<File> _getDecodedFile(String filename) async {
+  final tempDir = await getTemporaryDirectory();
+  final file = File('${tempDir.path}/$filename');
+  return file;
+}
 
-  String get getName {
-    switch (this) {
-      case SupportedMailers.sendgrid:
-        return "Sendgrid";
-    }
-  }
-
-  String get baseUrl {
-    switch (this) {
-      case SupportedMailers.sendgrid:
-        return "https://api.sendgrid.com/v3/mail/send";
-    }
-  }
+Future<String> _decodeBase64ToFile(String base64String, String filename) async {
+  Uint8List decodedBytes = base64Decode(base64String);
+  File decodedFile = await _getDecodedFile(filename);
+  await decodedFile.writeAsBytes(decodedBytes);
+  return decodedFile.path;
 }
 
 class SendTokindle {
-  final Dio dio = Dio();
   final KindleData kindleData;
   final String fileName;
-  SupportedMailers type = SupportedMailers.sendgrid;
   bool enabled = false;
   String base64EncodedData = "";
   late Notifications notifications;
@@ -71,59 +56,25 @@ class SendTokindle {
       required this.notifications,
       required this.enabled,
       required this.kindleData,
-      required this.fileName,
-      required this.type});
+      required this.fileName});
 
-  Future<Response<dynamic>?> sendMail(SupportedMailers type) async {
+  Future<bool> sendMail() async {
     if (enabled) {
-      switch (type) {
-        case SupportedMailers.sendgrid:
-          try {
-            final response = await dio.post(
-              type.baseUrl,
-              options: Options(headers: {
-                "Content-type": "application/json",
-                "Authorization": "Bearer ${kindleData.apiKey}"
-              }),
-              data: {
-                "personalizations": [
-                  {
-                    "to": [
-                      {"email": kindleData.kindleMailAddress}
-                    ]
-                  }
-                ],
-                "from": {"email": kindleData.fromEmail},
-                "subject": "Kindle Ebook $fileName",
-                "content": [
-                  {
-                    "type": "text/html",
-                    "value": "Hey,<br>Please find attachment."
-                  }
-                ],
-                "attachments": [
-                  {
-                    "content": base64EncodedData,
-                    "type": "text/plain",
-                    "filename": fileName
-                  }
-                ]
-              },
-              onSendProgress: (int sent, int total) async {
-                notifications.sendToKindle(
-                    id: fileName.hashCode.toString(),
-                    name: fileName,
-                    progress: sent,
-                    notificationType: NotificationType.kindle,
-                    total: total);
-              },
-            );
-            return response;
-          } catch (_) {
-            return null;
-          }
+      String filePath = await _decodeBase64ToFile(base64EncodedData, fileName);
+      final Email email = Email(
+        subject: "Kindle Ebook $fileName",
+        cc: [kindleData.fromEmail],
+        recipients: [kindleData.kindleMailAddress],
+        attachmentPaths: [filePath],
+        isHTML: false,
+      );
+      try {
+        await FlutterEmailSender.send(email);
+        return true;
+      } catch (_) {
+        return false;
       }
     }
-    return null;
+    return false;
   }
 }

@@ -1,6 +1,7 @@
 // Dart imports:
 // ignore_for_file: use_build_context_synchronously
 
+// Dart imports:
 import 'dart:async';
 import 'dart:io';
 
@@ -344,7 +345,10 @@ void downloadFile(FileOrDirectory fileOrDirectory) async {
 void sendToKindle(FileOrDirectory fileOrDirectory) async {
   BuildContext context = ContextKeys.fileListingPageKey.currentContext!;
   final AppService appService = Provider.of<AppService>(context, listen: false);
+  final FileListingState fileListState =
+      Provider.of<FileListingState>(context, listen: false);
   if (appService.kindleData.dataAvailable) {
+    fileListState.setIsLoading = true;
     await appService.commandExecuter
         .base64(fileOrDirectory: fileOrDirectory)
         .then((base64encodedString) async {
@@ -354,10 +358,10 @@ void sendToKindle(FileOrDirectory fileOrDirectory) async {
             notifications: appService.notifications,
             enabled: true,
             fileName: fileOrDirectory.name,
-            type: SupportedMailers.sendgrid,
             kindleData: appService.kindleData);
-        await sendTokindle.sendMail(SupportedMailers.sendgrid).then((response) {
-          if (response != null && response.statusCode == 202) {
+        await sendTokindle.sendMail().then((send) {
+          fileListState.setIsLoading = false;
+          if (send) {
             showMessage(context: context, text: AppMessages.sendToKindle);
           } else {
             showMessage(context: context, text: AppMessages.sendToKindleError);

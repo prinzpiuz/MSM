@@ -36,7 +36,7 @@ class AppMeasurements {
   static const appInfoIconHeight = 100.0;
   static const appInfoIconWidth = 100.0;
   static const deleteFileDailogBoxHeight = 50.0;
-  static const kindleFormHeight = 290.0;
+  static const kindleFormHeight = 200.0;
 }
 
 class AppConstants {
