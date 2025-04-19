@@ -1,6 +1,12 @@
 ## What's Changed
+* fix: manifest file updated for accessing network state by @prinzpiuz in [#151](https://github.com/prinzpiuz/MSM/pull/151)
+
+## What's Changed in 1.9.2
+* chore(generated): changelog generated & version updated automatically by @github-actions[bot]
 * fix(connection issue): ssh connection persisted in last build fixed by @prinzpiuz in [#149](https://github.com/prinzpiuz/MSM/pull/149)
 * fix(connection issue): ssh connection persisted in last build fixed by @prinzpiuz
+
+**Full Changelog**: https://github.com/prinzpiuz/MSM/compare/1.9.1...1.9.2
 
 ## What's Changed in 1.9.1
 * chore(generated): changelog generated & version updated automatically by @github-actions[bot]
