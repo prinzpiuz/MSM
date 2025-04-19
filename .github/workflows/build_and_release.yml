@@ -44,7 +44,7 @@ jobs:
       - name: Build
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.29.2"
+          flutter-version: "3.29.3"
           channel: "stable"
       - run: flutter --version
       - run: flutter pub get

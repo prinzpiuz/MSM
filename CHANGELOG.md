@@ -1,6 +1,13 @@
 ## What's Changed
+* fix(connection issue): ssh connection persisted in last build fixed by @prinzpiuz in [#149](https://github.com/prinzpiuz/MSM/pull/149)
+* fix(connection issue): ssh connection persisted in last build fixed by @prinzpiuz
+
+## What's Changed in 1.9.1
+* chore(generated): changelog generated & version updated automatically by @github-actions[bot]
 * fix(connection issue): connection issue in the earlier release fixed by @prinzpiuz in [#147](https://github.com/prinzpiuz/MSM/pull/147)
 * Merge branch 'main' of github.com:prinzpiuz/MSM into prinz/send_to_kindle_via_native_email by @prinzpiuz
+
+**Full Changelog**: https://github.com/prinzpiuz/MSM/compare/1.9.0...1.9.1
 
 ## What's Changed in 1.9.0
 * chore(generated): changelog generated & version updated automatically by @github-actions[bot]
