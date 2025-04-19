@@ -7,14 +7,14 @@ version: 1.9.1+11
 
 environment:
   sdk: ">=2.17.6 <3.0.0"
-  flutter: ^3.29.2
+  flutter: ^3.29.3
 
 dependencies:
   flutter:
     sdk: flutter
 
   shared_preferences: ^2.1.0
-  dartssh2: ^2.7.2+3
+  dartssh2: ^2.12.0
   permission_handler: ^12.0.0+1
   filesize: ^2.0.1
   flutter_screenutil: ^5.9.3
