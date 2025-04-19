@@ -1,5 +1,11 @@
 ## What's Changed
-
+* Merge branch 'release' into main by @prinzpiuz
+* Release v1.9.2 by @prinzpiuz in [#150](https://github.com/prinzpiuz/MSM/pull/150)
+* Release v1.9.1 by @prinzpiuz in [#148](https://github.com/prinzpiuz/MSM/pull/148)
+* Release v1.9.0 by @prinzpiuz in [#146](https://github.com/prinzpiuz/MSM/pull/146)
+* Release v1.8.2+9 by @prinzpiuz in [#140](https://github.com/prinzpiuz/MSM/pull/140)
+* Release v1.8.1 by @prinzpiuz in [#137](https://github.com/prinzpiuz/MSM/pull/137)
+* chore(generated): changelog generated & version updated automatically by @github-actions[bot]
 * fix: manifest file updated for accessing network state by @prinzpiuz in [#151](https://github.com/prinzpiuz/MSM/pull/151)
 
 ## What's Changed in 1.9.2
@@ -8,9 +14,6 @@
 * fix(connection issue): ssh connection persisted in last build fixed by @prinzpiuz
 
 **Full Changelog**: https://github.com/prinzpiuz/MSM/compare/1.9.1...1.9.2
-
-* fix(connection issue): ssh connection persisted in last build fixed by @prinzpiuz in [#149](https://github.com/prinzpiuz/MSM/pull/149)
-* fix(connection issue): ssh connection persisted in last build fixed by @prinzpiuz
 
 ## What's Changed in 1.9.1
 * chore(generated): changelog generated & version updated automatically by @github-actions[bot]
