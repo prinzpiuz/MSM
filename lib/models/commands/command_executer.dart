@@ -13,7 +13,6 @@ import 'package:msm/models/file_manager.dart';
 import 'package:msm/models/folder_configuration.dart';
 import 'package:msm/models/local_notification.dart';
 import 'package:msm/models/server.dart';
-import 'package:msm/models/storage.dart';
 import 'package:msm/views/upload_pages/upload_page_utils.dart';
 
 class CommandExecuter extends Server {
@@ -24,7 +23,6 @@ class CommandExecuter extends Server {
     required super.serverData,
     required super.folderConfiguration,
     required super.serverFunctionsData,
-    required super.serverOS,
     required this.client,
     required this.sftp,
     required this.notifications,
@@ -251,51 +249,6 @@ class CommandExecuter extends Server {
     } catch (_) {
       return null;
     }
-  }
-
-  Future<ServerOS?> getDistribution(Storage storage) async {
-    try {
-      String command = Commands.linuxDistribution;
-      String output = decodeOutput(await client!.run(command));
-      if (output.contains("command not found")) {
-        return null;
-      }
-      serverOS.serverOS = output.trim();
-      storage.saveObject(StorageKeys.serverOS.key, serverOS);
-      return serverOS;
-    } catch (_) {
-      return null;
-    }
-  }
-
-  Future<String> updateList() async {
-    try {
-      String updateCommand = serverOS.updateCommand;
-      String listCommand = serverOS.listCommand;
-      String updateStatus = decodeOutput(await client!.run(updateCommand));
-      if (updateStatus.contains("All packages are up to date.")) {
-        return "All packages are up to date.";
-      }
-      String output = decodeOutput(await client!.run(listCommand));
-      return output;
-    } catch (_) {
-      return "";
-    }
-  }
-
-  Future<void> systemUpgrade() async {
-    try {
-      String command = serverOS.upgradeCommand;
-      await client!.run(command).then((value) {
-        if (serverOS.afterRunCommand.isNotEmpty) {
-          client!.run(serverOS.afterRunCommand);
-        }
-        notifications!.systemUpdate(
-            id: "",
-            name: "System Update",
-            notificationType: NotificationType.update);
-      });
-    } catch (_) {}
   }
 
   Future<Map> foldersExist(FolderConfiguration folderConfigurationObj) async {

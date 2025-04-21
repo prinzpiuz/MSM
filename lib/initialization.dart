@@ -38,8 +38,7 @@ class Init {
         server: Server(
             serverData: storage.getServerData,
             folderConfiguration: storage.getFolderConfigurations,
-            serverFunctionsData: storage.getServerFunctions,
-            serverOS: storage.getServerOSData),
+            serverFunctionsData: storage.getServerFunctions),
         backgroundService: backgroundService,
         storage: storage);
     configureBackgroundService(backgroundService);
@@ -53,7 +52,6 @@ class Init {
         serverData: appService.server.serverData,
         folderConfiguration: appService.server.folderConfiguration,
         serverFunctionsData: appService.server.serverFunctionsData,
-        serverOS: appService.server.serverOS,
         client: null,
         sftp: null,
         notifications: null);
@@ -97,7 +95,6 @@ class Init {
               serverData: appService.server.serverData,
               folderConfiguration: appService.server.folderConfiguration,
               serverFunctionsData: appService.server.serverFunctionsData,
-              serverOS: appService.server.serverOS,
               client: client,
               sftp: sftpClient,
               notifications: notifications);
