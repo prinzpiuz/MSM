@@ -32,7 +32,6 @@ enum ServerState {
 
 class Server {
   ServerData serverData;
-  ServerOS serverOS;
   FolderConfiguration folderConfiguration;
   ServerFunctionsData serverFunctionsData;
   SSHClient? _client;
@@ -41,8 +40,7 @@ class Server {
   Server(
       {required this.serverData,
       required this.folderConfiguration,
-      required this.serverFunctionsData,
-      required this.serverOS});
+      required this.serverFunctionsData});
 
   Future<SSHClient?> connect() async {
     try {
@@ -69,39 +67,4 @@ class Server {
       await _client?.done;
     }
   }
-}
-
-class ServerOS {
-  String serverOS;
-  String updateCommand;
-  String upgradeCommand;
-  String listCommand;
-  String afterRunCommand;
-
-  ServerOS(
-      {this.serverOS = "",
-      this.updateCommand = "",
-      this.upgradeCommand = "",
-      this.listCommand = "",
-      this.afterRunCommand = ""});
-
-  bool get dataAvailable =>
-      serverOS.isNotEmpty &&
-      updateCommand.isNotEmpty &&
-      upgradeCommand.isNotEmpty &&
-      listCommand.isNotEmpty;
-
-  ServerOS.fromJson(Map<String, dynamic> json)
-      : serverOS = json['serverOS'],
-        updateCommand = json['updateCommand'],
-        upgradeCommand = json['upgradeCommand'],
-        listCommand = json['listCommand'],
-        afterRunCommand = json['afterRunCommand'];
-  Map<String, String> toJson() => {
-        'serverOS': serverOS,
-        'updateCommand': updateCommand,
-        'upgradeCommand': upgradeCommand,
-        'listCommand': listCommand,
-        'afterRunCommand': afterRunCommand
-      };
 }

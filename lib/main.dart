@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 // Project imports:
 import 'package:msm/initialization.dart';
 import 'package:msm/views/splash/init_screen.dart';
+
 import 'config.dart';
 
 void main() {

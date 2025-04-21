@@ -68,14 +68,6 @@ class Storage {
     return ServerData();
   }
 
-  ServerOS get getServerOSData {
-    Map<String, dynamic>? data = _getJson(StorageKeys.serverOS.key);
-    if (data != null) {
-      return ServerOS.fromJson(data);
-    }
-    return ServerOS();
-  }
-
   ServerFunctionsData get getServerFunctions {
     Map<String, dynamic>? data = _getJson(StorageKeys.serverFunctions.key);
     if (data != null) {
