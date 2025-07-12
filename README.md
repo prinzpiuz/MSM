@@ -8,7 +8,9 @@
 </br>
 <a href="https://apt.izzysoft.de/fdroid/index/apk/com.prinzpiuz.msm" alt="Get it on IzzyOnDroid">
 <img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on F-Droid" height="80">
-[<img src="https://user-images.githubusercontent.com/15032958/208871323-c1c5511c-d6bc-47c8-b82b-7ce2f95f244a.png" alt="Get it on GitHub" width="200">](https://github.com/prinzpiuz/MSM/releases)
+</a>
+<a href="https://github.com/prinzpiuz/MSM/releases" alt="Get it on GitHub">
+<img src="https://user-images.githubusercontent.com/15032958/208871323-c1c5511c-d6bc-47c8-b82b-7ce2f95f244a.png" alt="Get it on GitHub" width="200">
 </a>
 
 </p>
