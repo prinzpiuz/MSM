@@ -12,7 +12,6 @@
 <a href="https://github.com/prinzpiuz/MSM/releases" alt="Get it on GitHub">
 <img src="https://user-images.githubusercontent.com/15032958/208871323-c1c5511c-d6bc-47c8-b82b-7ce2f95f244a.png" alt="Get it on GitHub" width="200">
 </a>
-
 </p>
 <hr>
 <p align="center"><a href="#screenshots">Screenshots</a> &bull; <a href="#description">Description</a> &bull; <a href="#features">Features</a> &bull; <a href="#contribution">Contribution</a>&bull; <a href="https://github.com/prinzpiuz/MSM_mobile/releases">Releases</a> </p>
