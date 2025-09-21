@@ -15,7 +15,6 @@
 </a>
 </p>
 <hr>
-
 <p align="center"><a href="#screenshots">Screenshots</a> &bull; <a href="#description">Description</a> &bull; <a href="#features">Features</a> &bull; <a href="#contribution">Contribution</a>&bull; <a href="https://github.com/prinzpiuz/MSM_mobile/releases">Releases</a> </p>
 
 <hr>
