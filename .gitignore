@@ -107,8 +107,8 @@ core
 ios/
 linux/
 macos/
-android/
 
 
 *.jks
-../android/keystore.properties1
+android/keystore.properties1
+android/app/proguard-rules.pro
