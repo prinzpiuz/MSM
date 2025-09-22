@@ -5,6 +5,7 @@
 <p align="center">
 <a href="https://www.gnu.org/licenses/gpl-3.0" alt="License: GPLv3"><img src="https://img.shields.io/badge/License-GPL%20v3-blue.svg"></a>
 <a href="https://t.me/joinchat/FDVzK06Rt7vsNQLBLi2icw" alt="telegram: #msm"><img src="https://img.shields.io/badge/chat-Telegram-brightgreen"></a>
+<a href="https://shields.rbtlog.dev/com.prinzpiuz.msm" alt="RB Status"><img src="https://shields.rbtlog.dev/simple/com.prinzpiuz.msm" alt="RB Status"></a>
 </br>
 <a href="https://apt.izzysoft.de/fdroid/index/apk/com.prinzpiuz.msm" alt="Get it on IzzyOnDroid">
 <img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on F-Droid" height="80">
@@ -14,7 +15,6 @@
 </a>
 </p>
 <hr>
-
 <p align="center"><a href="#screenshots">Screenshots</a> &bull; <a href="#description">Description</a> &bull; <a href="#features">Features</a> &bull; <a href="#contribution">Contribution</a>&bull; <a href="https://github.com/prinzpiuz/MSM_mobile/releases">Releases</a> </p>
 
 <hr>
