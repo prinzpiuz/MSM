@@ -21,12 +21,18 @@
 
 ## Description
 
-MSM works as a wrapper around your Media server(Emby, Jellyfin, Kodi, Plex ... etc.) and helps you to manage your media files, CRUD operations also help to manage server services without touching the server. All you need is an android mobile phone and a media server which are connected to the same network
+Managing your media server just got a lot easier! MSM is a handy Android app that acts as a wrapper around your favorite media servers like Emby, Jellyfin, Kodi, or Plex.
+
+**What It Does**
+With MSM, you can easily manage your media files directly from your phone. Whether you need to add, remove, or edit files, MSM helps you perform these tasks without ever having to log into your server. It also allows you to manage server services, giving you control from the palm of your hand.
+
+**How to Get Started**
+
+All you need is an Android mobile phone and a media server—as long as they're on the same network, you're good to go! 📱💻
 
 ## Screenshots
 
-- [latest](screenshots/)
-- [V 1.1.4](screenshots/version_1.1.4)
+- [latest](fastlane/metadata/android/en-US/images/phoneScreenshots)
 
 ### Features
 
@@ -42,6 +48,6 @@ MSM works as a wrapper around your Media server(Emby, Jellyfin, Kodi, Plex ... e
 
 ## Contribution
 
-Whether you have ideas, design changes, code cleaning, or real heavy code changes,
-Help is always welcome.
-Please join this [Telegram](https://t.me/joinchat/FDVzK06Rt7vsNQLBLi2icw) group for further discussion
+- Whether you have ideas, design changes, code cleaning, or real heavy code changes, Help is always welcome.
+- Please join this [Telegram](https://t.me/joinchat/FDVzK06Rt7vsNQLBLi2icw) group for further discussion
+- The contributing guide is available [here](https://github.com/prinzpiuz/MSM_mobile/blob/main/CONTRIBUTING.md)

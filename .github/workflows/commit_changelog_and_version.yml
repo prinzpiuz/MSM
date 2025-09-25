@@ -19,6 +19,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
           skipInvalidTags: true
+          noVersionBumpBehavior: patch
     outputs:
       new_tag: ${{ steps.autoversion.outputs.nextStrict }}
   commit_changelog_and_version:
@@ -35,6 +36,7 @@ jobs:
         id: git-cliff
         with:
           config: cliff.toml
+          args: --sort newest --tag ${{ needs.tag.outputs.new_tag }}
         env:
           OUTPUT: CHANGES.md
       - name: Copy changelog to workspace
