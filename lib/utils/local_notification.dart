@@ -4,7 +4,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 // Project imports:
 import 'package:msm/constants/constants.dart';
-import 'package:msm/models/background_tasks.dart';
+import 'package:msm/utils/background_tasks.dart';
 
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {

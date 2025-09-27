@@ -1,16 +1,16 @@
 // Package imports:
 import 'package:go_router/go_router.dart';
 
-// Project imports:
-import 'package:msm/models/server.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/router/router_utils.dart';
+// Project imports:
+import 'package:msm/utils/server.dart';
 import 'package:msm/views/file_listing/file_listing.dart';
 import 'package:msm/views/home/home.dart';
 import 'package:msm/views/notifications/notifications.dart';
 import 'package:msm/views/settings/app_info.dart';
 import 'package:msm/views/settings/folder_configuration_view.dart';
-import 'package:msm/views/settings/server_details_view.dart';
+import 'package:msm/views/settings/server_details/server_details_view.dart';
 import 'package:msm/views/settings/server_functions_view.dart';
 import 'package:msm/views/settings/settings.dart';
 import 'package:msm/views/system_tools/live_terminal.dart';

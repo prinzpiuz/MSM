@@ -11,14 +11,14 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:msm/common_utils.dart';
+import 'package:msm/utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
-import 'package:msm/models/background_tasks.dart';
-import 'package:msm/models/commands/command_executer.dart';
-import 'package:msm/models/file_manager.dart';
-import 'package:msm/models/folder_configuration.dart';
+import 'package:msm/utils/background_tasks.dart';
+import 'package:msm/utils/commands/command_executer.dart';
+import 'package:msm/utils/file_manager.dart';
+import 'package:msm/utils/folder_configuration.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/upload_provider.dart';
 import 'package:msm/router/router_utils.dart';

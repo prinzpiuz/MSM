@@ -14,13 +14,13 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:msm/common_utils.dart';
+import 'package:msm/utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
-import 'package:msm/models/background_tasks.dart';
-import 'package:msm/models/file_manager.dart';
-import 'package:msm/models/send_to_kindle.dart';
+import 'package:msm/utils/background_tasks.dart';
+import 'package:msm/utils/file_manager.dart';
+import 'package:msm/utils/send_to_kindle.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/router/router_utils.dart';

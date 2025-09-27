@@ -6,8 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
 import 'package:msm/constants/colors.dart';
-import 'package:msm/models/file_manager.dart';
-import 'package:msm/models/file_upload.dart';
+import 'package:msm/utils/file_manager.dart';
+import 'package:msm/utils/file_upload.dart';
 
 class UploadItemCard extends StatefulWidget {
   final FileOrDirectory data;

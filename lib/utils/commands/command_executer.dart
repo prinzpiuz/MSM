@@ -5,14 +5,14 @@ import 'dart:io';
 import 'package:dartssh2/dartssh2.dart';
 
 // Project imports:
-import 'package:msm/common_utils.dart';
-import 'package:msm/models/commands/basic_details.dart';
-import 'package:msm/models/commands/commands.dart';
-import 'package:msm/models/commands/services.dart';
-import 'package:msm/models/file_manager.dart';
-import 'package:msm/models/folder_configuration.dart';
-import 'package:msm/models/local_notification.dart';
-import 'package:msm/models/server.dart';
+import 'package:msm/utils.dart';
+import 'package:msm/utils/commands/basic_details.dart';
+import 'package:msm/utils/commands/commands.dart';
+import 'package:msm/utils/commands/services.dart';
+import 'package:msm/utils/file_manager.dart';
+import 'package:msm/utils/folder_configuration.dart';
+import 'package:msm/utils/local_notification.dart';
+import 'package:msm/utils/server.dart';
 import 'package:msm/views/upload_pages/upload_page_utils.dart';
 
 class CommandExecuter extends Server {

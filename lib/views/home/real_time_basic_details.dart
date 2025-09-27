@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 // Project imports:
 import 'package:msm/common_widgets.dart';
-import 'package:msm/models/commands/basic_details.dart';
+import 'package:msm/utils/commands/basic_details.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/views/home/home_common_widgets.dart';
 

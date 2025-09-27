@@ -12,11 +12,11 @@ import 'package:wake_on_lan/wake_on_lan.dart';
 
 // Project imports:
 import 'package:msm/constants/constants.dart';
-import 'package:msm/models/background_tasks.dart';
-import 'package:msm/models/commands/command_executer.dart';
-import 'package:msm/models/local_notification.dart';
-import 'package:msm/models/server.dart';
-import 'package:msm/models/storage.dart';
+import 'package:msm/utils/background_tasks.dart';
+import 'package:msm/utils/commands/command_executer.dart';
+import 'package:msm/utils/local_notification.dart';
+import 'package:msm/utils/server.dart';
+import 'package:msm/utils/storage.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/providers/folder_configuration_provider.dart';

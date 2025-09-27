@@ -15,8 +15,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 // Project imports:
 import 'package:msm/constants/constants.dart';
 import 'package:msm/initialization.dart';
-import 'package:msm/models/local_notification.dart';
-import 'package:msm/models/upload_and_download.dart';
+import 'package:msm/utils/local_notification.dart';
+import 'package:msm/utils/upload_and_download.dart';
 import 'package:msm/providers/app_provider.dart';
 
 @pragma('vm:entry-point')

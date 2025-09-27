@@ -6,15 +6,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:msm/common_utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
-import 'package:msm/models/commands/basic_details.dart';
-import 'package:msm/models/commands/command_executer.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
+import 'package:msm/utils/commands/basic_details.dart';
+import 'package:msm/utils/commands/command_executer.dart';
 
 Future<dynamic> speedTestOutput(BuildContext context) {
   return dailogBox(

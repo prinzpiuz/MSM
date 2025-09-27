@@ -10,22 +10,22 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
-// Project imports:
-import 'package:msm/common_utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
-import 'package:msm/models/folder_configuration.dart';
-import 'package:msm/models/send_to_kindle.dart';
-import 'package:msm/models/server_details.dart';
-import 'package:msm/models/server_functions.dart';
-import 'package:msm/models/storage.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/folder_configuration_provider.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 import 'package:msm/ui_components/textfield/textfield.dart';
 import 'package:msm/ui_components/textfield/validators.dart';
+// Project imports:
+import 'package:msm/utils.dart';
+import 'package:msm/utils/folder_configuration.dart';
+import 'package:msm/utils/send_to_kindle.dart';
+import 'package:msm/utils/server_details.dart';
+import 'package:msm/utils/server_functions.dart';
+import 'package:msm/utils/storage.dart';
 
 Widget saveButton({required void Function()? onPressed}) {
   return Padding(

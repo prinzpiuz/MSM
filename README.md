@@ -30,6 +30,8 @@ With MSM, you can easily manage your media files directly from your phone. Wheth
 
 All you need is an Android mobile phone and a media server—as long as they're on the same network, you're good to go! 📱💻
 
+**Note**: This is app intended to use in local network only, Tested mostly with my home lab setup
+
 ## Screenshots
 
 - [latest](fastlane/metadata/android/en-US/images/phoneScreenshots)

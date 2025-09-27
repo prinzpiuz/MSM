@@ -90,6 +90,9 @@ class AppMessages {
   static const sendToKindle = "File Successfully Sent To Kindle";
   static const sendToKindleError = "File Sending To Kindle Failed \n Try Again";
   static const setupKindleDetails = "Please Add Required Kindle Details";
+  static const sshKeyNotUploaded = "SSH Key Not Uploaded";
+  static const sshKeyUploaded = "SSH Key Uploaded Successfully";
+  static const fillDetails = "Fill Server Details First";
 }
 
 class BackgroundTaskUniqueNames {

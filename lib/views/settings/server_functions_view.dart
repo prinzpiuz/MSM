@@ -5,14 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:msm/common_utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
-import 'package:msm/models/server_functions.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/router/router_utils.dart';
 import 'package:msm/ui_components/switch/switch.dart';
+import 'package:msm/utils/server_functions.dart';
 import 'package:msm/views/settings/settings_utils.dart';
 
 class ServerFunctions extends StatefulWidget {
