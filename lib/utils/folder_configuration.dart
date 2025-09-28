@@ -37,7 +37,10 @@ class FolderConfiguration {
   }
 
   bool get dataAvailable {
-    if (movies.isNotEmpty && tv.isNotEmpty && books.isNotEmpty) {
+    if (movies.isNotEmpty ||
+        tv.isNotEmpty ||
+        books.isNotEmpty ||
+        customFolders.isNotEmpty) {
       return true;
     }
     return false;

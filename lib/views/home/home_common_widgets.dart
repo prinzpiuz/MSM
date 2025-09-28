@@ -12,10 +12,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
-import 'package:msm/utils/commands/basic_details.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
+import 'package:msm/utils/commands/basic_details.dart';
 
 Widget homePageIcon(IconData icon,
     {bool fontAwesome = false, Color color = Colors.white}) {
@@ -93,7 +93,11 @@ Stream<BasicDetails> fetchBasicDetailsLive(
         BasicDetails? basicDetails =
             await appService.commandExecuter.basicDetails;
         if (basicDetails != null) {
-          controller.add(basicDetails);
+          try {
+            controller.add(basicDetails);
+          } catch (_) {
+            controller.close();
+          }
         } else {
           controller.close();
         }

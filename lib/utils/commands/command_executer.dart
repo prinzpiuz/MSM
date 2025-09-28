@@ -85,72 +85,88 @@ class CommandExecuter extends Server {
     }
   }
 
-  Future<List<FileOrDirectory>?>? listAllRemoteDirectories(
+  Future<List<FileOrDirectory>> listAllRemoteDirectories(
       {required String path}) async {
-    List<FileOrDirectory> directories = [];
+    if (sftp == null) return [];
+
+    final pathsToList = _getPathsToList(path);
+    if (pathsToList.isEmpty) return [];
+
     try {
-      List<dynamic> pathsToList = [];
-      if (path.isNotEmpty) {
-        pathsToList.add(path);
-      } else {
-        if (super.folderConfiguration.dataAvailable) {
-          pathsToList.addAll([
-            super.folderConfiguration.movies,
-            super.folderConfiguration.tv,
-            super.folderConfiguration.books,
-          ]);
-        } else {
-          return directories;
-        }
-        if (super.folderConfiguration.customFolders.isNotEmpty) {
-          pathsToList.addAll(super.folderConfiguration.customFolders);
+      final futures = pathsToList.map((p) => sftp!.listdir(p));
+      final results = await Future.wait(futures);
+
+      final items = <FileOrDirectory>{}; // Use Set to avoid duplicates
+
+      for (int i = 0; i < results.length; i++) {
+        final currentPath = pathsToList[i];
+        final dirItems = results[i];
+
+        for (final item in dirItems) {
+          if (item.filename == '.' || item.filename == '..') continue;
+
+          final fullPath = FileManager.linuxCompatibleNameString(
+              '$currentPath/${item.filename}');
+          final extension = item.filename.split('.').last;
+          final fileCategory = FileCategory.getCategoryFromExtension(extension);
+          final modifyTime = item.attr.modifyTime ?? 0;
+
+          if (item.attr.isDirectory) {
+            items.add(DirectoryObject(
+              Directory(fullPath),
+              item.filename,
+              item.attr.size ?? 0,
+              FileType.directory,
+              0, // Intentionally zero as it doesn't matter
+              currentPath,
+              fullPath,
+              true,
+              fileCategory,
+              modifyTime,
+            ));
+          } else {
+            items.add(FileObject(
+              File(fullPath),
+              item.filename,
+              item.attr.size ?? 0,
+              extension,
+              currentPath,
+              FileType.file,
+              fullPath,
+              true,
+              fileCategory,
+              modifyTime,
+            ));
+          }
         }
       }
-      if (sftp != null) {
-        for (var path in pathsToList) {
-          await sftp!.listdir(path).then((items) {
-            for (final item in items) {
-              if (item.filename != "." && item.filename != "..") {
-                String filepath = FileManager.linuxCompatibleNameString(
-                    "$path/${item.filename}");
-                if (item.attr.isDirectory) {
-                  directories.add(DirectoryObject(
-                      Directory(filepath),
-                      item.filename,
-                      item.attr.size ?? 0,
-                      FileType.directory,
-                      0, //intentionally put to zero because it does'nt matter at the moment
-                      path,
-                      filepath,
-                      true,
-                      FileCategory.getCategoryFromExtension(
-                          item.filename.split(".").last),
-                      item.attr.modifyTime ?? 0));
-                } else {
-                  directories.add(FileObject(
-                      File(filepath),
-                      item.filename,
-                      item.attr.size ?? 0,
-                      item.filename.split(".").last,
-                      path,
-                      FileType.file,
-                      filepath,
-                      true,
-                      FileCategory.getCategoryFromExtension(
-                          item.filename.split(".").last),
-                      item.attr.modifyTime ?? 0));
-                }
-              }
-            }
-          });
-        }
-        return directories.toSet().toList(); //to remove duplicates
-      } else {
-        return null;
-      }
+
+      return items.toList();
+    } on SftpStatusError catch (_) {
+      // Handle SFTP-specific errors gracefully
+      return [];
     } catch (_) {
-      return null;
+      // Handle other unexpected errors
+      return [];
     }
+  }
+
+  List<String> _getPathsToList(String path) {
+    final paths = <String>[];
+    if (path.isNotEmpty) {
+      paths.add(path);
+    } else {
+      if (super.folderConfiguration.dataAvailable) {
+        paths.addAll([
+          super.folderConfiguration.movies,
+          super.folderConfiguration.tv,
+          super.folderConfiguration.books,
+        ]);
+      }
+      paths.addAll(super.folderConfiguration.customFolders);
+    }
+    paths.removeWhere((element) => element.isEmpty);
+    return paths;
   }
 
   Future<void> delete(

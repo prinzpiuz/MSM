@@ -39,6 +39,8 @@ All you need is an Android mobile phone and a media server—as long as they're 
 ### Features
 
 - Works on top of SSH connection to server
+- Password less authentication
+- Create and update SSH keys
 - CRUD options on files
 - Send To Kindle for e-books
 - Uploads/downloads run as background tasks
