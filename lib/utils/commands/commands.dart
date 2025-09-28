@@ -26,7 +26,7 @@ class Commands {
   static const ping = "";
   static const speedTest = "speedtest-cli --secure --bytes --json";
   static String folderExist(String folder) =>
-      "if [ -d $folder ]; then echo 'Exists'; else echo 'Not found'; fi";
+      "if [ -d \"$folder\" ]; then echo 'Exists'; else echo 'Not found'; fi";
 
   static List<String> basicDetailsGroup = [
     addIdentifier(whoAmI, Identifiers.username),
