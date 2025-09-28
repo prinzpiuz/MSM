@@ -230,80 +230,107 @@ class CommandExecuter extends Server {
     }
   }
 
+  /// Retrieves the list of available system services.
+  ///
+  /// Parses the output of the systemctl command to extract service information.
+  /// Returns an empty list if parsing fails or no services are found.
   Future<List<Services>> availableServices() async {
-    List<Services> serviceList = [];
+    final List<Services> services = [];
     try {
-      String command = Commands.getServices;
-      String output = decodeOutput(await client!.run(command));
-      List<String> splitAtEnd = output.split("end");
-      if (splitAtEnd.isNotEmpty) {
-        List<String> wantedServices =
-            splitAtEnd.sublist(1, splitAtEnd.length - 9);
-        for (String item in wantedServices) {
-          List individualService = item.split(",");
-          serviceList.add(Services(
-              unit: individualService[0].trim(),
-              serviceStatus: individualService[2].trim(),
-              description: individualService[3].trim()));
+      const String command = Commands.getServices;
+      final String output = decodeOutput(await client!.run(command));
+      final List<String> lines = output.split('end');
+      if (lines.isEmpty) return services;
+
+      // Skip header (index 0) and footer (last 9 lines based on command output structure)
+      const int headerOffset = 1;
+      const int footerOffset = 9;
+      final int startIndex = headerOffset;
+      final int endIndex = lines.length - footerOffset;
+      if (startIndex >= endIndex || endIndex <= 0) return services;
+
+      final List<String> serviceLines = lines.sublist(startIndex, endIndex);
+      for (final String line in serviceLines) {
+        final Services? service = _parseServiceLine(line);
+        if (service != null) {
+          services.add(service);
         }
       }
-      return serviceList;
-    } catch (_) {
-      return serviceList;
+    } catch (e) {
+      // Return empty list on any error to maintain consistency
+      return [];
     }
+    return services;
   }
 
+  /// Parses a single service line into a Services object.
+  ///
+  /// Expects the line to be comma-separated with at least 4 parts:
+  /// unit, load, active_sub, description
+  Services? _parseServiceLine(String line) {
+    final List<String> parts = line.split(',');
+    if (parts.length < 4) return null;
+    return Services(
+      unit: parts[0].trim(),
+      serviceStatus: parts[2].trim(),
+      description: parts[3].trim(),
+    );
+  }
+
+  /// Performs a speed test using speedtest-cli.
+  ///
+  /// Returns a [Speed] object with parsed results if successful,
+  /// a string error message if the command is not found,
+  /// or null if an unexpected error occurs.
   Future<dynamic> speedTest() async {
     try {
-      String command = Commands.speedTest;
-      String output = decodeOutput(await client!.run(command));
-      if (output.contains("command not found")) {
-        return "$output"
-            "\n Please Install speedtest-cli \n https://www.speedtest.net/apps/cli";
+      const String command = Commands.speedTest;
+      final String output = decodeOutput(await client!.run(command));
+      if (output.contains('command not found')) {
+        return 'Command not found. Please install speedtest-cli from https://www.speedtest.net/apps/cli';
       }
       return Speed(commandOutput: output);
-    } catch (_) {
+    } on FormatException catch (e) {
+      // Handle JSON parsing errors specifically
+      return 'Failed to parse speed test output: ${e.message}';
+    } catch (e) {
+      // Handle other unexpected errors
       return null;
     }
   }
 
-  Future<Map> foldersExist(FolderConfiguration folderConfigurationObj) async {
-    Map status = {"status": "", "notExist": ""};
-    try {
-      List<String> allFolders = [];
-      List<bool> folderExistStatus = [];
-      List<String> foldersNotExist = [];
-      if (folderConfigurationObj.dataAvailable) {
-        allFolders.addAll([
-          folderConfigurationObj.movies,
-          folderConfigurationObj.tv,
-          folderConfigurationObj.books,
-        ]);
-      }
-      if (folderConfigurationObj.customFolders.isNotEmpty) {
-        allFolders.addAll(folderConfigurationObj.customFolders);
-      }
-      for (String folder in allFolders) {
-        String command = Commands.folderExist(folder);
-        String existStatus = decodeOutput(await client!.run(command));
-        if (existStatus.contains("Not found")) {
-          folderExistStatus.add(false);
-          foldersNotExist.add(folder);
-        }
-        if (existStatus.contains("Exists")) {
-          folderExistStatus.add(true);
-        }
-      }
-      if (folderExistStatus.contains(false)) {
-        status.update("status", (value) => false);
-        status.update("notExist", (value) => foldersNotExist);
-      } else {
-        status.update("status", (value) => true);
-        status.update("notExist", (value) => foldersNotExist);
-      }
-      return status;
-    } catch (_) {
-      return status;
+  Future<Map<String, dynamic>> foldersExist(
+      FolderConfiguration folderConfigurationObj) async {
+    if (!folderConfigurationObj.dataAvailable ||
+        folderConfigurationObj.allPaths.isEmpty) {
+      return {"status": true, "notExist": <String>[]};
     }
+
+    final allFolders = folderConfigurationObj.allPaths;
+
+    // Run existence checks in parallel for better performance
+    final futures = allFolders.map((folder) async {
+      try {
+        final command = Commands.folderExist(folder);
+        final output = decodeOutput(await client!.run(command));
+        return output.contains("Exists");
+      } catch (_) {
+        // On error, assume folder does not exist
+        return false;
+      }
+    });
+
+    final existStatuses = await Future.wait(futures);
+
+    // Collect non-existent folders
+    final nonExistentFolders = <String>[];
+    for (int i = 0; i < allFolders.length; i++) {
+      if (!existStatuses[i]) {
+        nonExistentFolders.add(allFolders[i]);
+      }
+    }
+
+    final allExist = nonExistentFolders.isEmpty;
+    return {"status": allExist, "notExist": nonExistentFolders};
   }
 }

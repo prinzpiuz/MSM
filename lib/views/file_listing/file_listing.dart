@@ -62,10 +62,10 @@ class _FileListingState extends State<FileListing> {
   }
 }
 
-Widget _buildFileList(BuildContext context, TextEditingController searchController,
-    FileListingState listingState) {
+Widget _buildFileList(BuildContext context,
+    TextEditingController searchController, FileListingState listingState) {
   return Scaffold(
-    key: const Key('fileListingScaffold'),
+    key: ContextKeys.fileListingPageKey,
     appBar: _buildAppBar(context, searchController, listingState),
     backgroundColor: CommonColors.commonWhiteColor,
     resizeToAvoidBottomInset: false,
@@ -74,10 +74,11 @@ Widget _buildFileList(BuildContext context, TextEditingController searchControll
   );
 }
 
-PreferredSizeWidget _buildAppBar(BuildContext context, TextEditingController searchController,
-    FileListingState listingState) {
+PreferredSizeWidget _buildAppBar(BuildContext context,
+    TextEditingController searchController, FileListingState listingState) {
   if (listingState.isInSearchMode) {
-    return searchBar(searchController: searchController, listingState: listingState);
+    return searchBar(
+        searchController: searchController, listingState: listingState);
   }
   return commonAppBar(
     text: Pages.fileList.toTitle,
@@ -213,7 +214,6 @@ Widget _handleDataLoaded(
     return _buildNoFilesView();
   }
 
-  // Update state with the loaded data
   listingState.originalList = data;
   listingState.currentList = data;
 
@@ -226,19 +226,16 @@ Widget _handleDataLoaded(
 }
 
 Widget _handleError(Object? error, AppService appService) {
-  // Log the error for debugging
   debugPrint('Error loading file list: $error');
 
-  // Show user-friendly error message
   String errorMessage = 'Failed to load files. Please try again.';
   if (error is Exception) {
-    // Handle specific exceptions if needed
     errorMessage = 'An error occurred while loading files.';
   }
-
-  // Optionally, show a snackbar or dialog
-  // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
-
+  final BuildContext? context = ContextKeys.fileListingPageKey.currentContext;
+  if (context != null) {
+    showMessage(context: context, text: errorMessage);
+  }
   return Center(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,

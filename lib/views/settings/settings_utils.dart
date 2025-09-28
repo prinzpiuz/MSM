@@ -75,37 +75,64 @@ String generateFolderConfigurationNotSavedMessage(List<String> folders) {
   return msg + notSavedFolders;
 }
 
-void saveFolderConfigurations(GlobalKey<FormState> formKey,
-    FolderConfiguration folderConfiguration, BuildContext context) async {
+Future<void> saveFolderConfigurations(
+  GlobalKey<FormState> formKey,
+  FolderConfiguration folderConfiguration,
+  BuildContext context,
+) async {
   hideKeyboard(context);
   Provider.of<FolderConfigState>(context, listen: false).resetFolderCount();
-  if (formKey.currentState!.validate()) {
-    formKey.currentState!.save();
-    final AppService appService =
-        Provider.of<AppService>(context, listen: false);
-    final bool connected = appService.connectionState;
-    if (connected) {
-      await appService.commandExecuter
-          .foldersExist(folderConfiguration)
-          .then((value) {
-        if (value.isNotEmpty) {
-          if (value["status"]) {
-            appService.storage.saveObject(
-                StorageKeys.folderConfigurations.key, folderConfiguration);
-            appService.updateFolderConfigurations = folderConfiguration;
-            showMessage(
-                context: context, text: AppMessages.folderConfigurationSaved);
-          } else {
-            showMessage(
-                duration: 10,
-                context: context,
-                multiline: true,
-                text: generateFolderConfigurationNotSavedMessage(
-                    value["notExist"]));
-          }
-        }
-      });
+
+  if (!formKey.currentState!.validate()) {
+    return; // Early return for invalid form
+  }
+
+  formKey.currentState!.save();
+
+  final AppService appService = Provider.of<AppService>(context, listen: false);
+  final bool connected = appService.connectionState;
+
+  if (!connected) {
+    showMessage(
+      context: context,
+      text: AppMessages.connectionLost,
+    );
+    return;
+  }
+
+  try {
+    final Map<String, dynamic> result =
+        await appService.commandExecuter.foldersExist(folderConfiguration);
+
+    if (result.isEmpty) {
+      showMessage(
+        context: context,
+        text: AppMessages.folderVerifyError,
+      );
+      return;
     }
+
+    final bool status = result['status'] as bool? ?? false;
+    if (status) {
+      appService.storage.saveObject(
+          StorageKeys.folderConfigurations.key, folderConfiguration);
+      appService.updateFolderConfigurations = folderConfiguration;
+      showMessage(context: context, text: AppMessages.folderConfigurationSaved);
+    } else {
+      final List<String> notExistFolders =
+          (result['notExist'] as List<dynamic>?)?.cast<String>() ?? [];
+      showMessage(
+        duration: 10,
+        context: context,
+        multiline: true,
+        text: generateFolderConfigurationNotSavedMessage(notExistFolders),
+      );
+    }
+  } catch (e) {
+    showMessage(
+      context: context,
+      text: '${AppMessages.errorSavingFolderConfig} ${e.toString()}',
+    );
   }
 }
 

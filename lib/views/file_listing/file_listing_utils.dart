@@ -188,7 +188,8 @@ enum FileSorting {
 /// Performs sorting on the original list using the provided comparator.
 ///
 /// [comparator] - Function to compare two FileOrDirectory objects.
-void _performSort(int Function(FileOrDirectory a, FileOrDirectory b) comparator) {
+void _performSort(
+    int Function(FileOrDirectory a, FileOrDirectory b) comparator) {
   final BuildContext? context = ContextKeys.fileListingPageKey.currentContext;
   if (context == null) {
     debugPrint('Context is null, cannot perform sort.');
@@ -219,8 +220,9 @@ String generateSubtitle(FileOrDirectory fileOrDirectory) {
 List<FileOrDirectory>? filterBasedOnSearchText(FileListingState listingState) {
   if (listingState.searchText.isEmpty) return null;
   return listingState.currentList
-      .where((fileOrDirectory) =>
-          fileOrDirectory.name.toLowerCase().contains(listingState.searchText.toLowerCase()))
+      .where((fileOrDirectory) => fileOrDirectory.name
+          .toLowerCase()
+          .contains(listingState.searchText.toLowerCase()))
       .toList();
 }
 
@@ -396,10 +398,9 @@ Widget _buildMoveLocations(
             Navigator.pop(context, "OK");
             LoadingOverlay.of(mainContext).show();
             try {
-              await appService.commandExecuter
-                  .move(
-                      fileOrDirectory: fileOrDirectory,
-                      newLocation: locations[index]);
+              await appService.commandExecuter.move(
+                  fileOrDirectory: fileOrDirectory,
+                  newLocation: locations[index]);
               LoadingOverlay.of(mainContext).hide();
               showMessage(context: context, text: AppMessages.moveFile);
               final FileListingState fileListState =
@@ -491,7 +492,8 @@ void _sendToKindle(FileOrDirectory fileOrDirectory) async {
 void _sortOnDate() => _performSort((a, b) => b.date.compareTo(a.date));
 
 /// Sorts files by size (ascending).
-void _sortOnSize() => _performSort((a, b) => a.sizeInInt.compareTo(b.sizeInInt));
+void _sortOnSize() =>
+    _performSort((a, b) => a.sizeInInt.compareTo(b.sizeInInt));
 
 /// Sorts files by name (ascending).
 void _sortOnName() => _performSort((a, b) => a.name.compareTo(b.name));

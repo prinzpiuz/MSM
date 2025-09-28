@@ -20,6 +20,26 @@ import 'package:msm/utils/server_details.dart';
 import 'package:msm/views/settings/server_details/ssh_settings.dart';
 import 'package:msm/views/settings/settings_utils.dart';
 
+class _ServerDetailsStrings {
+  static const String serverNameLabel = "Server Name";
+  static const String serverNameHint = "Name Of Your Server";
+  static const String usernameLabel = "Username";
+  static const String usernameHint = "User Name Of Server";
+  static const String serverHostLabel = "Server Host";
+  static const String serverHostHint = "IP Address Of The Server";
+  static const String rootPasswordLabel = "Root Password";
+  static const String rootPasswordHint = "Root Password Of The Server";
+  static const String portNumberLabel = "Port Number";
+  static const String portNumberHint = "SSH Port Number Of The Server";
+  static const String macAddressLabel = "MAC Address";
+  static const String macAddressHint =
+      "MAC Address Of Your Server In Upper Case";
+  static const String switchText = "Use Password Instead of SSH?";
+  static const String invalidFileMessage =
+      "Invalid file selected or no file chosen.";
+  static const String fileErrorPrefix = "Error selecting file: ";
+}
+
 class ServerDetails extends StatefulWidget {
   const ServerDetails({super.key});
 
@@ -48,20 +68,32 @@ class _ServerDetailsState extends State<ServerDetails> {
   }
 
   void onSSHFileSelected(ServerData serverData, {String? fileSelected}) async {
-    if (fileSelected == null) {
-      final result = await file_picker.FilePicker.platform.pickFiles(
-        type: file_picker.FileType.custom,
-        allowedExtensions: ['pem', 'key', 'txt'],
-      );
-      if (result != null && result.files.single.path != null) {
-        sshKeyController.text = result.files.single.path!.split('/').last;
-        serverData.privateKeyPath = result.files.single.path!;
+    try {
+      if (fileSelected == null) {
+        final result = await file_picker.FilePicker.platform.pickFiles(
+          type: file_picker.FileType.custom,
+          allowedExtensions: ['pem', 'key', 'txt'],
+        );
+        if (result == null) return; // User cancelled
+        if (result.files.isEmpty || result.files.single.path == null) {
+          if (mounted) {
+            showMessage(
+                context: context,
+                text: _ServerDetailsStrings.invalidFileMessage);
+          }
+          return;
+        }
+        final path = result.files.single.path!;
+        sshKeyController.text = path.split('/').last;
+        serverData.privateKeyPath = path;
+      } else {
+        serverData.privateKeyPath = fileSelected;
+        sshKeyController.text = fileSelected.split('/').last;
       }
-    } else {
-      serverData.privateKeyPath = fileSelected;
-      sshKeyController.text = fileSelected.split('/').last;
-    }
-    setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (_) {}
   }
 
   @override
@@ -96,13 +128,7 @@ class _ServerDetailsState extends State<ServerDetails> {
                 nameField(serverData),
                 hostField(serverData),
                 usernameField(serverData),
-                if (usePassword)
-                  passwordField(serverData)
-                else ...[
-                  sshKeyField(
-                      context, serverData, onSSHFileSelected, sshKeyController),
-                  generateKeyPairButton(context, serverData, onSSHFileSelected),
-                ],
+                _buildAuthenticationFields(),
                 switchField(),
                 portField(serverData),
                 macField(serverData)
@@ -115,10 +141,23 @@ class _ServerDetailsState extends State<ServerDetails> {
   Widget switchField() => Padding(
         padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 10.h),
         child: CommonSwitch(
-            text: 'Use Password Instead of SSH?',
+            text: _ServerDetailsStrings.switchText,
             value: usePassword,
             onChanged: toggleUseSSHKey),
       );
+
+  Widget _buildAuthenticationFields() {
+    if (usePassword) {
+      return passwordField(serverData);
+    } else {
+      return Column(
+        children: [
+          sshKeyField(context, serverData, onSSHFileSelected, sshKeyController),
+          generateKeyPairButton(context, serverData, onSSHFileSelected),
+        ],
+      );
+    }
+  }
 
   Widget nameField(ServerData serverData) => AppTextField.commonTextField(
         onsaved: (data) {
@@ -130,8 +169,8 @@ class _ServerDetailsState extends State<ServerDetails> {
         initialValue: serverData.serverName,
         validator: validateServerName,
         keyboardType: TextInputType.text,
-        labelText: "Server Name",
-        hintText: "Name Of Your Server",
+        labelText: _ServerDetailsStrings.serverNameLabel,
+        hintText: _ServerDetailsStrings.serverNameHint,
       );
 
   Widget usernameField(ServerData serverData) => AppTextField.commonTextField(
@@ -142,8 +181,8 @@ class _ServerDetailsState extends State<ServerDetails> {
         initialValue: serverData.username,
         validator: validateServerName,
         keyboardType: TextInputType.text,
-        labelText: "Username",
-        hintText: "User Name Of Server",
+        labelText: _ServerDetailsStrings.usernameLabel,
+        hintText: _ServerDetailsStrings.usernameHint,
       );
 
   Widget hostField(ServerData serverData) => AppTextField.commonTextField(
@@ -159,8 +198,8 @@ class _ServerDetailsState extends State<ServerDetails> {
         initialValue: serverData.serverHost,
         validator: valueNeeded,
         keyboardType: TextInputType.number,
-        labelText: "Server Host",
-        hintText: "IP Address Of The Server",
+        labelText: _ServerDetailsStrings.serverHostLabel,
+        hintText: _ServerDetailsStrings.serverHostHint,
       );
 
   Widget passwordField(ServerData serverData) => AppTextField.commonTextField(
@@ -170,8 +209,8 @@ class _ServerDetailsState extends State<ServerDetails> {
       initialValue: serverData.rootPassword,
       validator: valueNeeded,
       keyboardType: TextInputType.visiblePassword,
-      labelText: "Root Password",
-      hintText: "Root Password Of The Server",
+      labelText: _ServerDetailsStrings.rootPasswordLabel,
+      hintText: _ServerDetailsStrings.rootPasswordHint,
       obscureText: true);
 
   Widget portField(ServerData serverData) => AppTextField.commonTextField(
@@ -184,8 +223,8 @@ class _ServerDetailsState extends State<ServerDetails> {
         initialValue: serverData.portNumber,
         validator: validatePortNumber,
         keyboardType: TextInputType.number,
-        labelText: "Port Number",
-        hintText: "SSH Port Number Of The Server",
+        labelText: _ServerDetailsStrings.portNumberLabel,
+        hintText: _ServerDetailsStrings.portNumberHint,
       );
 
   Widget macField(ServerData serverData) => AppTextField.commonTextField(
@@ -200,7 +239,7 @@ class _ServerDetailsState extends State<ServerDetails> {
         initialValue: serverData.macAddress,
         validator: macValidation,
         keyboardType: TextInputType.text,
-        labelText: "MAC Address",
-        hintText: "MAC Address Of Your Server In Upper Case",
+        labelText: _ServerDetailsStrings.macAddressLabel,
+        hintText: _ServerDetailsStrings.macAddressHint,
       );
 }

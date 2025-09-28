@@ -46,6 +46,23 @@ class FolderConfiguration {
     return false;
   }
 
+  List<String> get allPaths {
+    List<String> allFolders = [];
+    if (movies.isNotEmpty) {
+      allFolders.add(movies);
+    }
+    if (tv.isNotEmpty) {
+      allFolders.add(tv);
+    }
+    if (books.isNotEmpty) {
+      allFolders.add(books);
+    }
+    if (customFolders.isNotEmpty) {
+      allFolders.addAll(customFolders);
+    }
+    return allFolders;
+  }
+
   FolderConfiguration.fromJson(Map<String, dynamic> json)
       : movies = json['movies'],
         tv = json['tv'],

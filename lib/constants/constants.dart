@@ -93,6 +93,10 @@ class AppMessages {
   static const sshKeyNotUploaded = "SSH Key Not Uploaded";
   static const sshKeyUploaded = "SSH Key Uploaded Successfully";
   static const fillDetails = "Fill Server Details First";
+  static const errorSavingFolderConfig =
+      "An error occurred while saving folder configuration:";
+  static const folderVerifyError =
+      "Unable to verify folder existence. Please try again.";
 }
 
 class BackgroundTaskUniqueNames {
