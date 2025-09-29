@@ -37,10 +37,30 @@ class FolderConfiguration {
   }
 
   bool get dataAvailable {
-    if (movies.isNotEmpty && tv.isNotEmpty && books.isNotEmpty) {
+    if (movies.isNotEmpty ||
+        tv.isNotEmpty ||
+        books.isNotEmpty ||
+        customFolders.isNotEmpty) {
       return true;
     }
     return false;
+  }
+
+  List<String> get allPaths {
+    List<String> allFolders = [];
+    if (movies.isNotEmpty) {
+      allFolders.add(movies);
+    }
+    if (tv.isNotEmpty) {
+      allFolders.add(tv);
+    }
+    if (books.isNotEmpty) {
+      allFolders.add(books);
+    }
+    if (customFolders.isNotEmpty) {
+      allFolders.addAll(customFolders);
+    }
+    return allFolders;
   }
 
   FolderConfiguration.fromJson(Map<String, dynamic> json)

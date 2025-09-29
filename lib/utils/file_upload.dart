@@ -1,5 +1,5 @@
 // Project imports:
-import 'package:msm/models/file_manager.dart';
+import 'package:msm/utils/file_manager.dart';
 
 class FileUploadData {
   List<FileOrDirectory> uploadData = [];

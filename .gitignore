@@ -111,4 +111,3 @@ macos/
 
 *.jks
 android/keystore.properties1
-android/app/proguard-rules.pro

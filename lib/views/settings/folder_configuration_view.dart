@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 // Project imports:
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
-import 'package:msm/models/folder_configuration.dart';
+import 'package:msm/utils/folder_configuration.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/folder_configuration_provider.dart';
 import 'package:msm/router/router_utils.dart';
