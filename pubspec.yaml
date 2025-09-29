@@ -3,7 +3,7 @@ description: Media Server Manager.
 
 publish_to: "none"
 
-version: 1.9.4+16
+version: 1.10.0+17
 
 environment:
   sdk: ">=2.17.6 <3.0.0"
