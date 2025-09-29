@@ -37,7 +37,6 @@ class _ServerDetailsStrings {
   static const String switchText = "Use Password Instead of SSH?";
   static const String invalidFileMessage =
       "Invalid file selected or no file chosen.";
-  static const String fileErrorPrefix = "Error selecting file: ";
 }
 
 class ServerDetails extends StatefulWidget {
