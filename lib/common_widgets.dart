@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-// Project imports:
-import 'package:msm/common_utils.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
 import 'package:msm/initialization.dart';
@@ -14,6 +13,8 @@ import 'package:msm/providers/file_listing_provider.dart';
 import 'package:msm/providers/upload_provider.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
+// Project imports:
+import 'package:msm/utils.dart';
 
 Widget serverNotConnected(AppService appService, {bool text = true}) {
   return Column(
@@ -137,3 +138,162 @@ Widget dialogCancelButton(BuildContext context) => TextButton(
           style: AppTextStyles.regular(CommonColors.commonBlackColor,
               AppFontSizes.dialogBoxactionFontSixe.sp)),
     );
+
+PopupMenuButton commonPopUpMenu(
+    {required void Function(dynamic) onSelected,
+    required List menuListValues,
+    required double size,
+    dynamic disabledItem}) {
+  return PopupMenuButton(
+      icon: Icon(
+        FontAwesomeIcons.ellipsisVertical,
+        color: CommonColors.commonBlackColor,
+        size: size.sp,
+      ),
+      onSelected: onSelected,
+      itemBuilder: (BuildContext context) =>
+          buildPopupMenus(menuListValues, disabledItem));
+}
+
+List<PopupMenuEntry> buildPopupMenus(
+    List menuListValues, dynamic disabledItem) {
+  List<PopupMenuEntry> menuList = [];
+  for (var item in menuListValues) {
+    menuList.add(PopupMenuItem(
+        enabled: !(item == disabledItem),
+        textStyle: item == disabledItem
+            ? AppTextStyles.regular(CommonColors.commonGreenColor, 15.sp)
+            : AppTextStyles.regular(CommonColors.commonBlackColor, 15.sp),
+        value: item,
+        child: AppText.text(item.menuText)));
+  }
+  return menuList;
+}
+
+void showMessage(
+    {required BuildContext context,
+    required String text,
+    bool multiline = false,
+    int duration = 3}) async {
+  OverlayState overlayState = Overlay.of(context);
+  OverlayEntry overlayEntry = OverlayEntry(builder: (context) {
+    return Positioned(
+        bottom: 100.h,
+        left: 40.h,
+        right: 40.h,
+        child: Container(
+          height: 50.h,
+          width: 60.w,
+          color: CommonColors.commonWhiteColor,
+          child: Center(
+            child: DefaultTextStyle(
+              style:
+                  AppTextStyles.regular(CommonColors.commonBlackColor, 15.sp),
+              child: multiline
+                  ? AppText.text(text)
+                  : AppText.centerSingleLineText(text),
+            ),
+          ),
+        ));
+  });
+  overlayState.insert(overlayEntry);
+  await Future.delayed(Duration(seconds: duration));
+  overlayEntry.remove();
+}
+
+Future<dynamic> dailogBox(
+    {required BuildContext context,
+    required String title,
+    Widget? content,
+    void Function()? okOnPressed,
+    List<Widget>? actions,
+    void Function()? cancelOnPressed,
+    bool onlycancel = false}) {
+  if (!onlycancel && okOnPressed == null) {
+    okOnPressed = () => Navigator.pop(context, 'Ok');
+  }
+  return showDialog<String>(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) => AlertDialog(
+      title: AppText.singleLineText(title,
+          style: AppTextStyles.regular(CommonColors.commonBlackColor,
+              AppFontSizes.dialogBoxTitleFontSize.sp)),
+      content: content,
+      actions: actions ??
+          <Widget>[
+            dialogCancelButton(context),
+            if (!onlycancel)
+              TextButton(
+                onPressed: okOnPressed,
+                child: Text('OK',
+                    style: AppTextStyles.regular(CommonColors.commonBlackColor,
+                        AppFontSizes.dialogBoxactionFontSixe.sp)),
+              ),
+          ],
+    ),
+  );
+}
+
+Future<String?> askPassword({required BuildContext context}) {
+  final controller = TextEditingController();
+  return showDialog<String>(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) => AlertDialog(
+      title: AppText.singleLineText("Enter Sudo Password",
+          style: AppTextStyles.regular(CommonColors.commonBlackColor,
+              AppFontSizes.dialogBoxTitleFontSize.sp)),
+      content: TextField(
+        autofocus: true,
+        controller: controller,
+        obscureText: true,
+        obscuringCharacter: "*",
+        style: const TextStyle(color: CommonColors.commonBlackColor),
+        decoration: InputDecoration(
+            hintText: "Sudo Password",
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(
+                color: CommonColors.commonBlackColor,
+              ),
+            )),
+      ),
+      actions: <Widget>[
+        dialogCancelButton(context),
+        TextButton(
+            onPressed: () => Navigator.pop(context, controller.text),
+            child: Text("OK",
+                style: AppTextStyles.regular(CommonColors.commonBlackColor,
+                    AppFontSizes.dialogBoxactionFontSixe.sp))),
+      ],
+    ),
+  );
+}
+
+OutlinedButton outlinedTextButton({
+  required String text,
+  required void Function() onPressed,
+  Icon? icon,
+}) {
+  final buttonText = AppText.centerSingleLineText(text,
+      style: AppTextStyles.bold(CommonColors.commonBlackColor, 12.sp));
+  return OutlinedButton(
+      style: ButtonStyle(
+          shape: WidgetStateProperty.all(RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0.r))),
+          side: WidgetStateProperty.all(
+              const BorderSide(color: CommonColors.commonBlackColor))),
+      onPressed: onPressed,
+      child: icon != null
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                icon,
+                const SizedBox(
+                  width: 10,
+                ),
+                buttonText,
+              ],
+            )
+          : buttonText);
+}

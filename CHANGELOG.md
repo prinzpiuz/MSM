@@ -1,8 +1,40 @@
-## What's Changed
+## What's Changed in 1.10.0
+* chore: conflits fixed by @prinzpiuz in [#170](https://github.com/prinzpiuz/MSM/pull/170)
+* chore: conflicts fixed by @prinzpiuz
+* Release v1.9.4 by @prinzpiuz in [#154](https://github.com/prinzpiuz/MSM/pull/154)
+* Merge branch 'main' of github.com:prinzpiuz/MSM into 142-ssh-keys by @prinzpiuz
+* chore(generated): changelog generated & version updated automatically by @github-actions[bot]
+* feat: SSH keys support by @prinzpiuz in [#168](https://github.com/prinzpiuz/MSM/pull/168)
+* fix: minor fixes in file listing by @prinzpiuz
+* fix: minor bug fixes by @prinzpiuz
+* chore: flutter analysis fix by @prinzpiuz
+* Merge branch '142-ssh-keys' of github.com:prinzpiuz/MSM into 142-ssh-keys by @prinzpiuz
+* Update checks.yml by @prinzpiuz
+* fix: support for tracking only single folder by @prinzpiuz
+* feat: support for key based authentication by @prinzpiuz
+* Merge branch 'main' of github.com:prinzpiuz/MSM into 142-ssh-keys by @prinzpiuz
+* build(deps): bump flutter_lints from 5.0.0 to 6.0.0 by @dependabot[bot] in [#158](https://github.com/prinzpiuz/MSM/pull/158)
+* build: flutter upgraded to version 3.35 by @prinzpiuz
+* build(deps): bump flutter_lints from 5.0.0 to 6.0.0 by @dependabot[bot]
+* build(deps): bump flutter_email_sender from 7.0.0 to 8.0.0 by @dependabot[bot] in [#164](https://github.com/prinzpiuz/MSM/pull/164)
+* build(deps): bump go_router from 15.1.3 to 16.2.2 by @dependabot[bot] in [#167](https://github.com/prinzpiuz/MSM/pull/167)
+* build(deps): bump package_info_plus from 8.3.1 to 9.0.0 by @dependabot[bot] in [#165](https://github.com/prinzpiuz/MSM/pull/165)
+* Fastlane by @prinzpiuz in [#166](https://github.com/prinzpiuz/MSM/pull/166)
+* Update README.md by @prinzpiuz
+* Update README.md by @prinzpiuz
+* Update README.md by @prinzpiuz
+* Update README.md by @prinzpiuz
+
+**Full Changelog**: https://github.com/prinzpiuz/MSM/compare/1.9.4...1.10.0
+
+## What's Changed in 1.9.4
+* chore(generated): changelog generated & version updated automatically by @github-actions[bot]
 * Merge branch 'release' into main by @prinzpiuz
 * Release v1.9.3 by @prinzpiuz in [#152](https://github.com/prinzpiuz/MSM/pull/152)
 * chore(generated): changelog generated & version updated automatically by @github-actions[bot]
 * fix(r8 disabled): connection issue because of code shrinking by @prinzpiuz in [#153](https://github.com/prinzpiuz/MSM/pull/153)
+
+**Full Changelog**: https://github.com/prinzpiuz/MSM/compare/1.9.3...1.9.4
 
 ## What's Changed in 1.9.3
 * chore(generated): changelog generated & version updated automatically by @github-actions[bot]
