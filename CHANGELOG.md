@@ -24,6 +24,13 @@
 ## What's Changed in 1.9.3
 * chore(generated): changelog generated & version updated automatically by @github-actions[bot]
 * Merge branch 'release' into main by @prinzpiuz
+* Release v1.9.3 by @prinzpiuz in [#152](https://github.com/prinzpiuz/MSM/pull/152)
+* chore(generated): changelog generated & version updated automatically by @github-actions[bot]
+* fix(r8 disabled): connection issue because of code shrinking by @prinzpiuz in [#153](https://github.com/prinzpiuz/MSM/pull/153)
+
+## What's Changed in 1.9.3
+* chore(generated): changelog generated & version updated automatically by @github-actions[bot]
+* Merge branch 'release' into main by @prinzpiuz
 * Release v1.9.2 by @prinzpiuz in [#150](https://github.com/prinzpiuz/MSM/pull/150)
 * Release v1.9.1 by @prinzpiuz in [#148](https://github.com/prinzpiuz/MSM/pull/148)
 * Release v1.9.0 by @prinzpiuz in [#146](https://github.com/prinzpiuz/MSM/pull/146)
