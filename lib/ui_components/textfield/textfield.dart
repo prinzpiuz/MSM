@@ -34,15 +34,21 @@ class AppTextField {
       int? maxLength,
       String? errorText,
       String? initialValue,
+      InputDecoration? decoration,
       bool obscureText = false,
       bool suffix = false,
+      Widget? suffixIcon,
       bool disableLeftRightPadding = false,
+      bool readOnly = false,
+      TextEditingController? controller,
       void Function()? onSuffixIconPressed}) {
     double leftRightPadding = disableLeftRightPadding ? 0 : 18.w;
     return Padding(
       padding: EdgeInsets.only(
           top: 20.h, left: leftRightPadding, right: leftRightPadding),
       child: TextFormField(
+        controller: controller,
+          readOnly: readOnly,
           validator: validator,
           onSaved: onsaved,
           onChanged: onChanged,
@@ -53,41 +59,45 @@ class AppTextField {
           obscuringCharacter: "*",
           inputFormatters: inputFormatters,
           style: const TextStyle(color: CommonColors.commonBlackColor),
-          decoration: InputDecoration(
-            suffix: suffix
-                ? InkWell(
-                    onTap: onSuffixIconPressed,
-                    child: Icon(Icons.clear, size: 14.sp),
-                  )
-                : null,
-            contentPadding: EdgeInsets.all(20.h),
-            labelText: labelText,
-            hintText: hintText,
-            errorText: errorText,
-            hintTextDirection: TextDirection.rtl,
-            labelStyle: const TextStyle(color: TextFormColors.inputTextColor),
-            hintStyle:
-                const TextStyle(color: TextFormColors.inputHintTextColor),
-            errorStyle:
-                const TextStyle(color: TextFormColors.inputErrorTextColor),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(
-                color: CommonColors.commonBlackColor,
-              ),
-            ),
-            enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(
-                color: CommonColors.commonBlackColor,
-              ),
-            ),
-            errorBorder: const OutlineInputBorder(
-              borderSide: BorderSide(
-                color: TextFormColors.inputErrorTextColor,
-              ),
-            ),
-            border: const OutlineInputBorder(
-                borderSide: BorderSide(color: CommonColors.commonBlackColor)),
-          )),
+          decoration: decoration ??
+              InputDecoration(
+                suffix: suffix
+                    ? InkWell(
+                        onTap: onSuffixIconPressed,
+                        child: Icon(Icons.clear, size: 14.sp),
+                      )
+                    : null,
+                suffixIcon: suffixIcon,
+                contentPadding: EdgeInsets.all(20.h),
+                labelText: labelText,
+                hintText: hintText,
+                errorText: errorText,
+                hintTextDirection: TextDirection.rtl,
+                labelStyle:
+                    const TextStyle(color: TextFormColors.inputTextColor),
+                hintStyle:
+                    const TextStyle(color: TextFormColors.inputHintTextColor),
+                errorStyle:
+                    const TextStyle(color: TextFormColors.inputErrorTextColor),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: CommonColors.commonBlackColor,
+                  ),
+                ),
+                enabledBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: CommonColors.commonBlackColor,
+                  ),
+                ),
+                errorBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: TextFormColors.inputErrorTextColor,
+                  ),
+                ),
+                border: const OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: CommonColors.commonBlackColor)),
+              )),
     );
   }
 

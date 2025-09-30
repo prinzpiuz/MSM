@@ -25,8 +25,8 @@ class Commands {
   static const serviceRestart = "systemctl restart";
   static const ping = "";
   static const speedTest = "speedtest-cli --secure --bytes --json";
-  static String folderExist(folder) =>
-      "if [ -d $folder ]; then echo 'Exists'; else echo 'Not found'; fi";
+  static String folderExist(String folder) =>
+      "if [ -d \"$folder\" ]; then echo 'Exists'; else echo 'Not found'; fi";
 
   static List<String> basicDetailsGroup = [
     addIdentifier(whoAmI, Identifiers.username),
@@ -38,6 +38,14 @@ class Commands {
 
   static String addIdentifier(String command, String identifier) {
     return "echo -n '$identifier:';$command";
+  }
+
+  static String copySSHKey(String publicKey) {
+    return '''
+    mkdir -p ~/.ssh && chmod 700 ~/.ssh &&
+    echo "$publicKey" >> ~/.ssh/authorized_keys &&
+    chmod 600 ~/.ssh/authorized_keys
+  ''';
   }
 
   Commands._();

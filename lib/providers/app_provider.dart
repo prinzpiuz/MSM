@@ -6,14 +6,15 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 
 // Project imports:
 import 'package:msm/initialization.dart';
-import 'package:msm/models/commands/command_executer.dart';
-import 'package:msm/models/folder_configuration.dart';
-import 'package:msm/models/local_notification.dart';
-import 'package:msm/models/send_to_kindle.dart';
-import 'package:msm/models/server.dart';
-import 'package:msm/models/server_details.dart';
-import 'package:msm/models/server_functions.dart';
-import 'package:msm/models/storage.dart';
+import 'package:msm/providers/file_listing_provider.dart' show FileListingState;
+import 'package:msm/utils/commands/command_executer.dart';
+import 'package:msm/utils/folder_configuration.dart';
+import 'package:msm/utils/local_notification.dart';
+import 'package:msm/utils/send_to_kindle.dart';
+import 'package:msm/utils/server.dart';
+import 'package:msm/utils/server_details.dart';
+import 'package:msm/utils/server_functions.dart';
+import 'package:msm/utils/storage.dart';
 
 class AppService with ChangeNotifier {
   bool _connectionState = false;
@@ -24,6 +25,7 @@ class AppService with ChangeNotifier {
   KindleData kindleData = KindleData();
   late CommandExecuter commandExecuter;
   late Notifications notifications;
+  late FileListingState fileListingService;
 
   AppService(
       {required this.storage,
@@ -60,6 +62,7 @@ class AppService with ChangeNotifier {
   set updateFolderConfigurations(FolderConfiguration folderConfiguration) {
     server.folderConfiguration = folderConfiguration;
     commandExecuter.folderConfiguration = folderConfiguration;
+    fileListingService.folderConfiguration = folderConfiguration;
   }
 
   set updateServerFunctions(ServerFunctionsData serverFunctionsData) {

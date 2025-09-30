@@ -5,8 +5,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 // Project imports:
-import 'package:msm/models/file_manager.dart';
-import 'package:msm/models/file_upload.dart';
+import 'package:msm/utils/file_manager.dart';
+import 'package:msm/utils/file_upload.dart';
 import 'package:msm/views/upload_pages/upload_page_utils.dart';
 
 class UploadState with ChangeNotifier {

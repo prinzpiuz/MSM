@@ -2,8 +2,8 @@
 import 'package:dartssh2/dartssh2.dart';
 
 // Project imports:
-import 'package:msm/common_utils.dart';
-import 'package:msm/models/commands/commands.dart';
+import 'package:msm/utils.dart';
+import 'package:msm/utils/commands/commands.dart';
 
 class Services {
   String unit = "";

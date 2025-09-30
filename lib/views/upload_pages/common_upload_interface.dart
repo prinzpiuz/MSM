@@ -7,11 +7,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:msm/common_utils.dart';
+import 'package:msm/utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
-import 'package:msm/models/file_manager.dart';
+import 'package:msm/utils/file_manager.dart';
 import 'package:msm/providers/upload_provider.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';

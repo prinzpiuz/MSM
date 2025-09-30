@@ -11,7 +11,7 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:path_provider/path_provider.dart';
 
 // Project imports:
-import 'package:msm/models/local_notification.dart';
+import 'package:msm/utils/local_notification.dart';
 
 class KindleData {
   String fromEmail = "";
