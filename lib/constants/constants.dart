@@ -143,3 +143,9 @@ class BackGroundTaskRelated {
   static const uploadChannelName = "upload channel";
   static const uploadNotificationId = 123;
 }
+
+class ShellScriptPaths {
+  static const basicDetails = "shell_scripts/basic_details.sh";
+
+  // ShellScriptPaths._();
+}

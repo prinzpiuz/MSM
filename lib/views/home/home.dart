@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-// Project imports:
-import 'package:msm/utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
-import 'package:msm/utils/commands/basic_details.dart';
-import 'package:msm/utils/commands/command_executer.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
+// Project imports:
+import 'package:msm/utils.dart';
+import 'package:msm/utils/commands/basic_details.dart';
+import 'package:msm/utils/commands/command_executer.dart';
 import 'package:msm/views/home/home_common_widgets.dart';
 import 'package:msm/views/home/home_utils.dart';
 import 'package:msm/views/home/real_time_basic_details.dart';
@@ -98,7 +98,7 @@ Widget serverdetails(BasicDetails data, AppService appService) =>
         width: 225.w,
         height: 225.w,
         child: TweenAnimationBuilder(
-          tween: Tween<double>(begin: 0.0, end: data.disk.percentage),
+          tween: Tween<double>(begin: 0.0, end: data.diskUsagePercentage),
           duration: const Duration(milliseconds: 3500),
           builder: (context, double value, _) => CircularProgressIndicator(
             strokeWidth: 15.sp,

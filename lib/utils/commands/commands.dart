@@ -1,97 +1,99 @@
-// Project imports:
-import 'package:msm/constants/constants.dart';
-
+/// A collection of predefined shell commands for system management operations.
+/// All commands are designed to be executed on Linux systems.
 class Commands {
-  //added echo -n '<identifier>:' to prepend and identifier with the command output
-  static const whoAmI = "whoami";
-  static const uptime = "uptime -p";
-  static const linuxDistribution = "lsb_release -i -s";
-  // https://askubuntu.com/a/854029/596101
-  static const temperature =
-      r"paste <(cat /sys/class/thermal/thermal_zone*/type) <(cat /sys/class/thermal/thermal_zone*/temp) | column -s $'\t' -t | sed 's/\(.\)..$/.\1°C/' | grep x86_pkg_temp";
-  // --exclude-type=overlay to avoid showing overlay filesystems
-  static const diskUsage =
-      "df -hl --total --exclude-type=overlay | awk 'END{print}'";
-  static const ramUsage = "free -h | grep Mem";
+  // File and folder operations
+  /// Deletes files or folders recursively and forcefully.
   static const deleteFileOrFolders = "rm -rf";
+
+  /// Renames or moves files/folders.
   static const rename = "mv";
+
+  /// Encodes data to base64 without line wrapping.
   static const base64 = "base64 --wrap=0";
-  // added `end` at the end for identification it also used for splitting output string
-  static const getServices =
-      r"""systemctl --type=service -a --plain | awk '{ print $1,"," $3,"," $4,",", $5,$6,$7,$8,$9,"end"}'""";
+
+  // Service management commands
+  /// Lists all services with status information, formatted with commas and 'end' marker.
+  static const String getServices =
+      "systemctl --type=service -a --plain | awk '{ print \$1, \",\" , \$3, \",\" , \$4, \",\" , \$5\$6\$7\$8\$9,\"end\"}'";
+
+  /// Starts a systemd service.
   static const serviceStart = "systemctl start";
+
+  /// Gets the status of a systemd service.
   static const serviceStatus = "systemctl status";
+
+  /// Stops a systemd service.
   static const serviceStop = "systemctl stop";
+
+  /// Restarts a systemd service.
   static const serviceRestart = "systemctl restart";
+
+  // Network commands
+  /// Placeholder for ping command (currently empty - set as needed).
   static const ping = "";
+
+  /// Runs speed test and outputs JSON results.
   static const speedTest = "speedtest-cli --secure --bytes --json";
-  static String folderExist(String folder) =>
-      "if [ -d \"$folder\" ]; then echo 'Exists'; else echo 'Not found'; fi";
 
-  static List<String> basicDetailsGroup = [
-    addIdentifier(whoAmI, Identifiers.username),
-    addIdentifier(uptime, Identifiers.uptime),
-    addIdentifier(temperature, Identifiers.temperature),
-    addIdentifier(diskUsage, Identifiers.disk),
-    addIdentifier(ramUsage, Identifiers.ram)
-  ];
+  /// Checks if a folder exists on the filesystem.
+  /// Properly escapes the folder path to handle special characters.
+  static String folderExist(String folder) {
+    final escapedFolder = folder.replaceAll("'", "\\'");
+    return "if [ -d '$escapedFolder' ]; then echo 'Exists'; else echo 'Not found'; fi";
+  }
 
+  /// Prepends an identifier to a command output for easy parsing.
   static String addIdentifier(String command, String identifier) {
     return "echo -n '$identifier:';$command";
   }
 
+  /// Generates a command to copy an SSH public key to authorized_keys.
+  /// Properly escapes the public key to handle special characters.
   static String copySSHKey(String publicKey) {
+    final escapedKey = publicKey.replaceAll("'", "\\'");
     return '''
-    mkdir -p ~/.ssh && chmod 700 ~/.ssh &&
-    echo "$publicKey" >> ~/.ssh/authorized_keys &&
-    chmod 600 ~/.ssh/authorized_keys
-  ''';
+mkdir -p ~/.ssh && chmod 700 ~/.ssh &&
+echo '$escapedKey' >> ~/.ssh/authorized_keys &&
+chmod 600 ~/.ssh/authorized_keys
+''';
   }
 
   Commands._();
 }
 
+/// Shell command operators for chaining commands.
 class Operators {
+  /// Logical AND operator.
   static const and = "&&";
-  static const grep = "|";
+
+  /// Pipe operator for command chaining.
+  static const pipe = "|";
 }
 
+/// Utility class for building complex shell commands from simpler parts.
+/// All methods are pure functions to ensure immutability and thread safety.
 class CommandBuilder {
-  String output = "";
-
-  String andAll(List<String> commands) {
-    // put && inbetween the commands in list
-    if (commands.length == 1) {
-      return commands.first;
-    } else {
-      for (int i = 0; i < commands.length; i++) {
-        output += "${i == 0 ? '' : Operators.and} ${commands[i]} ";
-      }
-      return output;
-    }
+  /// Combines a list of commands with the AND operator (&&).
+  /// Returns the single command if the list has only one element.
+  static String andAll(List<String> commands) {
+    if (commands.isEmpty) return '';
+    if (commands.length == 1) return commands.first;
+    return commands.join(' ${Operators.and} ');
   }
 
-  String grepAll(List<String> commands) {
-    // put | inbetween the commands in list
-    if (commands.length == 1) {
-      return commands.first;
-    } else {
-      for (int i = 0; i < commands.length; i++) {
-        output += "${i == 0 ? '' : Operators.grep} ${commands[i]} ";
-      }
-      return output;
-    }
+  /// Combines a list of commands with the pipe operator (|).
+  /// Returns the single command if the list has only one element.
+  static String pipeAll(List<String> commands) {
+    if (commands.isEmpty) return '';
+    if (commands.length == 1) return commands.first;
+    return commands.join(' ${Operators.pipe} ');
   }
 
-  String addArguments(String command, List<String> args) {
-    //add arguments to command supplied
-    if (args.length == 1) {
-      return "$command ${args.first}";
-    } else {
-      for (int i = 0; i < args.length; i++) {
-        output += "${i == 0 ? command : ''} ${args[i]} ";
-      }
-      return output;
-    }
+  /// Adds arguments to a base command.
+  /// Returns the command with arguments appended.
+  static String addArguments(String command, List<String> args) {
+    if (args.isEmpty) return command;
+    final escapedArgs = args.map((arg) => arg.replaceAll("'", "\\'")).join(' ');
+    return '$command $escapedArgs';
   }
 }

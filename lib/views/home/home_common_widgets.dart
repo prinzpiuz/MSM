@@ -68,13 +68,13 @@ Widget serverDetails(BasicDetails? data) {
             FontAwesomeIcons.microchip, "${data.ram.used}/${data.ram.size}"),
         Padding(
           padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
-          child: serverStats(
-              Icons.sd_card_outlined, "${data.disk.used}/${data.disk.size}"),
+          child: serverStats(Icons.sd_card_outlined,
+              "${data.totalDiskUsed}/${data.totalDiskSize}"),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            serverStats(Icons.thermostat, data.tempreture),
+            serverStats(Icons.thermostat, data.temperature),
             serverStats(Icons.alarm, data.uptime)
           ],
         )
