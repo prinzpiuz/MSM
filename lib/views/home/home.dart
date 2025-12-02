@@ -86,30 +86,65 @@ Widget serverDetailsBuilder(BuildContext context) {
   return serverNotConnected(appService);
 }
 
-Widget serverdetails(BasicDetails data, AppService appService) =>
-    Stack(children: <Widget>[
-      Positioned(
-        top: 15.h,
-        left: 10.w,
-        right: 10.w,
-        child: RealTimeBasicDetails(appService: appService, basicDetails: data),
-      ),
-      SizedBox(
-        width: 225.w,
-        height: 225.w,
-        child: TweenAnimationBuilder(
-          tween: Tween<double>(begin: 0.0, end: data.diskUsagePercentage),
-          duration: const Duration(milliseconds: 3500),
-          builder: (context, double value, _) => CircularProgressIndicator(
-            strokeWidth: 15.sp,
-            color: CommonColors.commonGreenColor,
-            backgroundColor: CommonColors.diskUsageBackgroundColor,
-            value: value,
-            semanticsLabel: 'System Disk Usage Data',
+class ServerDetailsWidget extends StatelessWidget {
+  final BasicDetails? data;
+  final AppService appService;
+
+  const ServerDetailsWidget({
+    super.key,
+    required this.data,
+    required this.appService,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // Validate input data
+    if (data == null) {
+      return const SizedBox.shrink();
+    }
+
+    // Ensure disk usage percentage is within valid range
+    final double diskUsage = data!.diskUsagePercentage.clamp(0.0, 1.0);
+
+    return Stack(
+      children: <Widget>[
+        // Positioned widget for real-time basic details overlay
+        Positioned(
+          top: AppMeasurements.realTimeDetailsTopPosition.h,
+          left: AppMeasurements.realTimeDetailsHorizontalMargin.w,
+          right: AppMeasurements.realTimeDetailsHorizontalMargin.w,
+          child: RealTimeBasicDetails(
+            appService: appService,
+            basicDetails: data!,
           ),
         ),
-      ),
-    ]);
+        // Centered circular progress indicator for disk usage
+        Center(
+          child: SizedBox(
+            width: AppMeasurements.diskUsageIndicatorSize.w,
+            height: AppMeasurements.diskUsageIndicatorSize.w,
+            child: TweenAnimationBuilder<double>(
+              tween: Tween<double>(begin: 0.0, end: diskUsage),
+              duration: AppDurations.diskUsageAnimation,
+              curve: Curves.easeOut,
+              builder: (context, double value, _) => CircularProgressIndicator(
+                strokeWidth: AppMeasurements.diskUsageIndicatorStrokeWidth.sp,
+                color: CommonColors.commonGreenColor,
+                backgroundColor: CommonColors.diskUsageBackgroundColor,
+                value: value,
+                semanticsLabel: 'System Disk Usage Data',
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Legacy function for backward compatibility
+Widget serverdetails(BasicDetails data, AppService appService) =>
+    ServerDetailsWidget(data: data, appService: appService);
 
 Widget get fetchingData => Column(
       children: [

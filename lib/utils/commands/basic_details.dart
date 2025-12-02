@@ -223,6 +223,14 @@ class Ram {
     }
   }
 
+  double get ramUsageInBytes {
+    return _parseSizeToBytes(used);
+  }
+
+  double get ramSizeInBytes {
+    return _parseSizeToBytes(size);
+  }
+
   /// Returns RAM usage percentage as a formatted string.
   String get usagePercentage {
     if (size.isEmpty || used.isEmpty) return '0%';
@@ -237,7 +245,7 @@ class Ram {
     }
   }
 
-  /// Converts human-readable size (e.g., "1.5G") to bytes for calculations.
+  // / Converts human-readable size (e.g., "1.5G") to bytes for calculations.
   static double _parseSizeToBytes(String size) {
     if (size.isEmpty) return 0.0;
     try {
@@ -309,7 +317,7 @@ class CPU {
   ///   'model': String,
   ///   'cores': int,
   ///   'usage': num,
-  ///   'load': List<num>,
+  ///   'load': List[num],
   ///   'bogomips': String,
   ///   'freq_mhz': num
   /// }
@@ -412,6 +420,9 @@ class CPU {
   /// Returns frequency formatted as GHz.
   String get freqGhz => '${(freqMhz / 1000).toStringAsFixed(2)} GHz';
 
+  String get formattedModelName =>
+      model.isNotEmpty ? model.split('CPU').first : 'Unknown';
+
   /// Checks if CPU data is available (has non-empty model).
   bool get hasData => model.isNotEmpty;
 }
@@ -494,14 +505,22 @@ class Network {
   bool get hasData =>
       download.isNotEmpty || upload.isNotEmpty || ping.isNotEmpty;
 
+  /// Formats speed data safely, handling missing keys and null values.
+  String _formatSpeed(Map<String, String> data) {
+    final value = data['value'] ?? '0';
+    final unit = data['unit'] ?? '';
+    final formatted = '$value $unit'.trim();
+    return formatted.isEmpty ? 'N/A' : formatted;
+  }
+
   /// Returns the primary download speed (first available interface).
-  String? get primaryDownload => download.values.firstOrNull;
+  String get primaryDownload => _formatSpeed(download);
 
   /// Returns the primary upload speed (first available interface).
-  String? get primaryUpload => upload.values.firstOrNull;
+  String get primaryUpload => _formatSpeed(upload);
 
   /// Returns the primary ping time (first available interface).
-  String? get primaryPing => ping.values.firstOrNull;
+  String get primaryPing => _formatSpeed(ping);
 }
 
 class BasicDetails {
@@ -616,10 +635,23 @@ class BasicDetails {
     return totalUsed / totalSize;
   }
 
+  String get diskUsagePercentageString =>
+      "${(diskUsagePercentage * 100).toStringAsFixed(2)}%";
+
+  String get ramUsed {
+    return filesize(ram.ramUsageInBytes.toInt());
+  }
+
+  String get ramSize {
+    return filesize(ram.ramSizeInBytes.toInt());
+  }
+
   /// Checks if basic details data is available (has non-empty user or uptime).
   bool get hasData => user.isNotEmpty || uptime.isNotEmpty;
-  String get temperature =>
+  String get getTemperature =>
       temperature.isEmpty ? "0" : temperature.replaceAll("+", "");
+
+  String get getUptime => uptime.split(",").first;
 }
 
 class Speed {

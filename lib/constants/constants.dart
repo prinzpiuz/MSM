@@ -37,6 +37,15 @@ class AppMeasurements {
   static const appInfoIconWidth = 100.0;
   static const deleteFileDailogBoxHeight = 50.0;
   static const kindleFormHeight = 200.0;
+  static const serverStatGap = 2.0;
+  static const diskUsageIndicatorSize = 300.0;
+  static const diskUsageIndicatorStrokeWidth = 15.0;
+  static const realTimeDetailsTopPosition = 15.0;
+  static const realTimeDetailsHorizontalMargin = 10.0;
+}
+
+class AppDurations {
+  static const diskUsageAnimation = Duration(milliseconds: 2000);
 }
 
 class AppConstants {
@@ -146,6 +155,4 @@ class BackGroundTaskRelated {
 
 class ShellScriptPaths {
   static const basicDetails = "shell_scripts/basic_details.sh";
-
-  // ShellScriptPaths._();
 }
