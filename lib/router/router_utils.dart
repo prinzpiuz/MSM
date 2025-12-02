@@ -37,9 +37,7 @@ extension AppPageExtension on Pages {
         return "/fileList";
       case Pages.settings:
         return "/settings";
-      default:
-        return "/";
-    }
+      }
   }
 
   String get toName {
@@ -58,9 +56,7 @@ extension AppPageExtension on Pages {
         return "FILE LIST";
       case Pages.settings:
         return "SETTINGS";
-      default:
-        return "HOME";
-    }
+      }
   }
 
   String get toTitle {
@@ -79,9 +75,7 @@ extension AppPageExtension on Pages {
         return "File List";
       case Pages.settings:
         return "Settings";
-      default:
-        return "Home";
-    }
+      }
   }
 }
 

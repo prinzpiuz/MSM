@@ -28,7 +28,7 @@ class Services {
   Future<bool> get start async {
     try {
       String command =
-          CommandBuilder().addArguments(Commands.serviceStart, [unit]);
+          CommandBuilder.addArguments(Commands.serviceStart, [unit]);
       await client.run(command);
       return true;
     } catch (_) {
@@ -39,7 +39,7 @@ class Services {
   Future<bool> get stop async {
     try {
       String command =
-          CommandBuilder().addArguments(Commands.serviceStop, [unit]);
+          CommandBuilder.addArguments(Commands.serviceStop, [unit]);
       await client.run(command);
       return true;
     } catch (_) {
@@ -50,7 +50,7 @@ class Services {
   Future<bool> get restart async {
     try {
       String command =
-          CommandBuilder().addArguments(Commands.serviceRestart, [unit]);
+          CommandBuilder.addArguments(Commands.serviceRestart, [unit]);
       await client.run(command);
       return true;
     } catch (_) {
@@ -61,7 +61,7 @@ class Services {
   Future<String> get status async {
     try {
       String command =
-          CommandBuilder().addArguments(Commands.serviceStatus, [unit]);
+          CommandBuilder.addArguments(Commands.serviceStatus, [unit]);
       return decodeOutput(await client.run(command));
     } catch (e) {
       return e.toString();

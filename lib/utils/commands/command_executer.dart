@@ -4,6 +4,7 @@ import 'dart:io';
 // Package imports:
 import 'package:dartssh2/dartssh2.dart';
 
+import 'package:msm/constants/constants.dart' show ShellScriptPaths;
 // Project imports:
 import 'package:msm/utils.dart';
 import 'package:msm/utils/commands/basic_details.dart';
@@ -30,10 +31,10 @@ class CommandExecuter extends Server {
 
   Future<BasicDetails?> get basicDetails async {
     try {
-      String command = CommandBuilder().andAll(Commands.basicDetailsGroup);
+      final script = await loadShellScript(ShellScriptPaths.basicDetails);
       if (client != null) {
-        final basicDetails = decodeOutput(await client!.run(command));
-        return BasicDetails(BasicDetails.mapSource(basicDetails));
+        final basicDetails = decodeOutput(await client!.run(script));
+        return BasicDetails(basicDetails);
       }
     } catch (_) {
       super.state = ServerState.disconnected;
@@ -187,7 +188,7 @@ class CommandExecuter extends Server {
         pathList.add(fileOrDirectory.fullPath);
       }
       String command =
-          CommandBuilder().addArguments(Commands.deleteFileOrFolders, pathList);
+          CommandBuilder.addArguments(Commands.deleteFileOrFolders, pathList);
       client!.execute(command);
     }
   }
@@ -202,8 +203,8 @@ class CommandExecuter extends Server {
     } catch (_) {
       //this is implemented because for avoid delete error `SftpStatusError`
       // in some files with spaces or special chars in file name
-      String command = CommandBuilder()
-          .addArguments(Commands.rename, [fileOrDirectory.fullPath, newPath]);
+      String command = CommandBuilder.addArguments(
+          Commands.rename, [fileOrDirectory.fullPath, newPath]);
       client!.execute(command);
     }
   }
@@ -213,16 +214,16 @@ class CommandExecuter extends Server {
       required String newLocation}) async {
     String newPath = FileManager.linuxCompatibleNameString(newLocation);
     try {
-      String command = CommandBuilder()
-          .addArguments(Commands.rename, [fileOrDirectory.fullPath, newPath]);
+      String command = CommandBuilder.addArguments(
+          Commands.rename, [fileOrDirectory.fullPath, newPath]);
       client!.execute(command);
     } catch (_) {}
   }
 
   Future<String> base64({required FileOrDirectory fileOrDirectory}) async {
     try {
-      String command = CommandBuilder()
-          .addArguments(Commands.base64, [fileOrDirectory.fullPath]);
+      String command = CommandBuilder.addArguments(
+          Commands.base64, [fileOrDirectory.fullPath]);
       final String encodedString = decodeOutput(await client!.run(command));
       return encodedString;
     } catch (_) {
