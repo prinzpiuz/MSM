@@ -1,4 +1,7 @@
 ## What's Changed in 1.11.0
+* Merge branch 'release' into main by @prinzpiuz
+* Release v1.10.0 by @prinzpiuz in [#169](https://github.com/prinzpiuz/MSM/pull/169)
+* chore(generated): changelog generated & version updated automatically by @github-actions[bot]
 * feat: new variable and minor bug fixes by @prinzpiuz in [#173](https://github.com/prinzpiuz/MSM/pull/173)
 * refactor: code refactored using  kilo code by @prinzpiuz
 * feat(basic details): added new variables and fixed minor bugs with fetching basic details by @prinzpiuz
