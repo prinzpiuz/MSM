@@ -10,15 +10,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-// Project imports:
-import 'package:msm/utils.dart';
 import 'package:msm/common_widgets.dart';
 import 'package:msm/constants/colors.dart';
 import 'package:msm/constants/constants.dart';
-import 'package:msm/utils/background_tasks.dart';
-import 'package:msm/utils/commands/command_executer.dart';
-import 'package:msm/utils/file_manager.dart';
-import 'package:msm/utils/folder_configuration.dart';
 import 'package:msm/providers/app_provider.dart';
 import 'package:msm/providers/upload_provider.dart';
 import 'package:msm/router/router_utils.dart';
@@ -26,6 +20,12 @@ import 'package:msm/ui_components/text/text.dart';
 import 'package:msm/ui_components/text/textstyles.dart';
 import 'package:msm/ui_components/textfield/textfield.dart';
 import 'package:msm/ui_components/textfield/validators.dart';
+// Project imports:
+import 'package:msm/utils.dart';
+import 'package:msm/utils/background_tasks.dart';
+import 'package:msm/utils/commands/command_executer.dart';
+import 'package:msm/utils/file_manager.dart';
+import 'package:msm/utils/folder_configuration.dart';
 
 enum UploadCatogories { movies, tvShows, books, custom }
 
@@ -40,9 +40,7 @@ extension UploadCategoriesExtension on UploadCatogories {
         return "Books";
       case UploadCatogories.custom:
         return "Custom";
-      default:
-        return "";
-    }
+      }
   }
 }
 

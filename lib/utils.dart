@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 // Package imports:
 import 'package:go_router/go_router.dart';
@@ -60,6 +61,27 @@ String fileNameFromPath(String path) {
   return path.split('/').last.toString();
 }
 
+/// Decodes the given [output] bytes to a UTF-8 string.
+///
+/// Allows malformed UTF-8 sequences and replaces them with the Unicode
+/// replacement character (U+FFFD) to ensure a valid string is always returned.
+/// This prevents [FormatException] from being thrown for invalid byte sequences.
 String decodeOutput(Uint8List output) {
-  return utf8.decode(output);
+  return utf8.decode(output, allowMalformed: true);
+}
+
+/// Loads a shell script from the app's assets.
+///
+/// [assetPath] The path to the script asset (e.g., 'assets/scripts/script.sh').
+/// Returns the script content as a string.
+/// Throws [Exception] if the asset cannot be loaded or if the path is invalid.
+Future<String> loadShellScript(String scriptPath) async {
+  if (scriptPath.isEmpty) {
+    throw ArgumentError('Asset path cannot be empty');
+  }
+  try {
+    return await rootBundle.loadString(scriptPath);
+  } catch (e) {
+    throw Exception('Failed to load script from $scriptPath: $e');
+  }
 }

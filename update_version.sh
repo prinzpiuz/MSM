@@ -8,7 +8,7 @@ NEW_SEMANTIC_VERSION="$1"
 # Get the current version
 CURRENT_VERSION=$(grep "^version:" "$PUBSPEC_FILE" | awk '{print $2}')
 
-echo "Current version: $CURRENT_VERSION"
+# echo "Current version: $CURRENT_VERSION"
 
 # Extract the build number from the current version
 CURRENT_BUILD_NUMBER=$(echo "$CURRENT_VERSION" | cut -d'+' -f2)
