@@ -1,10 +1,17 @@
+## What's Changed in 1.11.0
+* feat: new variable and minor bug fixes by @prinzpiuz in [#173](https://github.com/prinzpiuz/MSM/pull/173)
+* refactor: code refactored using  kilo code by @prinzpiuz
+* feat(basic details): added new variables and fixed minor bugs with fetching basic details by @prinzpiuz
+* Merge branch 'main' of github.com:prinzpiuz/MSM by @prinzpiuz
+
+**Full Changelog**: https://github.com/prinzpiuz/MSM/compare/1.10.0...1.11.0
+
 ## What's Changed in 1.10.0
+* chore(generated): changelog generated & version updated automatically by @github-actions[bot]
 * chore: conflits fixed by @prinzpiuz in [#170](https://github.com/prinzpiuz/MSM/pull/170)
 * chore: conflicts fixed by @prinzpiuz
 * Release v1.9.4 by @prinzpiuz in [#154](https://github.com/prinzpiuz/MSM/pull/154)
 * Merge branch 'main' of github.com:prinzpiuz/MSM into 142-ssh-keys by @prinzpiuz
-* chore(generated): changelog generated & version updated automatically by @github-actions[bot]
-* feat: SSH keys support by @prinzpiuz in [#168](https://github.com/prinzpiuz/MSM/pull/168)
 * fix: minor fixes in file listing by @prinzpiuz
 * fix: minor bug fixes by @prinzpiuz
 * chore: flutter analysis fix by @prinzpiuz
@@ -13,8 +20,11 @@
 * fix: support for tracking only single folder by @prinzpiuz
 * feat: support for key based authentication by @prinzpiuz
 * Merge branch 'main' of github.com:prinzpiuz/MSM into 142-ssh-keys by @prinzpiuz
-* build(deps): bump flutter_lints from 5.0.0 to 6.0.0 by @dependabot[bot] in [#158](https://github.com/prinzpiuz/MSM/pull/158)
 * build: flutter upgraded to version 3.35 by @prinzpiuz
+* Merge branch 'main' of github.com:prinzpiuz/MSM by @prinzpiuz
+* chore(generated): changelog generated & version updated automatically by @github-actions[bot]
+* feat: SSH keys support by @prinzpiuz in [#168](https://github.com/prinzpiuz/MSM/pull/168)
+* build(deps): bump flutter_lints from 5.0.0 to 6.0.0 by @dependabot[bot] in [#158](https://github.com/prinzpiuz/MSM/pull/158)
 * build(deps): bump flutter_lints from 5.0.0 to 6.0.0 by @dependabot[bot]
 * build(deps): bump flutter_email_sender from 7.0.0 to 8.0.0 by @dependabot[bot] in [#164](https://github.com/prinzpiuz/MSM/pull/164)
 * build(deps): bump go_router from 15.1.3 to 16.2.2 by @dependabot[bot] in [#167](https://github.com/prinzpiuz/MSM/pull/167)
